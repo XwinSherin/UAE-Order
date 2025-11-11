@@ -1,3 +1,4 @@
+{
   "products": [
     {
       "id": 1,
@@ -6,47 +7,47 @@
       "en": "Angel Lips",
       "img": "images/1.png"
     },
-   {
-    "id": 2,
-    "tr": "Bagdadi",
-    "ar": "بغدادي",
-    "en": "Bagdadi",
-    "img": "images/2.png",
-  },
-  {
-    "id": 3,
-    "tr": "Izmir Romantic",
-    "en": "Izmir Romantic",
-    "ar": "إزمير رومانتيك",
-    "img": "images/3.png",
-  },
-  {
-    "id": 4,
-    "tr": "JK777",
-    "en": "JK777",
-    "ar": "جوكر ٧٧٧",
-    "img": "images/4.png",
-  },
-  {
-    "id": 5,
-    "tr": "Lady Killer",
-    "en": "Lady Killer",
-    "ar": "ليدي  كلير",
-    "img": "images/5.png",
-  },
-      {
-    "id": 7,
-    "tr": "test",
-    "en": "test",
-    "ar": "كلير",
-    "img": "images/5.png",
-  },
-  {
-    "id": 6,
-    "tr": "Love 66",
-    "en": "Love 66",
-    "ar": "لوف ٦٦",
-    "img": "images/6.png",
-  }
+    {
+      "id": 2,
+      "tr": "Bagdadi",
+      "ar": "بغدادي",
+      "en": "Bagdadi",
+      "img": "images/2.png"
+    },
+    {
+      "id": 3,
+      "tr": "Izmir Romantic",
+      "en": "Izmir Romantic",
+      "ar": "إزمير رومانتيك",
+      "img": "images/3.png"
+    },
+    {
+      "id": 4,
+      "tr": "JK777",
+      "en": "JK777",
+      "ar": "جوكر ٧٧٧",
+      "img": "images/4.png"
+    },
+    {
+      "id": 5,
+      "tr": "Lady Killer",
+      "en": "Lady Killer",
+      "ar": "ليدي  كلير",
+      "img": "images/5.png"
+    },
+    {
+      "id": 7,
+      "tr": "test",
+      "en": "test",
+      "ar": "كلير",
+      "img": "images/5.png"
+    },
+    {
+      "id": 6,
+      "tr": "Love 66",
+      "en": "Love 66",
+      "ar": "لوف ٦٦",
+      "img": "images/6.png"
+    }
   ]
 }
