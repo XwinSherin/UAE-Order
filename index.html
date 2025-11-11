@@ -154,7 +154,7 @@
     .input-group input {
       padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
       font-size: 1rem; background: white; transition: var(--transition);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04); text-transform: uppercase;
     }
     .input-group input:focus {
       border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.18); 
@@ -438,6 +438,11 @@
 
     [dir="rtl"] .product-name, [dir="rtl"] .summary-table .product-name { text-align: right; }
     [dir="rtl"] .quantity-input input, [dir="rtl"] .grand-input input { text-align: left; }
+
+    /* BOŞ DEĞER STİLİ */
+    .empty-value {
+      color: #999;
+    }
   </style>
 </head>
 <body>
@@ -485,7 +490,7 @@
 <div class="order-info">
   <div class="input-group">
     <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
-    <input type="text" id="customer-name" required placeholder="Örn: Ahmet Yılmaz" aria-required="true">
+    <input type="text" id="customer-name" required placeholder="Örn: AHMET YILMAZ" aria-required="true">
     <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
   </div>
   <div class="input-group">
@@ -509,7 +514,7 @@
 <div class="grand-total-card">
   <div class="grand-total-header">
     <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
-    <span id="order-code-display">-</span>
+    <span id="order-code-display" class="empty-value">-</span>
   </div>
   <table class="grand-table">
     <thead>
@@ -523,24 +528,24 @@
       <tr class="gram-50">
         <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
-        <td id="grand-kg-50">-</td>
+        <td id="grand-kg-50" class="empty-value">-</td>
       </tr>
       <tr class="gram-250">
         <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
-        <td id="grand-kg-250">-</td>
+        <td id="grand-kg-250" class="empty-value">-</td>
       </tr>
       <tr class="gram-1000">
         <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
-        <td id="grand-kg-1000">-</td>
+        <td id="grand-kg-1000" class="empty-value">-</td>
       </tr>
     </tbody>
     <tfoot>
       <tr>
         <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
-        <td><strong id="final-koli">-</strong></td>
-        <td><strong id="final-kg">-</strong></td>
+        <td><strong id="final-koli" class="empty-value">-</strong></td>
+        <td><strong id="final-kg" class="empty-value">-</strong></td>
       </tr>
     </tfoot>
   </table>
@@ -571,7 +576,7 @@ const OrderManager = {
   selectedProducts: new Set(),
   currentOrderCode: null,
 
-  // GitHub'dan ürünleri çek - DÜZELTİLDİ
+  // GitHub'dan ürünleri çek
   async loadProducts() {
     try {
       const response = await fetch('./products.json');
@@ -606,30 +611,31 @@ const OrderManager = {
     this.toggleSearchClear();
   },
 
-  // YENİ SİPARİŞ KODU SİSTEMİ
+  // YENİ SİPARİŞ KODU SİSTEMİ - GÜNCELLENDİ
   generateOrderCode() {
-    const customerName = document.getElementById('customer-name').value.trim();
+    const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
     const now = new Date();
     
-    // Tarih formatı: GG-AA-YYYY/SS:DD
+    // Tarih formatı: GGAAYYYY
     const dateStr = now.toLocaleDateString('tr-TR', {
       day: '2-digit',
       month: '2-digit', 
       year: 'numeric'
-    }).replace(/\./g, '-');
+    }).replace(/\./g, '');
     
+    // Saat formatı: SSDD (saat ve dakika)
     const timeStr = now.toLocaleTimeString('tr-TR', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     }).replace(/:/g, '');
 
     if (customerName) {
-      // Müşteri adı + tarih + sayaç
-      const baseCode = `${customerName.replace(/\s+/g, '_')}_${dateStr}/${timeStr}`;
-      this.currentOrderCode = baseCode;
+      // Format: MÜŞTERİ_ADI/GGAAYYYY/SSDD/001
+      this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}/${dateStr}/${timeStr}/${this.orderCounter.toString().padStart(3, '0')}`;
     } else {
-      // Sadece tarih + sayaç
-      this.currentOrderCode = `SIPARIS_${dateStr}/${timeStr}_${this.orderCounter.toString().padStart(3, '0')}`;
+      // Format: SIPARIS/GGAAYYYY/SSDD/001
+      this.currentOrderCode = `SIPARIS/${dateStr}/${timeStr}/${this.orderCounter.toString().padStart(3, '0')}`;
     }
     
     document.getElementById('order-code-display').textContent = this.currentOrderCode;
@@ -639,13 +645,13 @@ const OrderManager = {
   },
 
   toLatin(str) {
-    if (!str || str === '-') return 0;
+    if (!str || str === '-' || str === '') return 0;
     return parseInt(str.toString().split('').map(d => this.latinDigits[this.arabicDigits.indexOf(d)] || d).join('').replace(/[٬,.]/g, ''), 10) || 0;
   },
 
   formatNumber(num, lang) {
-    if (!num && num !== 0) return '-';
-    if (num === 0) return '-';
+    if (!num && num !== 0) return '';
+    if (num === 0) return '';
     const formatted = num.toLocaleString(lang === 'ar' ? 'ar-EG' : 'tr-TR');
     return lang === 'ar' ? formatted.replace(/\./g, ',').replace(/,/g, '٬') : formatted;
   },
@@ -685,24 +691,24 @@ const OrderManager = {
         <tr class="gram-50">
           <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="50">-</td>
+          <td data-kg="50" class="empty-value">-</td>
         </tr>
         <tr class="gram-250">
           <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="250">-</td>
+          <td data-kg="250" class="empty-value">-</td>
         </tr>
         <tr class="gram-1000">
           <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="1000">-</td>
+          <td data-kg="1000" class="empty-value">-</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td><strong data-tr="Toplam" data-ar="الإجمالي" data-en="Total">Toplam</strong></td>
-          <td data-total-koli>-</td>
-          <td data-total-kg>-</td>
+          <td data-total-koli class="empty-value">-</td>
+          <td data-total-kg class="empty-value">-</td>
         </tr>
       </tfoot>
     `;
@@ -713,7 +719,7 @@ const OrderManager = {
       const input = document.createElement('input');
       input.type = 'text';
       input.setAttribute('data-gram', g);
-      input.placeholder = '-';
+      input.placeholder = '';
       input.maxLength = 6;
       input.setAttribute('aria-label', `${g} gram koli sayısı`);
       qtyDivs[idx].appendChild(input);
@@ -780,7 +786,9 @@ const OrderManager = {
       }
     });
 
-    document.getElementById('customer-name').addEventListener('input', () => {
+    // MÜŞTERİ ADI BÜYÜK HARF DÖNÜŞÜMÜ
+    document.getElementById('customer-name').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
       this.generateOrderCode();
       this.updateGrandTotal();
     });
@@ -858,7 +866,6 @@ const OrderManager = {
     // Boş değer kontrolü
     if (!val || val === '-') {
       input.value = '';
-      input.placeholder = '-';
     } else {
       const koli = Math.min(this.toLatin(val), this.MAX_INPUT);
       
@@ -878,7 +885,16 @@ const OrderManager = {
     const koli = this.toLatin(input.value.replace(/[٬,.]/g, ''));
     const kg = koli * this.KOLI_KG;
     const kgEl = card.querySelector(`[data-kg="${gram}"]`);
-    if (kgEl) kgEl.textContent = this.formatNumber(kg, this.currentLang);
+    
+    if (kgEl) {
+      if (koli > 0) {
+        kgEl.textContent = this.formatNumber(kg, this.currentLang);
+        kgEl.classList.remove('empty-value');
+      } else {
+        kgEl.textContent = '-';
+        kgEl.classList.add('empty-value');
+      }
+    }
 
     this.updateCardTotal(card);
     this.updateGrandTotal();
@@ -896,8 +912,26 @@ const OrderManager = {
     const totalKG = totalKoli * this.KOLI_KG;
     const totalKoliEl = card.querySelector('[data-total-koli]');
     const totalKgEl = card.querySelector('[data-total-kg]');
-    if (totalKoliEl) totalKoliEl.textContent = this.formatNumber(totalKoli, this.currentLang);
-    if (totalKgEl) totalKgEl.textContent = this.formatNumber(totalKG, this.currentLang);
+    
+    if (totalKoliEl) {
+      if (totalKoli > 0) {
+        totalKoliEl.textContent = this.formatNumber(totalKoli, this.currentLang);
+        totalKoliEl.classList.remove('empty-value');
+      } else {
+        totalKoliEl.textContent = '-';
+        totalKoliEl.classList.add('empty-value');
+      }
+    }
+    
+    if (totalKgEl) {
+      if (totalKG > 0) {
+        totalKgEl.textContent = this.formatNumber(totalKG, this.currentLang);
+        totalKgEl.classList.remove('empty-value');
+      } else {
+        totalKgEl.textContent = '-';
+        totalKgEl.classList.add('empty-value');
+      }
+    }
   },
 
   updateGrandTotal() {
@@ -917,14 +951,60 @@ const OrderManager = {
       const koli = gramTotals[g];
       const el = document.getElementById(`grand-${g}`);
       const kgEl = document.getElementById(`grand-kg-${g}`);
-      if (el) el.value = this.formatNumber(koli, this.currentLang);
-      if (kgEl) kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
+      
+      if (el) {
+        if (koli > 0) {
+          el.value = this.formatNumber(koli, this.currentLang);
+        } else {
+          el.value = '';
+        }
+      }
+      
+      if (kgEl) {
+        if (koli > 0) {
+          kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
+          kgEl.classList.remove('empty-value');
+        } else {
+          kgEl.textContent = '-';
+          kgEl.classList.add('empty-value');
+        }
+      }
     });
 
     const finalKoli = gramTotals[50] + gramTotals[250] + gramTotals[1000];
     const finalKG = finalKoli * this.KOLI_KG;
-    document.getElementById('final-koli').textContent = this.formatNumber(finalKoli, this.currentLang);
-    document.getElementById('final-kg').textContent = this.formatNumber(finalKG, this.currentLang);
+    const finalKoliEl = document.getElementById('final-koli');
+    const finalKgEl = document.getElementById('final-kg');
+    
+    if (finalKoliEl) {
+      if (finalKoli > 0) {
+        finalKoliEl.textContent = this.formatNumber(finalKoli, this.currentLang);
+        finalKoliEl.classList.remove('empty-value');
+      } else {
+        finalKoliEl.textContent = '-';
+        finalKoliEl.classList.add('empty-value');
+      }
+    }
+    
+    if (finalKgEl) {
+      if (finalKG > 0) {
+        finalKgEl.textContent = this.formatNumber(finalKG, this.currentLang);
+        finalKgEl.classList.remove('empty-value');
+      } else {
+        finalKgEl.textContent = '-';
+        finalKgEl.classList.add('empty-value');
+      }
+    }
+
+    // Sipariş kodu display güncelleme
+    const codeDisplay = document.getElementById('order-code-display');
+    if (this.currentOrderCode) {
+      codeDisplay.textContent = this.currentOrderCode;
+      codeDisplay.classList.remove('empty-value');
+    } else {
+      codeDisplay.textContent = '-';
+      codeDisplay.classList.add('empty-value');
+    }
 
     // Özet butonunu aktif/pasif yap
     document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
@@ -998,9 +1078,9 @@ const OrderManager = {
         html += `
           <tr>
             <td class="product-name">${productName}</td>
-            <td>${this.formatNumber(vals[50], this.currentLang)}</td>
-            <td>${this.formatNumber(vals[250], this.currentLang)}</td>
-            <td>${this.formatNumber(vals[1000], this.currentLang)}</td>
+            <td>${vals[50] > 0 ? this.formatNumber(vals[50], this.currentLang) : ''}</td>
+            <td>${vals[250] > 0 ? this.formatNumber(vals[250], this.currentLang) : ''}</td>
+            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], this.currentLang) : ''}</td>
             <td>${this.formatNumber(itemKoli, this.currentLang)}</td>
             <td>${this.formatNumber(itemKoli * this.KOLI_KG, this.currentLang)}</td>
           </tr>
@@ -1013,9 +1093,9 @@ const OrderManager = {
         <tfoot>
           <tr>
             <td class="product-name"><strong data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</strong></td>
-            <td><strong>${this.formatNumber(colTotals[50], this.currentLang)}</strong></td>
-            <td><strong>${this.formatNumber(colTotals[250], this.currentLang)}</strong></td>
-            <td><strong>${this.formatNumber(colTotals[1000], this.currentLang)}</strong></td>
+            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
+            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
+            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
             <td><strong>${this.formatNumber(colTotals.koli, this.currentLang)}</strong></td>
             <td><strong>${this.formatNumber(colTotals.kg, this.currentLang)}</strong></td>
           </tr>
@@ -1062,7 +1142,6 @@ const OrderManager = {
     
     document.querySelectorAll('input[data-gram]').forEach(input => {
       input.value = '';
-      input.placeholder = '-';
       this.updateCard(input);
     });
     
@@ -1112,7 +1191,6 @@ const OrderManager = {
     document.querySelectorAll('.quantity-input input, .grand-input input').forEach(inp => {
       const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
       inp.value = this.formatNumber(val, lang);
-      inp.placeholder = '-';
     });
 
     document.querySelectorAll('.lang-btn').forEach(b => {
@@ -1121,10 +1199,16 @@ const OrderManager = {
 
     document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli, #final-kg').forEach(el => {
       const num = this.toLatin(el.textContent.replace(/[٬,.]/g, ''));
-      el.textContent = this.formatNumber(num, lang);
+      if (num > 0) {
+        el.textContent = this.formatNumber(num, lang);
+        el.classList.remove('empty-value');
+      } else {
+        el.textContent = '-';
+        el.classList.add('empty-value');
+      }
     });
 
-    // Ürün isimlerini güncelle - DÜZELTİLDİ
+    // Ürün isimlerini güncelle
     document.querySelectorAll('.product-header').forEach(header => {
       const productId = header.closest('.product-card').dataset.productId;
       const product = this.products.find(p => p.id == productId);
@@ -1244,18 +1328,18 @@ const ExportManager = {
     
     const data = OrderManager.currentOrderData.items.map(item => [
       item.name,
-      OrderManager.formatNumber(item[50], 'tr'),
-      OrderManager.formatNumber(item[250], 'tr'),
-      OrderManager.formatNumber(item[1000], 'tr'),
+      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
       OrderManager.formatNumber(item.koli, 'tr'),
       OrderManager.formatNumber(item.kg, 'tr')
     ]);
 
     const totals = [
       ["GENEL TOPLAM", 
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr'),
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr'),
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr'),
+       OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+       OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+       OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
        OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
        OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
       ]
@@ -1344,18 +1428,18 @@ const ExportManager = {
     
     const tableData = OrderManager.currentOrderData.items.map(item => [
       item.name,
-      OrderManager.formatNumber(item[50], 'tr'),
-      OrderManager.formatNumber(item[250], 'tr'),
-      OrderManager.formatNumber(item[1000], 'tr'),
+      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
       OrderManager.formatNumber(item.koli, 'tr'),
       OrderManager.formatNumber(item.kg, 'tr')
     ]);
     
     tableData.push([
       "GENEL TOPLAM",
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr'),
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr'),
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr'),
+      OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+      OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+      OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
       OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
       OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
     ]);
@@ -1410,16 +1494,16 @@ const ExportManager = {
 
     OrderManager.currentOrderData.items.forEach((item, index) => {
       text += `\n${index + 1}. ${item.name}\n`;
-      text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
-      text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
-      text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
+      if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
+      if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
+      if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
       text += `   ➕ Toplam: ${OrderManager.formatNumber(item.koli, 'tr')} koli (${OrderManager.formatNumber(item.kg, 'tr')} KG)\n`;
     });
 
     text += `\n*📊 GENEL TOPLAM:*\n`;
-    text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
-    text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
-    text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
+    if (OrderManager.currentOrderData.totals[50] > 0) text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
+    if (OrderManager.currentOrderData.totals[250] > 0) text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
+    if (OrderManager.currentOrderData.totals[1000] > 0) text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
     text += `✅ Toplam Koli: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr')}\n`;
     text += `⚖️ Toplam KG: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')} KG`;
 
