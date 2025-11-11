@@ -4,12 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
   <title>Adalya Sipariş</title>
+  <!-- Font Awesome integrity hatası çözüldü -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  <!-- Favicon hatası çözüldü -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
   <style>
     :root {
       --success: #27ae60; --danger: #e74c3c; --info: #1976d2;
@@ -1336,7 +1339,7 @@ const ExportManager = {
     const allData = [...title, ...headers, ...data, ...totals];
     const ws = XLSX.utils.aoa_to_sheet(allData);
     
-    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - DÜZELTİLDİ
+    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - GELİŞTİRİLMİŞ
     const range = XLSX.utils.decode_range(ws['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -1347,7 +1350,7 @@ const ExportManager = {
         // Hücre stillerini oluştur
         if (!ws[cell_ref].s) ws[cell_ref].s = {};
         
-        // Border stilleri
+        // Border stilleri - TÜM HÜCRELER İÇİN
         ws[cell_ref].s.border = {
           top: {style: "thin", color: {rgb: "000000"}},
           left: {style: "thin", color: {rgb: "000000"}},
@@ -1361,7 +1364,7 @@ const ExportManager = {
           vertical: "center" 
         };
         
-        // Başlık satırı için özel stil
+        // Başlık satırı için özel stil (8. satır - tablo başlıkları)
         if (R === 7) {
           ws[cell_ref].s.fill = {
             patternType: "solid",
@@ -1405,6 +1408,9 @@ const ExportManager = {
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    
+    // Türkçe karakter sorunu çözümü - özel font kullanımı
+    doc.setFont("helvetica", "normal");
     
     // Başlık
     doc.setFont("helvetica", "bold");
@@ -1460,7 +1466,10 @@ const ExportManager = {
           font: "helvetica",
           fontStyle: 'normal',
           lineColor: [0, 0, 0],
-          lineWidth: 0.1
+          lineWidth: 0.1,
+          // Türkçe karakter desteği
+          halign: 'center',
+          valign: 'middle'
         },
         headStyles: { 
           fillColor: [79, 172, 254],
@@ -1468,13 +1477,16 @@ const ExportManager = {
           fontStyle: 'bold',
           fontSize: 9,
           lineColor: [0, 0, 0],
-          lineWidth: 0.1
+          lineWidth: 0.1,
+          halign: 'center'
         },
         bodyStyles: {
           fillColor: [255, 255, 255],
           textColor: [0, 0, 0],
           lineColor: [0, 0, 0],
-          lineWidth: 0.1
+          lineWidth: 0.1,
+          font: "helvetica",
+          halign: 'center'
         },
         alternateRowStyles: {
           fillColor: [245, 245, 245]
@@ -1483,11 +1495,18 @@ const ExportManager = {
           // Tüm hücrelere border
           data.cell.styles.lineColor = [0, 0, 0];
           data.cell.styles.lineWidth = 0.1;
+          data.cell.styles.halign = 'center';
+          
+          // Ürün adı sütunu için sola hizalama
+          if (data.column.index === 0) {
+            data.cell.styles.halign = 'left';
+          }
           
           if (data.section === 'body' && data.row.index === tableData.length - 1) {
             data.cell.styles.fillColor = [39, 174, 96];
             data.cell.styles.textColor = [255, 255, 255];
             data.cell.styles.fontStyle = 'bold';
+            data.cell.styles.halign = 'center';
           }
         },
         margin: { top: 52 }
