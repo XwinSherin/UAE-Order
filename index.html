@@ -599,24 +599,38 @@
 
 <h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">Sipariş Oluştur</h1>
 
-<!-- BASİT SEARCH BAR -->
-<div class="search-container">
-  <div class="search-bar">
-    <input type="text" id="product-search" placeholder="Ürün ara..." aria-label="Ürün arama">
-    <i class="fas fa-times search-clear" id="search-clear"></i>
-  </div>
+<!-- MÜŞTERİ ADI -->
+<div class="input-group">
+    <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
+    <input type="text" id="customer-name" required 
+           data-tr="Örn: AHMET YILMAZ" 
+           data-ar="مثال: أحمد يلماز" 
+           data-en="Ex: AHMET YILMAZ"
+           placeholder="Örn: AHMET YILMAZ" aria-required="true">
+    <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
 </div>
 
-<div class="order-info">
-  <div class="input-group">
-    <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
-    <input type="text" id="customer-name" required placeholder="Örn: AHMET YILMAZ" aria-required="true">
-    <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
-  </div>
-  <div class="input-group">
+<!-- SİPARİŞ KODU -->
+<div class="input-group">
     <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
-    <input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
-  </div>
+    <input type="text" id="order-code" 
+           data-tr="Otomatik oluşturulur" 
+           data-ar="يتم إنشاؤه تلقائياً" 
+           data-en="Auto-generated"
+           placeholder="Otomatik oluşturulur" readonly>
+</div>
+
+<!-- ÜRÜN ARAMA -->
+<div class="search-container">
+    <div class="search-bar">
+        <input type="text" id="product-search" 
+               data-tr="Ürün ara..." 
+               data-ar="ابحث عن المنتج..." 
+               data-en="Search product..."
+               placeholder="Ürün ara..." aria-label="Ürün arama">
+        <i class="fas fa-times search-clear" id="search-clear"></i>
+    </div>
+</div>
 
   <!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
   <div class="input-group">
