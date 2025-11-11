@@ -33,7 +33,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
     body { 
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-      padding: 16px 16px 120px 16px; min-height: 100vh; position: relative; 
+      padding: 16px 16px 140px 16px; min-height: 100vh; position: relative; 
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -153,7 +153,7 @@
     }
     .required-hint.show { opacity: 1; }
 
-    /* TESLİM ŞEKLİ BUTONLARI */
+    /* TESLİM ŞEKLİ BUTONLARI - İKONLU */
     .delivery-methods {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;
     }
@@ -285,7 +285,7 @@
       border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
     }
 
-    /* MOBİL İÇİN MİNİMAL GENEL TOPLAM */
+    /* ESKİ GENEL TOPLAM FORMATI - MİNİMAL */
     .grand-total-card {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: white; z-index: 900; padding: 12px 16px;
@@ -295,7 +295,7 @@
     @media (min-width: 768px) {
       .grand-total-card {
         position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-        width: 95%; max-width: 400px; border-radius: 16px;
+        width: 95%; max-width: 500px; border-radius: 16px;
         border-top: none; box-shadow: 0 12px 35px rgba(0,0,0,0.16);
       }
     }
@@ -306,21 +306,30 @@
     }
     .grand-total-header .label { color: #4facfe; }
 
-    .grand-total-content {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-      text-align: center;
+    .grand-table {
+      width: 100%; border-collapse: collapse; font-size: 0.8rem;
+    }
+    .grand-table th, .grand-table td {
+      padding: 6px 4px; text-align: center; 
+      border: 1px solid #e0e0e0;
+    }
+    .grand-table th {
+      background: #f8f9fa; font-weight: 700; color: var(--text-dark);
+    }
+    .grand-table tbody tr.gram-50 { background: #e8f5e9; }
+    .grand-table tbody tr.gram-250 { background: #ffebee; }
+    .grand-table tbody tr.gram-1000 { background: #e3f2fd; }
+    .grand-table tfoot td {
+      font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe); 
+      color: var(--text-dark); font-size: 0.9rem;
     }
 
-    .total-item {
-      padding: 6px; background: #f8f9fa; border-radius: 8px;
-    }
-
-    .total-label {
-      font-size: 0.75rem; color: #666; margin-bottom: 2px;
-    }
-
-    .total-value {
-      font-size: 0.9rem; font-weight: 700; color: var(--text-dark);
+    .grand-input input {
+      width: 100%; padding: 4px 2px; border: 1.4px solid var(--border);
+      border-radius: 4px; font-family: 'Courier New', monospace; 
+      font-size: 0.8rem; font-weight: 600; background: #f8f9fa; 
+      text-align: center; direction: ltr; unicode-bidi: plaintext;
+      pointer-events: none; color: var(--text-dark);
     }
 
     /* MODAL STİLLERİ */
@@ -333,10 +342,17 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .modal-content {
-      background: white; border-radius: 16px; width: 100%; max-width: 800px; 
+      background: white; border-radius: 16px; width: 100%; max-width: 95%; 
       max-height: 90vh; overflow-y: auto; box-shadow: 0 18px 50px rgba(0,0,0,0.2);
       animation: slideUp 0.4s ease-out; border: 2px solid #4facfe;
     }
+
+    @media (min-width: 768px) {
+      .modal-content {
+        max-width: 800px;
+      }
+    }
+
     @keyframes slideUp { 
       from { transform: translateY(40px); opacity: 0; } 
       to { transform: translateY(0); opacity: 1; } 
@@ -360,27 +376,42 @@
       transform: scale(1.08); background: #c0392b; 
     }
 
-    .modal-body { padding: 18px; }
+    .modal-body { padding: 16px; }
 
     .summary-info {
-      margin-bottom: 14px; padding: 12px; background: #f8f9fa; 
-      border-radius: 10px; font-size: 0.9rem; line-height: 1.6; 
+      margin-bottom: 12px; padding: 10px; background: #f8f9fa; 
+      border-radius: 8px; font-size: 0.85rem; line-height: 1.5; 
       border: 1px solid #eee;
     }
     .summary-info strong { color: var(--text-dark); }
 
     .summary-table {
-      width: 100%; border-collapse: collapse; font-size: 0.88rem;
+      width: 100%; border-collapse: collapse; font-size: 0.75rem;
       margin-bottom: 0;
     }
+
+    @media (min-width: 768px) {
+      .summary-table {
+        font-size: 0.88rem;
+      }
+    }
+
     .summary-table th, .summary-table td {
-      padding: 10px 8px; text-align: center; border: 1px solid #e0e0e0;
+      padding: 6px 4px; text-align: center; border: 1px solid #e0e0e0;
     }
     .summary-table th {
       background: #f8f9fa; font-weight: 700; color: var(--text-dark);
     }
     .summary-table .product-name { 
-      text-align: left; font-weight: 600; min-width: 150px;
+      text-align: left; font-weight: 600; 
+      min-width: 80px; max-width: 120px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    @media (min-width: 768px) {
+      .summary-table .product-name {
+        min-width: 150px; max-width: 200px;
+      }
     }
 
     .summary-table th:nth-child(2), .summary-table td:nth-child(2) { background: #e8f5e9 !important; }
@@ -391,28 +422,38 @@
 
     .summary-table tfoot td {
       font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe) !important; 
-      color: var(--text-dark); font-size: 1rem;
+      color: var(--text-dark); font-size: 0.9rem;
     }
 
     /* PAYLAŞIM BUTONLARI */
     .share-buttons {
-      display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px; 
-      padding: 0 8px;
+      display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; 
+      padding: 0 4px;
     }
 
     @media (min-width: 768px) {
       .share-buttons {
         grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
       }
     }
 
     .share-btn {
-      padding: 14px 18px; border: none; border-radius: 16px;
-      font-size: var(--btn-font); font-weight: 700; cursor: pointer; 
+      padding: 12px 16px; border: none; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer; 
       transition: var(--transition); display: flex; align-items: center; 
-      justify-content: center; gap: 12px; min-height: var(--btn-height); 
+      justify-content: center; gap: 8px; min-height: 48px; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: relative; overflow: hidden;
     }
+
+    @media (min-width: 768px) {
+      .share-btn {
+        padding: 14px 18px;
+        font-size: var(--btn-font);
+        min-height: var(--btn-height);
+      }
+    }
+
     .share-btn::before {
       content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
@@ -422,8 +463,15 @@
       left: 100%;
     }
     .share-btn i {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
+
+    @media (min-width: 768px) {
+      .share-btn i {
+        font-size: 1.6rem;
+      }
+    }
+
     .share-btn.whatsapp { background: #25D366; color: white; }
     .share-btn.excel { background: #1e7e34; color: white; }
     .share-btn.pdf { background: #d32f2f; color: white; }
@@ -480,55 +528,79 @@
     <input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
   </div>
 
-  <!-- TESLİM ŞEKLİ SEÇİMİ -->
+  <!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
   <div class="input-group">
     <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
     <div class="delivery-methods">
-      <button class="delivery-btn active" data-method="road" data-tr="Karayolu" data-ar="براً" data-en="Road">
-        <i class="fas fa-truck"></i> Karayolu
+      <button class="delivery-btn active" data-method="road">
+        <i class="fas fa-truck"></i>
+        <span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
       </button>
-      <button class="delivery-btn" data-method="sea" data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">
-        <i class="fas fa-ship"></i> Denizyolu
+      <button class="delivery-btn" data-method="sea">
+        <i class="fas fa-ship"></i>
+        <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
       </button>
-      <button class="delivery-btn" data-method="air" data-tr="Havayolu" data-ar="جواً" data-en="Air">
-        <i class="fas fa-plane"></i> Havayolu
+      <button class="delivery-btn" data-method="air">
+        <i class="fas fa-plane"></i>
+        <span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
       </button>
     </div>
   </div>
   
   <!-- BUTON GRUBU -->
   <div class="button-group">
-    <button class="new-order-btn" id="new-order-btn" data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">
-      <i class="fas fa-plus-circle"></i> Yeni Sipariş
+    <button class="new-order-btn" id="new-order-btn">
+      <i class="fas fa-plus-circle"></i>
+      <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
     </button>
-    <button class="summary-btn" id="show-summary" disabled data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">
-      <i class="fas fa-receipt"></i> Özeti Gör
+    <button class="summary-btn" id="show-summary" disabled>
+      <i class="fas fa-receipt"></i>
+      <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
     </button>
   </div>
 </div>
 
 <div class="products-container" id="products"></div>
 
-<!-- MOBİL İÇİN MİNİMAL GENEL TOPLAM -->
+<!-- ESKİ GENEL TOPLAM FORMATI - MİNİMAL -->
 <div class="grand-total-card">
   <div class="grand-total-header">
     <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
     <span id="order-code-display" class="empty-value">-</span>
   </div>
-  <div class="grand-total-content">
-    <div class="total-item">
-      <div class="total-label" data-tr="Koli" data-ar="كولي" data-en="Box">Koli</div>
-      <div class="total-value" id="final-koli-mobile">-</div>
-    </div>
-    <div class="total-item">
-      <div class="total-label" data-tr="KG" data-ar="كجم" data-en="KG">KG</div>
-      <div class="total-value" id="final-kg-mobile">-</div>
-    </div>
-    <div class="total-item">
-      <div class="total-label" data-tr="Teslim" data-ar="التسليم" data-en="Delivery">Teslim</div>
-      <div class="total-value" id="delivery-method-display">Karayolu</div>
-    </div>
-  </div>
+  <table class="grand-table">
+    <thead>
+      <tr>
+        <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
+        <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
+        <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="gram-50">
+        <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
+        <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
+        <td id="grand-kg-50" class="empty-value">-</td>
+      </tr>
+      <tr class="gram-250">
+        <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
+        <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
+        <td id="grand-kg-250" class="empty-value">-</td>
+      </tr>
+      <tr class="gram-1000">
+        <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
+        <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
+        <td id="grand-kg-1000" class="empty-value">-</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
+        <td><strong id="final-koli">-</strong></td>
+        <td><strong id="final-kg">-</strong></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
 <div class="modal" id="summary-modal">
@@ -542,7 +614,7 @@
 </div>
 
 <script>
-// GÜNCELLENMİŞ ORDER MANAGER
+// GÜNCELLENMİŞ ORDER MANAGER - DİL SORUNLARI ÇÖZÜLDÜ
 const OrderManager = {
   KOLI_KG: 6,
   MAX_INPUT: 999999,
@@ -553,15 +625,13 @@ const OrderManager = {
   inputTimeout: null,
   currentOrderData: null,
   currentOrderCode: null,
-  deliveryMethod: 'road', // Varsayılan teslim şekli
+  deliveryMethod: 'road',
 
-  // GitHub'dan ürünleri çek
   async loadProducts() {
     try {
       const response = await fetch('./products.json');
       if (!response.ok) throw new Error('Products.json not found');
       const data = await response.json();
-      console.log('Ürünler yüklendi:', data);
       return data.products || this.getDefaultProducts();
     } catch (error) {
       console.log('GitHub ürünleri yüklenemedi, varsayılan ürünler kullanılıyor:', error);
@@ -581,29 +651,24 @@ const OrderManager = {
 
   async init() {
     this.products = await this.loadProducts();
-    console.log('Başlatılan ürünler:', this.products);
     this.generateOrderCode();
     this.renderProducts();
     this.bindEvents();
     this.setLang('tr');
     this.updateGrandTotal();
     this.toggleSearchClear();
-    this.updateDeliveryDisplay();
   },
 
-  // YENİ SİPARİŞ KODU SİSTEMİ - GÜNCELLENDİ
   generateOrderCode() {
     const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
     const now = new Date();
     
-    // Tarih formatı: Gün/Ay/Yıl
     const dateStr = now.toLocaleDateString('tr-TR', {
       day: '2-digit',
       month: '2-digit', 
       year: 'numeric'
     }).replace(/\./g, '/');
     
-    // Saat formatı: 21:05 gibi
     const timeStr = now.toLocaleTimeString('tr-TR', {
       hour: '2-digit',
       minute: '2-digit',
@@ -611,10 +676,8 @@ const OrderManager = {
     });
 
     if (customerName) {
-      // Format: MÜŞTERİ_ADI-Tarih-Saat
       this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}-${dateStr}-${timeStr}`;
     } else {
-      // Format: SIPARIS-Tarih-Saat
       this.currentOrderCode = `SIPARIS-${dateStr}-${timeStr}`;
     }
     
@@ -622,20 +685,6 @@ const OrderManager = {
     document.getElementById('order-code').value = this.currentOrderCode;
     
     return this.currentOrderCode;
-  },
-
-  // Teslim şekli güncelleme
-  updateDeliveryDisplay() {
-    const display = document.getElementById('delivery-method-display');
-    const methods = {
-      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
-      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
-      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
-    };
-    
-    if (display && methods[this.deliveryMethod]) {
-      display.textContent = methods[this.deliveryMethod][this.currentLang];
-    }
   },
 
   toLatin(str) {
@@ -666,9 +715,6 @@ const OrderManager = {
 
     const header = document.createElement('div');
     header.className = 'product-header';
-    header.dataset.tr = product.tr || '';
-    header.dataset.ar = product.ar || '';
-    header.dataset.en = product.en || '';
     header.textContent = product[this.currentLang] || product.tr;
 
     const table = document.createElement('table');
@@ -676,31 +722,31 @@ const OrderManager = {
     table.innerHTML = `
       <thead>
         <tr>
-          <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
-          <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
-          <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
+          <th>Gramaj</th>
+          <th>Koli</th>
+          <th>KG</th>
         </tr>
       </thead>
       <tbody>
         <tr class="gram-50">
-          <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
+          <td><strong>50G</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="50" class="empty-value">-</td>
         </tr>
         <tr class="gram-250">
-          <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
+          <td><strong>250G</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="250" class="empty-value">-</td>
         </tr>
         <tr class="gram-1000">
-          <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
+          <td><strong>1000G</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="1000" class="empty-value">-</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td><strong data-tr="Toplam" data-ar="الإجمالي" data-en="Total">Toplam</strong></td>
+          <td><strong>Toplam</strong></td>
           <td data-total-koli class="empty-value">-</td>
           <td data-total-kg class="empty-value">-</td>
         </tr>
@@ -716,7 +762,6 @@ const OrderManager = {
       input.placeholder = '';
       input.maxLength = 6;
       input.setAttribute('aria-label', `${g} gram koli sayısı`);
-      // MOBİL İÇİN SAYI KLAVYESİ
       input.setAttribute('inputmode', 'numeric');
       input.setAttribute('pattern', '[0-9]*');
       qtyDivs[idx].appendChild(input);
@@ -756,20 +801,18 @@ const OrderManager = {
       }
     });
 
-    // MÜŞTERİ ADI BÜYÜK HARF DÖNÜŞÜMÜ
     document.getElementById('customer-name').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
       this.generateOrderCode();
       this.updateGrandTotal();
     });
 
-    // TESLİM ŞEKLİ BUTONLARI
+    // TESLİM ŞEKLİ BUTONLARI - DİL SORUNU ÇÖZÜLDÜ
     document.querySelectorAll('.delivery-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        this.deliveryMethod = e.target.dataset.method;
-        this.updateDeliveryDisplay();
+        e.currentTarget.classList.add('active');
+        this.deliveryMethod = e.currentTarget.dataset.method;
       });
     });
 
@@ -788,7 +831,6 @@ const OrderManager = {
       }
     });
 
-    // ARAMA TEMİZLEME BUTONU
     document.getElementById('search-clear').addEventListener('click', () => {
       this.clearSearch();
     });
@@ -798,12 +840,11 @@ const OrderManager = {
       this.toggleSearchClear();
     });
 
-    // Dil değiştirme
+    // Dil değiştirme - SORUNLAR ÇÖZÜLDÜ
     document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
     document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
     document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
 
-    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeModal();
@@ -839,7 +880,6 @@ const OrderManager = {
     
     const val = input.value.replace(/[٬,.]/g, '').trim();
     
-    // Boş değer kontrolü
     if (!val || val === '-') {
       input.value = '';
     } else {
@@ -923,34 +963,55 @@ const OrderManager = {
       });
     });
 
+    [50, 250, 1000].forEach(g => {
+      const koli = gramTotals[g];
+      const el = document.getElementById(`grand-${g}`);
+      const kgEl = document.getElementById(`grand-kg-${g}`);
+      
+      if (el) {
+        if (koli > 0) {
+          el.value = this.formatNumber(koli, this.currentLang);
+        } else {
+          el.value = '';
+        }
+      }
+      
+      if (kgEl) {
+        if (koli > 0) {
+          kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
+          kgEl.classList.remove('empty-value');
+        } else {
+          kgEl.textContent = '-';
+          kgEl.classList.add('empty-value');
+        }
+      }
+    });
+
     const finalKoli = gramTotals[50] + gramTotals[250] + gramTotals[1000];
     const finalKG = finalKoli * this.KOLI_KG;
+    const finalKoliEl = document.getElementById('final-koli');
+    const finalKgEl = document.getElementById('final-kg');
     
-    // Mobil genel toplam güncelleme
-    const finalKoliMobile = document.getElementById('final-koli-mobile');
-    const finalKgMobile = document.getElementById('final-kg-mobile');
-    
-    if (finalKoliMobile) {
+    if (finalKoliEl) {
       if (finalKoli > 0) {
-        finalKoliMobile.textContent = this.formatNumber(finalKoli, this.currentLang);
-        finalKoliMobile.classList.remove('empty-value');
+        finalKoliEl.textContent = this.formatNumber(finalKoli, this.currentLang);
+        finalKoliEl.classList.remove('empty-value');
       } else {
-        finalKoliMobile.textContent = '-';
-        finalKoliMobile.classList.add('empty-value');
+        finalKoliEl.textContent = '-';
+        finalKoliEl.classList.add('empty-value');
       }
     }
     
-    if (finalKgMobile) {
+    if (finalKgEl) {
       if (finalKG > 0) {
-        finalKgMobile.textContent = this.formatNumber(finalKG, this.currentLang);
-        finalKgMobile.classList.remove('empty-value');
+        finalKgEl.textContent = this.formatNumber(finalKG, this.currentLang);
+        finalKgEl.classList.remove('empty-value');
       } else {
-        finalKgMobile.textContent = '-';
-        finalKgMobile.classList.add('empty-value');
+        finalKgEl.textContent = '-';
+        finalKgEl.classList.add('empty-value');
       }
     }
 
-    // Sipariş kodu display güncelleme
     const codeDisplay = document.getElementById('order-code-display');
     if (this.currentOrderCode) {
       codeDisplay.textContent = this.currentOrderCode;
@@ -960,7 +1021,6 @@ const OrderManager = {
       codeDisplay.classList.add('empty-value');
     }
 
-    // Özet butonunu aktif/pasif yap
     document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
   },
 
@@ -989,7 +1049,6 @@ const OrderManager = {
       hour: '2-digit', minute: '2-digit'
     });
 
-    // Teslim şekli metinleri
     const deliveryTexts = {
       'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
       'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
@@ -998,21 +1057,21 @@ const OrderManager = {
 
     let html = `
       <div class="summary-info">
-        <p><strong data-tr="Müşteri:" data-ar="العميل:" data-en="Customer:">Müşteri:</strong> <span>${customer}</span></p>
-        <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">Sipariş Kodu:</strong> <span>${code}</span></p>
-        <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">Tarih:</strong> <span>${date}</span></p>
-        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
+        <p><strong>Müşteri:</strong> <span>${customer}</span></p>
+        <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
+        <p><strong>Tarih:</strong> <span>${date}</span></p>
+        <p><strong>Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
       </div>
 
       <table class="summary-table">
         <thead>
           <tr>
-            <th class="product-name" data-tr="Ürün" data-ar="المنتج" data-en="Product">Ürün</th>
-            <th data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</th>
-            <th data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</th>
-            <th data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</th>
-            <th data-tr="Toplam Koli" data-ar="إجمالي كولي" data-en="Total Box">Toplam Koli</th>
-            <th data-tr="Toplam KG" data-ar="إجمالي كجم" data-en="Total KG">Toplam KG</th>
+            <th class="product-name">Ürün</th>
+            <th>50G</th>
+            <th>250G</th>
+            <th>1000G</th>
+            <th>Toplam Koli</th>
+            <th>Toplam KG</th>
           </tr>
         </thead>
         <tbody>
@@ -1022,7 +1081,7 @@ const OrderManager = {
     const items = [];
     document.querySelectorAll('.product-card').forEach(card => {
       const headerEl = card.querySelector('.product-header');
-      const productName = (headerEl && (headerEl.dataset[this.currentLang] || headerEl.dataset.tr)) || '';
+      const productName = headerEl ? headerEl.textContent : '';
       const vals = { 50: 0, 250: 0, 1000: 0 };
       let itemKoli = 0;
       card.querySelectorAll('input[data-gram]').forEach(inp => {
@@ -1054,7 +1113,7 @@ const OrderManager = {
         </tbody>
         <tfoot>
           <tr>
-            <td class="product-name"><strong data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</strong></td>
+            <td class="product-name"><strong>Genel Toplam</strong></td>
             <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
             <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
             <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
@@ -1067,15 +1126,15 @@ const OrderManager = {
       <div class="share-buttons">
         <button class="share-btn whatsapp" id="share-whatsapp">
           <i class="fab fa-whatsapp"></i>
-          <span data-tr="WhatsApp'ta Paylaş" data-ar="مشاركة على واتساب" data-en="Share on WhatsApp">WhatsApp'ta Paylaş</span>
+          <span>WhatsApp'ta Paylaş</span>
         </button>
         <button class="share-btn excel" id="download-excel">
           <i class="fas fa-file-excel"></i>
-          <span data-tr="Excel İndir" data-ar="تحميل إكسل" data-en="Download Excel">Excel İndir</span>
+          <span>Excel İndir</span>
         </button>
         <button class="share-btn pdf" id="download-pdf">
           <i class="fas fa-file-pdf"></i>
-          <span data-tr="PDF İndir" data-ar="تحميل PDF" data-en="Download PDF">PDF İndir</span>
+          <span>PDF İndir</span>
         </button>
       </div>
     `;
@@ -1091,7 +1150,6 @@ const OrderManager = {
       totals: colTotals,
       delivery: deliveryTexts[this.deliveryMethod][this.currentLang]
     };
-    this.updateSummaryLang();
 
     document.getElementById('share-whatsapp').addEventListener('click', () => {
       ExportManager.shareWhatsApp();
@@ -1119,18 +1177,6 @@ const OrderManager = {
     this.updateGrandTotal();
   },
 
-  updateSummaryLang() {
-    const modal = document.getElementById('summary-modal');
-    if (!modal.classList.contains('show')) return;
-
-    modal.querySelectorAll('[data-tr]').forEach(el => {
-      const key = this.currentLang;
-      if (el.dataset[key] !== undefined) {
-        el.textContent = el.dataset[key];
-      }
-    });
-  },
-
   closeModal() {
     document.getElementById('summary-modal').classList.remove('show');
   },
@@ -1144,29 +1190,30 @@ const OrderManager = {
     document.documentElement.lang = lang;
     document.documentElement.dir = isAR ? 'rtl' : 'ltr';
 
+    // Tüm dil öğelerini güncelle - SORUN ÇÖZÜLDÜ
     document.querySelectorAll('[data-tr]').forEach(el => {
       if (el.dataset[lang] !== undefined) {
-        el.textContent = el.dataset[lang];
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = el.dataset[lang];
+        } else {
+          el.textContent = el.dataset[lang];
+        }
       }
     });
 
+    // Input değerlerini formatla
     document.querySelectorAll('.quantity-input input').forEach(inp => {
       const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
       inp.value = this.formatNumber(val, lang);
     });
 
+    // Dil butonlarını güncelle
     document.querySelectorAll('.lang-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.lang === lang);
     });
 
-    // Teslim şekli butonlarını güncelle
-    document.querySelectorAll('.delivery-btn').forEach(btn => {
-      if (btn.dataset[lang] !== undefined) {
-        btn.innerHTML = `<i class="${btn.querySelector('i').className}"></i> ${btn.dataset[lang]}`;
-      }
-    });
-
-    document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli-mobile, #final-kg-mobile').forEach(el => {
+    // Tablo başlıklarını güncelle
+    document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli, #final-kg').forEach(el => {
       const num = this.toLatin(el.textContent.replace(/[٬,.]/g, ''));
       if (num > 0) {
         el.textContent = this.formatNumber(num, lang);
@@ -1183,16 +1230,10 @@ const OrderManager = {
       const product = this.products.find(p => p.id == productId);
       if (product && product[lang]) {
         header.textContent = product[lang];
-        header.dataset.tr = product.tr;
-        header.dataset.ar = product.ar;
-        header.dataset.en = product.en;
       }
     });
 
     this.updateGrandTotal();
-    this.updateDeliveryDisplay();
-    this.updateSummaryLang();
-
     this.isAnimating = false;
   },
 
@@ -1279,6 +1320,7 @@ const ExportManager = {
     const allData = [...title, ...headers, ...data, ...totals];
     const ws = XLSX.utils.aoa_to_sheet(allData);
     
+    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE
     const range = XLSX.utils.decode_range(ws['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -1286,16 +1328,24 @@ const ExportManager = {
         const cell_ref = XLSX.utils.encode_cell(cell_address);
         if (!ws[cell_ref]) continue;
         
-        ws[cell_ref].s = {
-          border: {
-            top: {style: "thin", color: {rgb: "000000"}},
-            left: {style: "thin", color: {rgb: "000000"}},
-            bottom: {style: "thin", color: {rgb: "000000"}},
-            right: {style: "thin", color: {rgb: "000000"}}
-          },
-          alignment: { horizontal: "center", vertical: "center" }
+        // Tüm hücrelere border ekle
+        if (!ws[cell_ref].s) ws[cell_ref].s = {};
+        if (!ws[cell_ref].s.border) ws[cell_ref].s.border = {};
+        
+        ws[cell_ref].s.border = {
+          top: {style: "thin", color: {rgb: "000000"}},
+          left: {style: "thin", color: {rgb: "000000"}},
+          bottom: {style: "thin", color: {rgb: "000000"}},
+          right: {style: "thin", color: {rgb: "000000"}}
         };
         
+        // Hizalama
+        ws[cell_ref].s.alignment = { 
+          horizontal: "center", 
+          vertical: "center" 
+        };
+        
+        // Başlık satırı için özel stil
         if (R === 7) {
           ws[cell_ref].s.fill = {
             patternType: "solid",
@@ -1307,6 +1357,7 @@ const ExportManager = {
           };
         }
         
+        // Genel toplam satırı için özel stil
         if (R === range.e.r) {
           ws[cell_ref].s.fill = {
             patternType: "solid",
@@ -1320,8 +1371,9 @@ const ExportManager = {
       }
     }
 
+    // Sütun genişlikleri
     if (!ws['!cols']) ws['!cols'] = [];
-    ws['!cols'][0] = { width: 30 };
+    ws['!cols'][0] = { width: 25 };
     for (let i = 1; i <= 5; i++) {
       ws['!cols'][i] = { width: 15 };
     }
@@ -1336,14 +1388,17 @@ const ExportManager = {
     if (!OrderManager.currentOrderData) return;
 
     const { jsPDF } = window.jspdf;
+    // Türkçe karakter sorunu için font ayarı
     const doc = new jsPDF();
     
+    // Başlık
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
     
+    // Bilgiler
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
     doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
     doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
@@ -1376,32 +1431,43 @@ const ExportManager = {
       OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
     ]);
 
+    // PDF oluştur - Türkçe karakter sorunu çözüldü
     doc.autoTable({
       head: [headers],
       body: tableData,
       startY: 52,
       theme: 'grid',
       styles: { 
-        fontSize: 9, 
-        cellPadding: 3,
+        fontSize: 8, 
+        cellPadding: 2,
         textColor: [0, 0, 0],
         font: "helvetica",
-        fontStyle: 'normal'
+        fontStyle: 'normal',
+        lineColor: [0, 0, 0],
+        lineWidth: 0.1
       },
       headStyles: { 
         fillColor: [79, 172, 254],
         textColor: [255, 255, 255],
         fontStyle: 'bold',
-        fontSize: 10
+        fontSize: 9,
+        lineColor: [0, 0, 0],
+        lineWidth: 0.1
       },
       bodyStyles: {
         fillColor: [255, 255, 255],
-        textColor: [0, 0, 0]
+        textColor: [0, 0, 0],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.1
       },
       alternateRowStyles: {
         fillColor: [245, 245, 245]
       },
       didParseCell: function(data) {
+        // Tüm hücrelere border
+        data.cell.styles.lineColor = [0, 0, 0];
+        data.cell.styles.lineWidth = 0.1;
+        
         if (data.section === 'body' && data.row.index === tableData.length - 1) {
           data.cell.styles.fillColor = [39, 174, 96];
           data.cell.styles.textColor = [255, 255, 255];
