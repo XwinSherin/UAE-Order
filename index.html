@@ -240,11 +240,12 @@ transform: translateY(-5px); box-shadow: var(--card-hover);
 
 /* ÜRÜN RESİMLERİ İÇİN OPTİMİZE BOYUT */
 .product-img { 
-width: 100%; 
-height: 140px; 
-object-fit: contain; /* Resmin tamamını göster, bozulma olmadan */
-background: #f8f9fa; /* Boş alanlar için arkaplan */
-padding: 8px; /* Resme biraz boşluk */
+  width: 100%; 
+  height: 140px; 
+  object-fit: cover; /* Değişti: contain -> cover */
+  background: white; /* Beyaz arkaplan */
+  padding: 0; /* Değişti: 8px -> 0 */
+  display: block;
 }
 
 .product-header {
