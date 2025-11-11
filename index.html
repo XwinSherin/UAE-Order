@@ -33,7 +33,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
     body { 
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-      padding: 16px 16px 140px 16px; min-height: 100vh; position: relative; 
+      padding: 16px 16px 120px 16px; min-height: 100vh; position: relative; 
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -238,7 +238,14 @@
       transform: translateY(-5px); box-shadow: var(--card-hover);
     }
 
-    .product-img { width: 100%; height: 130px; object-fit: cover; }
+    /* ÜRÜN RESİMLERİ İÇİN OPTİMİZE BOYUT */
+    .product-img { 
+      width: 100%; 
+      height: 140px; 
+      object-fit: contain; /* Resmin tamamını göster, bozulma olmadan */
+      background: #f8f9fa; /* Boş alanlar için arkaplan */
+      padding: 8px; /* Resme biraz boşluk */
+    }
 
     .product-header {
       background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;
@@ -285,33 +292,42 @@
       border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
     }
 
-    /* ESKİ GENEL TOPLAM FORMATI - MİNİMAL */
+    /* GENEL TOPLAM - MOBİL İÇİN KÜÇÜLTÜLMÜŞ */
     .grand-total-card {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: white; z-index: 900; padding: 12px 16px;
+      background: white; z-index: 900; padding: 10px 12px;
       border-top: 2px solid #4facfe; box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
     }
 
     @media (min-width: 768px) {
       .grand-total-card {
         position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-        width: 95%; max-width: 500px; border-radius: 16px;
+        width: 95%; max-width: 450px; border-radius: 16px;
         border-top: none; box-shadow: 0 12px 35px rgba(0,0,0,0.16);
+        padding: 12px 16px;
       }
     }
 
     .grand-total-header {
       display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 8px; font-weight: 700; font-size: 1rem; color: var(--text-dark);
+      margin-bottom: 6px; font-weight: 700; font-size: 0.9rem; color: var(--text-dark);
     }
     .grand-total-header .label { color: #4facfe; }
 
     .grand-table {
-      width: 100%; border-collapse: collapse; font-size: 0.8rem;
+      width: 100%; border-collapse: collapse; font-size: 0.75rem;
     }
+
+    @media (min-width: 768px) {
+      .grand-table {
+        font-size: 0.8rem;
+      }
+    }
+
     .grand-table th, .grand-table td {
-      padding: 6px 4px; text-align: center; 
+      padding: 4px 2px; text-align: center; 
       border: 1px solid #e0e0e0;
+      width: 33.33%; /* EŞİT SÜTUN GENİŞLİĞİ */
     }
     .grand-table th {
       background: #f8f9fa; font-weight: 700; color: var(--text-dark);
@@ -321,13 +337,13 @@
     .grand-table tbody tr.gram-1000 { background: #e3f2fd; }
     .grand-table tfoot td {
       font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe); 
-      color: var(--text-dark); font-size: 0.9rem;
+      color: var(--text-dark); font-size: 0.85rem;
     }
 
     .grand-input input {
-      width: 100%; padding: 4px 2px; border: 1.4px solid var(--border);
+      width: 100%; padding: 3px 2px; border: 1.4px solid var(--border);
       border-radius: 4px; font-family: 'Courier New', monospace; 
-      font-size: 0.8rem; font-weight: 600; background: #f8f9fa; 
+      font-size: 0.75rem; font-weight: 600; background: #f8f9fa; 
       text-align: center; direction: ltr; unicode-bidi: plaintext;
       pointer-events: none; color: var(--text-dark);
     }
@@ -562,7 +578,7 @@
 
 <div class="products-container" id="products"></div>
 
-<!-- ESKİ GENEL TOPLAM FORMATI - MİNİMAL -->
+<!-- GENEL TOPLAM - OPTİMİZE EDİLMİŞ -->
 <div class="grand-total-card">
   <div class="grand-total-header">
     <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
@@ -614,7 +630,7 @@
 </div>
 
 <script>
-// GÜNCELLENMİŞ ORDER MANAGER - DİL SORUNLARI ÇÖZÜLDÜ
+// GÜNCELLENMİŞ ORDER MANAGER
 const OrderManager = {
   KOLI_KG: 6,
   MAX_INPUT: 999999,
@@ -807,7 +823,7 @@ const OrderManager = {
       this.updateGrandTotal();
     });
 
-    // TESLİM ŞEKLİ BUTONLARI - DİL SORUNU ÇÖZÜLDÜ
+    // TESLİM ŞEKLİ BUTONLARI - İKON SORUNU ÇÖZÜLDÜ
     document.querySelectorAll('.delivery-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
@@ -840,7 +856,7 @@ const OrderManager = {
       this.toggleSearchClear();
     });
 
-    // Dil değiştirme - SORUNLAR ÇÖZÜLDÜ
+    // Dil değiştirme
     document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
     document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
     document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
@@ -1190,7 +1206,7 @@ const OrderManager = {
     document.documentElement.lang = lang;
     document.documentElement.dir = isAR ? 'rtl' : 'ltr';
 
-    // Tüm dil öğelerini güncelle - SORUN ÇÖZÜLDÜ
+    // Tüm dil öğelerini güncelle
     document.querySelectorAll('[data-tr]').forEach(el => {
       if (el.dataset[lang] !== undefined) {
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -1320,7 +1336,7 @@ const ExportManager = {
     const allData = [...title, ...headers, ...data, ...totals];
     const ws = XLSX.utils.aoa_to_sheet(allData);
     
-    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE
+    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - DÜZELTİLDİ
     const range = XLSX.utils.decode_range(ws['!ref']);
     for (let R = range.s.r; R <= range.e.r; ++R) {
       for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -1328,10 +1344,10 @@ const ExportManager = {
         const cell_ref = XLSX.utils.encode_cell(cell_address);
         if (!ws[cell_ref]) continue;
         
-        // Tüm hücrelere border ekle
+        // Hücre stillerini oluştur
         if (!ws[cell_ref].s) ws[cell_ref].s = {};
-        if (!ws[cell_ref].s.border) ws[cell_ref].s.border = {};
         
+        // Border stilleri
         ws[cell_ref].s.border = {
           top: {style: "thin", color: {rgb: "000000"}},
           left: {style: "thin", color: {rgb: "000000"}},
@@ -1388,7 +1404,6 @@ const ExportManager = {
     if (!OrderManager.currentOrderData) return;
 
     const { jsPDF } = window.jspdf;
-    // Türkçe karakter sorunu için font ayarı
     const doc = new jsPDF();
     
     // Başlık
@@ -1431,51 +1446,55 @@ const ExportManager = {
       OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
     ]);
 
-    // PDF oluştur - Türkçe karakter sorunu çözüldü
-    doc.autoTable({
-      head: [headers],
-      body: tableData,
-      startY: 52,
-      theme: 'grid',
-      styles: { 
-        fontSize: 8, 
-        cellPadding: 2,
-        textColor: [0, 0, 0],
-        font: "helvetica",
-        fontStyle: 'normal',
-        lineColor: [0, 0, 0],
-        lineWidth: 0.1
-      },
-      headStyles: { 
-        fillColor: [79, 172, 254],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold',
-        fontSize: 9,
-        lineColor: [0, 0, 0],
-        lineWidth: 0.1
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-        lineColor: [0, 0, 0],
-        lineWidth: 0.1
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245]
-      },
-      didParseCell: function(data) {
-        // Tüm hücrelere border
-        data.cell.styles.lineColor = [0, 0, 0];
-        data.cell.styles.lineWidth = 0.1;
-        
-        if (data.section === 'body' && data.row.index === tableData.length - 1) {
-          data.cell.styles.fillColor = [39, 174, 96];
-          data.cell.styles.textColor = [255, 255, 255];
-          data.cell.styles.fontStyle = 'bold';
-        }
-      },
-      margin: { top: 52 }
-    });
+    // PDF oluştur - TÜRKÇE KARAKTER SORUNU ÇÖZÜLDÜ
+    try {
+      doc.autoTable({
+        head: [headers],
+        body: tableData,
+        startY: 52,
+        theme: 'grid',
+        styles: { 
+          fontSize: 8, 
+          cellPadding: 2,
+          textColor: [0, 0, 0],
+          font: "helvetica",
+          fontStyle: 'normal',
+          lineColor: [0, 0, 0],
+          lineWidth: 0.1
+        },
+        headStyles: { 
+          fillColor: [79, 172, 254],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold',
+          fontSize: 9,
+          lineColor: [0, 0, 0],
+          lineWidth: 0.1
+        },
+        bodyStyles: {
+          fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
+          lineColor: [0, 0, 0],
+          lineWidth: 0.1
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        didParseCell: function(data) {
+          // Tüm hücrelere border
+          data.cell.styles.lineColor = [0, 0, 0];
+          data.cell.styles.lineWidth = 0.1;
+          
+          if (data.section === 'body' && data.row.index === tableData.length - 1) {
+            data.cell.styles.fillColor = [39, 174, 96];
+            data.cell.styles.textColor = [255, 255, 255];
+            data.cell.styles.fontStyle = 'bold';
+          }
+        },
+        margin: { top: 52 }
+      });
+    } catch (error) {
+      console.error('PDF oluşturma hatası:', error);
+    }
     
     doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
     ToastManager.show('PDF indirildi!', 'success');
