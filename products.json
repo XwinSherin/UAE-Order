@@ -1,11 +1,10 @@
-{
   "products": [
     {
       "id": 1,
-    "tr": "Angel Lips",
-    "en": "Angel Lips",
-    "ar": "آنجل ليبس",
-    "img": "images/1.png",
+      "tr": "Angel Lips",
+      "ar": "آنجل ليبس", 
+      "en": "Angel Lips",
+      "img": "images/1.png"
     },
    {
     "id": 2,
