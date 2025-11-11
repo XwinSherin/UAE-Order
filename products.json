@@ -2,6 +2,13 @@
   "products": [
         {
       "id": 6,
+      "tr": "Lemon Mint",
+      "en": "Lemon Mint",
+      "ar": "ليمون ونعناع",
+      "img": "images/9.png"
+    },
+    {
+      "id": 6,
       "tr": "Love",
       "en": "Love",
       "ar": "لوف 66",
