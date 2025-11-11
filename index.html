@@ -33,7 +33,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
     body { 
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-      padding: 16px 16px 200px 16px; min-height: 100vh; position: relative; 
+      padding: 16px 16px 120px 16px; min-height: 100vh; position: relative; 
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -118,22 +118,6 @@
     .search-clear:hover { opacity: 1; color: var(--danger); }
     .search-clear.show { display: block; }
 
-    .bulk-actions {
-      max-width: 800px; margin: 0 auto 20px; display: none;
-      gap: 12px; flex-wrap: wrap; justify-content: center;
-    }
-    .bulk-actions.show { display: flex; }
-    .bulk-btn {
-      padding: 10px 16px; border: 2px solid var(--primary); background: white;
-      color: var(--primary); border-radius: 8px; font-weight: 600;
-      cursor: pointer; transition: var(--transition); display: flex;
-      align-items: center; gap: 6px; font-size: 0.9rem;
-    }
-    .bulk-btn:hover {
-      background: var(--primary); color: white;
-      transform: translateY(-2px);
-    }
-
     .order-info {
       max-width: 800px; margin: 0 auto 24px; display: grid; gap: 14px;
       grid-template-columns: 1fr;
@@ -168,6 +152,26 @@
       opacity: 0; transition: opacity 0.3s;
     }
     .required-hint.show { opacity: 1; }
+
+    /* TESLİM ŞEKLİ BUTONLARI */
+    .delivery-methods {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;
+    }
+
+    .delivery-btn {
+      padding: 12px 8px; border: 2px solid var(--border); background: white;
+      border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      transition: var(--transition); text-align: center; display: flex;
+      align-items: center; justify-content: center; gap: 6px;
+    }
+
+    .delivery-btn.active {
+      border-color: var(--primary); background: var(--primary); color: white;
+    }
+
+    .delivery-btn i {
+      font-size: 1.1rem;
+    }
 
     /* BUTON GRUBU */
     .button-group {
@@ -233,9 +237,6 @@
     .product-card:hover {
       transform: translateY(-5px); box-shadow: var(--card-hover);
     }
-    .product-card.selected {
-      border-color: var(--primary); background: rgba(79, 172, 254, 0.05);
-    }
 
     .product-img { width: 100%; height: 130px; object-fit: cover; }
 
@@ -245,7 +246,7 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* TABLO STİLLERİ */
+    /* TABLO STİLLERİ - MOBİL UYUMLU */
     .product-table {
       width: 100%; border-collapse: collapse; font-size: 0.85rem;
     }
@@ -273,6 +274,9 @@
       font-size: var(--input-font); font-weight: 600; background: white; 
       text-align: center; direction: ltr; unicode-bidi: plaintext;
       transition: var(--transition);
+      /* MOBİL İÇİN SAYI KLAVYESİ */
+      inputmode: numeric;
+      pattern: "[0-9]*"
     }
     .quantity-input input:focus { 
       border-color: var(--primary); outline: none; 
@@ -281,51 +285,42 @@
       border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
     }
 
-    /* GENEL TOPLAM KARTI */
+    /* MOBİL İÇİN MİNİMAL GENEL TOPLAM */
     .grand-total-card {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: 95%; max-width: 560px; background: white; border-radius: 16px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.16); z-index: 900; padding: 16px;
-      border: 2px solid #4facfe;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: white; z-index: 900; padding: 12px 16px;
+      border-top: 2px solid #4facfe; box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
     }
 
-    @media (max-width: 768px) {
+    @media (min-width: 768px) {
       .grand-total-card {
-        width: 95%;
-        padding: 12px;
+        position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+        width: 95%; max-width: 400px; border-radius: 16px;
+        border-top: none; box-shadow: 0 12px 35px rgba(0,0,0,0.16);
       }
     }
 
     .grand-total-header {
       display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 12px; font-weight: 700; font-size: 1.1rem; color: var(--text-dark);
+      margin-bottom: 8px; font-weight: 700; font-size: 1rem; color: var(--text-dark);
     }
     .grand-total-header .label { color: #4facfe; }
 
-    .grand-table {
-      width: 100%; border-collapse: collapse; font-size: 0.88rem;
-    }
-    .grand-table th, .grand-table td {
-      width: var(--col-width); padding: 8px 4px; text-align: center; 
-      border: 1px solid #e0e0e0;
-    }
-    .grand-table th {
-      background: #f8f9fa; font-weight: 700; color: var(--text-dark);
-    }
-    .grand-table tbody tr.gram-50 { background: #e8f5e9; }
-    .grand-table tbody tr.gram-250 { background: #ffebee; }
-    .grand-table tbody tr.gram-1000 { background: #e3f2fd; }
-    .grand-table tfoot td {
-      font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe); 
-      color: var(--text-dark); font-size: 1rem;
+    .grand-total-content {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      text-align: center;
     }
 
-    .grand-input input {
-      width: 100%; padding: 6px 4px; border: 1.4px solid var(--border);
-      border-radius: 6px; font-family: 'Courier New', monospace; 
-      font-size: var(--input-font); font-weight: 600; background: #f8f9fa; 
-      text-align: center; direction: ltr; unicode-bidi: plaintext;
-      pointer-events: none; color: var(--text-dark);
+    .total-item {
+      padding: 6px; background: #f8f9fa; border-radius: 8px;
+    }
+
+    .total-label {
+      font-size: 0.75rem; color: #666; margin-bottom: 2px;
+    }
+
+    .total-value {
+      font-size: 0.9rem; font-weight: 700; color: var(--text-dark);
     }
 
     /* MODAL STİLLERİ */
@@ -474,19 +469,6 @@
   </div>
 </div>
 
-<!-- BULK ACTIONS -->
-<div class="bulk-actions" id="bulk-actions">
-  <button class="bulk-btn" id="bulk-select-all" data-tr="Tümünü Seç" data-ar="اختر الكل" data-en="Select All">
-    <i class="fas fa-check-square"></i> Tümünü Seç
-  </button>
-  <button class="bulk-btn" id="bulk-clear-all" data-tr="Tümünü Temizle" data-ar="امسح الكل" data-en="Clear All">
-    <i class="fas fa-broom"></i> Tümünü Temizle
-  </button>
-  <button class="bulk-btn" id="bulk-set-value" data-tr="Toplu Değer Ata" data-ar="تعيين قيمة مجمعة" data-en="Set Bulk Value">
-    <i class="fas fa-edit"></i> Toplu Değer Ata
-  </button>
-</div>
-
 <div class="order-info">
   <div class="input-group">
     <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
@@ -496,6 +478,22 @@
   <div class="input-group">
     <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
     <input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
+  </div>
+
+  <!-- TESLİM ŞEKLİ SEÇİMİ -->
+  <div class="input-group">
+    <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
+    <div class="delivery-methods">
+      <button class="delivery-btn active" data-method="road" data-tr="Karayolu" data-ar="براً" data-en="Road">
+        <i class="fas fa-truck"></i> Karayolu
+      </button>
+      <button class="delivery-btn" data-method="sea" data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">
+        <i class="fas fa-ship"></i> Denizyolu
+      </button>
+      <button class="delivery-btn" data-method="air" data-tr="Havayolu" data-ar="جواً" data-en="Air">
+        <i class="fas fa-plane"></i> Havayolu
+      </button>
+    </div>
   </div>
   
   <!-- BUTON GRUBU -->
@@ -511,44 +509,26 @@
 
 <div class="products-container" id="products"></div>
 
+<!-- MOBİL İÇİN MİNİMAL GENEL TOPLAM -->
 <div class="grand-total-card">
   <div class="grand-total-header">
     <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
     <span id="order-code-display" class="empty-value">-</span>
   </div>
-  <table class="grand-table">
-    <thead>
-      <tr>
-        <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
-        <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
-        <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="gram-50">
-        <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
-        <td id="grand-kg-50" class="empty-value">-</td>
-      </tr>
-      <tr class="gram-250">
-        <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
-        <td id="grand-kg-250" class="empty-value">-</td>
-      </tr>
-      <tr class="gram-1000">
-        <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
-        <td id="grand-kg-1000" class="empty-value">-</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
-        <td><strong id="final-koli" class="empty-value">-</strong></td>
-        <td><strong id="final-kg" class="empty-value">-</strong></td>
-      </tr>
-    </tfoot>
-  </table>
+  <div class="grand-total-content">
+    <div class="total-item">
+      <div class="total-label" data-tr="Koli" data-ar="كولي" data-en="Box">Koli</div>
+      <div class="total-value" id="final-koli-mobile">-</div>
+    </div>
+    <div class="total-item">
+      <div class="total-label" data-tr="KG" data-ar="كجم" data-en="KG">KG</div>
+      <div class="total-value" id="final-kg-mobile">-</div>
+    </div>
+    <div class="total-item">
+      <div class="total-label" data-tr="Teslim" data-ar="التسليم" data-en="Delivery">Teslim</div>
+      <div class="total-value" id="delivery-method-display">Karayolu</div>
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="summary-modal">
@@ -570,11 +550,10 @@ const OrderManager = {
   latinDigits: '0123456789',
   currentLang: 'tr',
   isAnimating: false,
-  orderCounter: 1,
   inputTimeout: null,
   currentOrderData: null,
-  selectedProducts: new Set(),
   currentOrderCode: null,
+  deliveryMethod: 'road', // Varsayılan teslim şekli
 
   // GitHub'dan ürünleri çek
   async loadProducts() {
@@ -609,6 +588,7 @@ const OrderManager = {
     this.setLang('tr');
     this.updateGrandTotal();
     this.toggleSearchClear();
+    this.updateDeliveryDisplay();
   },
 
   // YENİ SİPARİŞ KODU SİSTEMİ - GÜNCELLENDİ
@@ -616,32 +596,46 @@ const OrderManager = {
     const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
     const now = new Date();
     
-    // Tarih formatı: GGAAYYYY
+    // Tarih formatı: Gün/Ay/Yıl
     const dateStr = now.toLocaleDateString('tr-TR', {
       day: '2-digit',
       month: '2-digit', 
       year: 'numeric'
-    }).replace(/\./g, '');
+    }).replace(/\./g, '/');
     
-    // Saat formatı: SSDD (saat ve dakika)
+    // Saat formatı: 21:05 gibi
     const timeStr = now.toLocaleTimeString('tr-TR', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
-    }).replace(/:/g, '');
+    });
 
     if (customerName) {
-      // Format: MÜŞTERİ_ADI/GGAAYYYY/SSDD/001
-      this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}/${dateStr}/${timeStr}/${this.orderCounter.toString().padStart(3, '0')}`;
+      // Format: MÜŞTERİ_ADI-Tarih-Saat
+      this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}-${dateStr}-${timeStr}`;
     } else {
-      // Format: SIPARIS/GGAAYYYY/SSDD/001
-      this.currentOrderCode = `SIPARIS/${dateStr}/${timeStr}/${this.orderCounter.toString().padStart(3, '0')}`;
+      // Format: SIPARIS-Tarih-Saat
+      this.currentOrderCode = `SIPARIS-${dateStr}-${timeStr}`;
     }
     
     document.getElementById('order-code-display').textContent = this.currentOrderCode;
     document.getElementById('order-code').value = this.currentOrderCode;
     
     return this.currentOrderCode;
+  },
+
+  // Teslim şekli güncelleme
+  updateDeliveryDisplay() {
+    const display = document.getElementById('delivery-method-display');
+    const methods = {
+      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
+      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
+      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
+    };
+    
+    if (display && methods[this.deliveryMethod]) {
+      display.textContent = methods[this.deliveryMethod][this.currentLang];
+    }
   },
 
   toLatin(str) {
@@ -722,6 +716,9 @@ const OrderManager = {
       input.placeholder = '';
       input.maxLength = 6;
       input.setAttribute('aria-label', `${g} gram koli sayısı`);
+      // MOBİL İÇİN SAYI KLAVYESİ
+      input.setAttribute('inputmode', 'numeric');
+      input.setAttribute('pattern', '[0-9]*');
       qtyDivs[idx].appendChild(input);
     });
 
@@ -729,34 +726,7 @@ const OrderManager = {
     card.appendChild(header);
     card.appendChild(table);
 
-    card.addEventListener('click', (e) => {
-      if (!e.target.matches('input')) {
-        this.toggleProductSelection(product.id, card);
-      }
-    });
-
     return card;
-  },
-
-  toggleProductSelection(productId, card) {
-    const pid = String(productId);
-    if (this.selectedProducts.has(pid)) {
-      this.selectedProducts.delete(pid);
-      card.classList.remove('selected');
-    } else {
-      this.selectedProducts.add(pid);
-      card.classList.add('selected');
-    }
-    this.toggleBulkActions();
-  },
-
-  toggleBulkActions() {
-    const bulkActions = document.getElementById('bulk-actions');
-    if (this.selectedProducts.size > 0) {
-      bulkActions.classList.add('show');
-    } else {
-      bulkActions.classList.remove('show');
-    }
   },
 
   renderProducts() {
@@ -793,6 +763,16 @@ const OrderManager = {
       this.updateGrandTotal();
     });
 
+    // TESLİM ŞEKLİ BUTONLARI
+    document.querySelectorAll('.delivery-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.deliveryMethod = e.target.dataset.method;
+        this.updateDeliveryDisplay();
+      });
+    });
+
     document.getElementById('show-summary').addEventListener('click', () => this.showSummary());
     
     document.getElementById('new-order-btn').addEventListener('click', () => {
@@ -808,6 +788,7 @@ const OrderManager = {
       }
     });
 
+    // ARAMA TEMİZLEME BUTONU
     document.getElementById('search-clear').addEventListener('click', () => {
       this.clearSearch();
     });
@@ -821,11 +802,6 @@ const OrderManager = {
     document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
     document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
     document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
-
-    // Bulk actions
-    document.getElementById('bulk-select-all').addEventListener('click', () => this.bulkSelectAll());
-    document.getElementById('bulk-clear-all').addEventListener('click', () => this.bulkClearAll());
-    document.getElementById('bulk-set-value').addEventListener('click', () => this.bulkSetValue());
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -947,52 +923,30 @@ const OrderManager = {
       });
     });
 
-    [50, 250, 1000].forEach(g => {
-      const koli = gramTotals[g];
-      const el = document.getElementById(`grand-${g}`);
-      const kgEl = document.getElementById(`grand-kg-${g}`);
-      
-      if (el) {
-        if (koli > 0) {
-          el.value = this.formatNumber(koli, this.currentLang);
-        } else {
-          el.value = '';
-        }
-      }
-      
-      if (kgEl) {
-        if (koli > 0) {
-          kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
-          kgEl.classList.remove('empty-value');
-        } else {
-          kgEl.textContent = '-';
-          kgEl.classList.add('empty-value');
-        }
-      }
-    });
-
     const finalKoli = gramTotals[50] + gramTotals[250] + gramTotals[1000];
     const finalKG = finalKoli * this.KOLI_KG;
-    const finalKoliEl = document.getElementById('final-koli');
-    const finalKgEl = document.getElementById('final-kg');
     
-    if (finalKoliEl) {
+    // Mobil genel toplam güncelleme
+    const finalKoliMobile = document.getElementById('final-koli-mobile');
+    const finalKgMobile = document.getElementById('final-kg-mobile');
+    
+    if (finalKoliMobile) {
       if (finalKoli > 0) {
-        finalKoliEl.textContent = this.formatNumber(finalKoli, this.currentLang);
-        finalKoliEl.classList.remove('empty-value');
+        finalKoliMobile.textContent = this.formatNumber(finalKoli, this.currentLang);
+        finalKoliMobile.classList.remove('empty-value');
       } else {
-        finalKoliEl.textContent = '-';
-        finalKoliEl.classList.add('empty-value');
+        finalKoliMobile.textContent = '-';
+        finalKoliMobile.classList.add('empty-value');
       }
     }
     
-    if (finalKgEl) {
+    if (finalKgMobile) {
       if (finalKG > 0) {
-        finalKgEl.textContent = this.formatNumber(finalKG, this.currentLang);
-        finalKgEl.classList.remove('empty-value');
+        finalKgMobile.textContent = this.formatNumber(finalKG, this.currentLang);
+        finalKgMobile.classList.remove('empty-value');
       } else {
-        finalKgEl.textContent = '-';
-        finalKgEl.classList.add('empty-value');
+        finalKgMobile.textContent = '-';
+        finalKgMobile.classList.add('empty-value');
       }
     }
 
@@ -1035,11 +989,19 @@ const OrderManager = {
       hour: '2-digit', minute: '2-digit'
     });
 
+    // Teslim şekli metinleri
+    const deliveryTexts = {
+      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
+      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
+      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
+    };
+
     let html = `
       <div class="summary-info">
         <p><strong data-tr="Müşteri:" data-ar="العميل:" data-en="Customer:">Müşteri:</strong> <span>${customer}</span></p>
         <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">Sipariş Kodu:</strong> <span>${code}</span></p>
         <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">Tarih:</strong> <span>${date}</span></p>
+        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
       </div>
 
       <table class="summary-table">
@@ -1121,7 +1083,14 @@ const OrderManager = {
     content.innerHTML = html;
     document.getElementById('summary-modal').classList.add('show');
 
-    this.currentOrderData = { customer, code, date, items, totals: colTotals };
+    this.currentOrderData = { 
+      customer, 
+      code, 
+      date, 
+      items, 
+      totals: colTotals,
+      delivery: deliveryTexts[this.deliveryMethod][this.currentLang]
+    };
     this.updateSummaryLang();
 
     document.getElementById('share-whatsapp').addEventListener('click', () => {
@@ -1145,14 +1114,7 @@ const OrderManager = {
       this.updateCard(input);
     });
     
-    this.selectedProducts.clear();
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.classList.remove('selected');
-    });
-    this.toggleBulkActions();
-    
     this.filterProducts('');
-    this.orderCounter++;
     this.generateOrderCode();
     this.updateGrandTotal();
   },
@@ -1188,7 +1150,7 @@ const OrderManager = {
       }
     });
 
-    document.querySelectorAll('.quantity-input input, .grand-input input').forEach(inp => {
+    document.querySelectorAll('.quantity-input input').forEach(inp => {
       const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
       inp.value = this.formatNumber(val, lang);
     });
@@ -1197,7 +1159,14 @@ const OrderManager = {
       b.classList.toggle('active', b.dataset.lang === lang);
     });
 
-    document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli, #final-kg').forEach(el => {
+    // Teslim şekli butonlarını güncelle
+    document.querySelectorAll('.delivery-btn').forEach(btn => {
+      if (btn.dataset[lang] !== undefined) {
+        btn.innerHTML = `<i class="${btn.querySelector('i').className}"></i> ${btn.dataset[lang]}`;
+      }
+    });
+
+    document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli-mobile, #final-kg-mobile').forEach(el => {
       const num = this.toLatin(el.textContent.replace(/[٬,.]/g, ''));
       if (num > 0) {
         el.textContent = this.formatNumber(num, lang);
@@ -1221,6 +1190,7 @@ const OrderManager = {
     });
 
     this.updateGrandTotal();
+    this.updateDeliveryDisplay();
     this.updateSummaryLang();
 
     this.isAnimating = false;
@@ -1238,46 +1208,6 @@ const OrderManager = {
         card.style.display = 'none';
       }
     });
-  },
-
-  bulkSelectAll() {
-    document.querySelectorAll('.product-card').forEach(card => {
-      const productId = String(card.dataset.productId);
-      this.selectedProducts.add(productId);
-      card.classList.add('selected');
-    });
-    this.toggleBulkActions();
-  },
-
-  bulkClearAll() {
-    this.selectedProducts.clear();
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.classList.remove('selected');
-    });
-    this.toggleBulkActions();
-  },
-
-  bulkSetValue() {
-    const value = prompt('Tüm seçili ürünlere atanacak değeri girin:');
-    if (value === null) return;
-
-    const numValue = this.toLatin(value.replace(/[٬,.]/g, ''));
-    if (!this.validateInput(numValue)) {
-      ToastManager.show('Geçersiz değer!', 'error');
-      return;
-    }
-
-    this.selectedProducts.forEach(productId => {
-      const card = document.querySelector(`[data-product-id="${productId}"]`);
-      if (card) {
-        card.querySelectorAll('input[data-gram]').forEach(input => {
-          input.value = this.formatNumber(numValue, this.currentLang);
-          this.updateCard(input);
-        });
-      }
-    });
-
-    ToastManager.show('Toplu değer atandı!', 'success');
   }
 };
 
@@ -1321,6 +1251,7 @@ const ExportManager = {
       ["Müşteri:", OrderManager.currentOrderData.customer],
       ["Sipariş Kodu:", OrderManager.currentOrderData.code],
       ["Tarih:", OrderManager.currentOrderData.date],
+      ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
       []
     ];
 
@@ -1365,7 +1296,7 @@ const ExportManager = {
           alignment: { horizontal: "center", vertical: "center" }
         };
         
-        if (R === 6) {
+        if (R === 7) {
           ws[cell_ref].s.fill = {
             patternType: "solid",
             fgColor: {rgb: "4FACFE"}
@@ -1416,6 +1347,7 @@ const ExportManager = {
     doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
     doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
     doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
+    doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
     
     const headers = [
       "Ürün Adı", 
@@ -1447,7 +1379,7 @@ const ExportManager = {
     doc.autoTable({
       head: [headers],
       body: tableData,
-      startY: 45,
+      startY: 52,
       theme: 'grid',
       styles: { 
         fontSize: 9, 
@@ -1476,7 +1408,7 @@ const ExportManager = {
           data.cell.styles.fontStyle = 'bold';
         }
       },
-      margin: { top: 45 }
+      margin: { top: 52 }
     });
     
     doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
@@ -1489,7 +1421,8 @@ const ExportManager = {
     let text = `*SİPARİŞ DETAYI*\n\n`;
     text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
     text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
-    text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n\n`;
+    text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
+    text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
     text += `*ÜRÜN DETAYLARI:*\n`;
 
     OrderManager.currentOrderData.items.forEach((item, index) => {
