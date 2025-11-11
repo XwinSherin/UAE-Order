@@ -4,15 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 <title>Adalya Sipariş</title>
-  <!-- Font Awesome integrity hatası çözüldü -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-  <!-- Favicon hatası çözüldü -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
 <style>
+/* CSS kodları aynı kalacak - değişiklik yok */
 :root {
 --success: #27ae60; --danger: #e74c3c; --info: #1976d2;
 --border: #ddd; --primary: #4facfe; --total-bg: #f1f3f5;
@@ -740,31 +738,31 @@ table.className = 'product-table';
 table.innerHTML = `
      <thead>
        <tr>
-         <th>Gramaj</th>
-         <th>Koli</th>
-         <th>KG</th>
+         <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
+         <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
+         <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
        </tr>
      </thead>
      <tbody>
        <tr class="gram-50">
-         <td><strong>50G</strong></td>
+         <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
          <td><div class="quantity-input"></div></td>
          <td data-kg="50" class="empty-value">-</td>
        </tr>
        <tr class="gram-250">
-         <td><strong>250G</strong></td>
+         <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
          <td><div class="quantity-input"></div></td>
          <td data-kg="250" class="empty-value">-</td>
        </tr>
        <tr class="gram-1000">
-         <td><strong>1000G</strong></td>
+         <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
          <td><div class="quantity-input"></div></td>
          <td data-kg="1000" class="empty-value">-</td>
        </tr>
      </tbody>
      <tfoot>
        <tr>
-         <td><strong>Toplam</strong></td>
+         <td><strong data-tr="Toplam" data-ar="المجموع" data-en="Total">Toplam</strong></td>
          <td data-total-koli class="empty-value">-</td>
          <td data-total-kg class="empty-value">-</td>
        </tr>
@@ -1208,7 +1206,7 @@ const isAR = lang === 'ar';
 document.documentElement.lang = lang;
 document.documentElement.dir = isAR ? 'rtl' : 'ltr';
 
-// Tüm dil öğelerini güncelle
+// Tüm dil öğelerini güncelle - GÜNCELLENDİ
 document.querySelectorAll('[data-tr]').forEach(el => {
 if (el.dataset[lang] !== undefined) {
 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -1216,29 +1214,6 @@ el.placeholder = el.dataset[lang];
 } else {
 el.textContent = el.dataset[lang];
 }
-}
-});
-
-// Gramaj isimlerini güncelle - YENİ EKLENDİ
-const gramTexts = {
-'tr': { '50G': '50G', '250G': '250G', '1000G': '1000G', 'Gramaj': 'Gramaj', 'Koli': 'Koli', 'KG': 'KG', 'Toplam': 'Toplam', 'TOPLAM': 'TOPLAM' },
-'ar': { '50G': '٥٠غ', '250G': '٢٥٠غ', '1000G': '١٠٠٠غ', 'Gramaj': 'الوزن', 'Koli': 'كولي', 'KG': 'كجم', 'Toplam': 'المجموع', 'TOPLAM': 'الإجمالي' },
-'en': { '50G': '50G', '250G': '250G', '1000G': '1000G', 'Gramaj': 'Weight', 'Koli': 'Box', 'KG': 'KG', 'Toplam': 'Total', 'TOPLAM': 'TOTAL' }
-};
-
-// Ürün tablolarındaki gramaj isimlerini güncelle
-document.querySelectorAll('.product-table th, .product-table td strong').forEach(el => {
-const text = el.textContent.trim();
-if (gramTexts[lang][text]) {
-el.textContent = gramTexts[lang][text];
-}
-});
-
-// Genel toplam tablosundaki gramaj isimlerini güncelle
-document.querySelectorAll('.grand-table th, .grand-table td strong').forEach(el => {
-const text = el.textContent.trim();
-if (gramTexts[lang][text]) {
-el.textContent = gramTexts[lang][text];
 }
 });
 
@@ -1321,12 +1296,14 @@ setTimeout(() => toast.remove(), 300);
 }
 };
 
+// TAMAMEN YENİLENMİŞ EXPORT MANAGER
 const ExportManager = {
 downloadExcel() {
 if (!OrderManager.currentOrderData) return;
 
 const wb = XLSX.utils.book_new();
-
+    
+// Başlık ve bilgiler
 const title = [
 ["SİPARİŞ DETAYI"],
 [],
@@ -1337,57 +1314,61 @@ const title = [
 []
 ];
 
+// Tablo başlıkları
 const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
-
+    
+// Tablo verileri
 const data = OrderManager.currentOrderData.items.map(item => [
 item.name,
-item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '-',
+item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '-',
+item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '-',
 OrderManager.formatNumber(item.koli, 'tr'),
 OrderManager.formatNumber(item.kg, 'tr')
 ]);
 
+// Toplam satırı
 const totals = [
 ["GENEL TOPLAM", 
-OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '-',
+OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '-',
+OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '-',
 OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
 OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
 ]
 ];
 
+// Tüm verileri birleştir
 const allData = [...title, ...headers, ...data, ...totals];
 const ws = XLSX.utils.aoa_to_sheet(allData);
 
-// TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - GELİŞTİRİLMİŞ
+// TÜM HÜCRELERE BORDER EKLE - KESİN ÇÖZÜM
 const range = XLSX.utils.decode_range(ws['!ref']);
 for (let R = range.s.r; R <= range.e.r; ++R) {
 for (let C = range.s.c; C <= range.e.c; ++C) {
 const cell_address = {c: C, r: R};
 const cell_ref = XLSX.utils.encode_cell(cell_address);
 if (!ws[cell_ref]) continue;
-
+        
 // Hücre stillerini oluştur
 if (!ws[cell_ref].s) ws[cell_ref].s = {};
-
-// Border stilleri - TÜM HÜCRELER İÇİN
+        
+// Tüm hücrelere border ekle
 ws[cell_ref].s.border = {
 top: {style: "thin", color: {rgb: "000000"}},
 left: {style: "thin", color: {rgb: "000000"}},
 bottom: {style: "thin", color: {rgb: "000000"}},
 right: {style: "thin", color: {rgb: "000000"}}
 };
-
+        
 // Hizalama
 ws[cell_ref].s.alignment = { 
 horizontal: "center", 
 vertical: "center" 
 };
-
-// Tablo başlıkları için özel stil
-const headerRowIndex = title.length; // Başlık satırının indeksi
+        
+// Tablo başlıkları için özel stil (headers array'indeki satır)
+const headerRowIndex = title.length; // 7. satır
 if (R === headerRowIndex) {
 ws[cell_ref].s.fill = {
 patternType: "solid",
@@ -1398,7 +1379,7 @@ color: {rgb: "FFFFFF"},
 bold: true
 };
 }
-
+        
 // Genel toplam satırı için özel stil
 if (R === range.e.r) {
 ws[cell_ref].s.fill = {
@@ -1422,7 +1403,7 @@ ws['!cols'][i] = { width: 15 };
 
 XLSX.utils.book_append_sheet(wb, ws, "Sipariş");
 XLSX.writeFile(wb, `Sipariş_${OrderManager.currentOrderData.code}.xlsx`);
-
+    
 ToastManager.show('Excel indirildi!', 'success');
 },
 
@@ -1431,23 +1412,23 @@ if (!OrderManager.currentOrderData) return;
 
 const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
-
-// Türkçe karakter sorunu çözümü
+    
+// PDF ayarları - Türkçe karakter sorunu çözümü
 doc.setFont("helvetica");
-
+    
 // Başlık
 doc.setFontSize(16);
 doc.setFont(undefined, 'bold');
 doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
-
-// Bilgiler
+    
+// Müşteri bilgileri
 doc.setFontSize(10);
 doc.setFont(undefined, 'normal');
 doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
 doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
 doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
 doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
-
+    
 const headers = [
 "Ürün Adı", 
 "50G", 
@@ -1456,27 +1437,26 @@ const headers = [
 "Toplam Koli", 
 "Toplam KG"
 ];
-
+    
 const tableData = OrderManager.currentOrderData.items.map(item => [
 item.name,
-item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '-',
+item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '-',
+item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '-',
 OrderManager.formatNumber(item.koli, 'tr'),
 OrderManager.formatNumber(item.kg, 'tr')
 ]);
-
+    
 tableData.push([
 "GENEL TOPLAM",
-OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '-',
+OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '-',
+OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '-',
 OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
 OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
 ]);
 
-// PDF oluştur - GELİŞTİRİLMİŞ
-try {
+// PDF tablosu oluştur - KESİN ÇÖZÜM
 doc.autoTable({
 head: [headers],
 body: tableData,
@@ -1485,62 +1465,50 @@ theme: 'grid',
 styles: { 
 fontSize: 8, 
 cellPadding: 3,
-textColor: [0, 0, 0],
 font: "helvetica",
-fontStyle: 'normal',
-lineColor: [0, 0, 0],
-lineWidth: 0.3,
 halign: 'center',
-valign: 'middle'
+valign: 'middle',
+lineColor: [0, 0, 0],
+lineWidth: 0.3
 },
 headStyles: { 
 fillColor: [79, 172, 254],
 textColor: [255, 255, 255],
 fontStyle: 'bold',
 fontSize: 9,
-lineColor: [0, 0, 0],
-lineWidth: 0.3,
 halign: 'center',
-cellPadding: 4
+lineColor: [0, 0, 0],
+lineWidth: 0.3
 },
 bodyStyles: {
-fillColor: [255, 255, 255],
-textColor: [0, 0, 0],
-lineColor: [0, 0, 0],
-lineWidth: 0.3,
-fontStyle: 'normal',
+font: "helvetica", 
 halign: 'center',
-cellPadding: 3
+lineColor: [0, 0, 0],
+lineWidth: 0.3
 },
 alternateRowStyles: {
 fillColor: [245, 245, 245]
 },
 didParseCell: function(data) {
-// Tüm hücrelere kalın border
+// Tüm hücrelere border
 data.cell.styles.lineColor = [0, 0, 0];
 data.cell.styles.lineWidth = 0.3;
-data.cell.styles.halign = 'center';
-
+        
 // Ürün adı sütunu için sola hizalama
 if (data.column.index === 0) {
 data.cell.styles.halign = 'left';
 }
-
+        
 // Genel toplam satırı
 if (data.section === 'body' && data.row.index === tableData.length - 1) {
 data.cell.styles.fillColor = [39, 174, 96];
 data.cell.styles.textColor = [255, 255, 255];
 data.cell.styles.fontStyle = 'bold';
-data.cell.styles.halign = 'center';
 }
 },
-margin: { top: 55 },
-tableWidth: 'wrap'
+margin: { top: 55 }
 });
-} catch (error) {
-console.error('PDF oluşturma hatası:', error);
-}
-
+    
 doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
 ToastManager.show('PDF indirildi!', 'success');
 },
