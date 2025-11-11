@@ -1,511 +1,510 @@
-html
 <!DOCTYPE html>
 <html lang="tr" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-  <title>Adalya Sipariş</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+<title>Adalya Sipariş</title>
   <!-- Font Awesome integrity hatası çözüldü -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <!-- Favicon hatası çözüldü -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
-  <style>
-    :root {
-      --success: #27ae60; --danger: #e74c3c; --info: #1976d2;
-      --border: #ddd; --primary: #4facfe; --total-bg: #f1f3f5;
-      --glass-bg: rgba(255, 255, 255, 0.18); --glass-border: rgba(255, 255, 255, 0.25);
-      --transition: all 0.3s cubic-bezier(0.34, 0.68, 0.26, 0.99);
-      --card-shadow: 0 8px 25px rgba(0,0,0,0.1);
-      --card-hover: 0 14px 40px rgba(79, 172, 254, 0.22);
-      --col-width: 90px;
-      --input-font: 0.95rem;
-      --text-dark: #2c3e50;
-      --btn-height: 54px;
-      --btn-font: 1rem;
-      --red: rgba(220, 38, 38, 0.15);
-      --green: rgba(34, 197, 94, 0.15);
-      --blue-grad: linear-gradient(135deg, #4facfe, #00f2fe);
-      --warning: #f59e0b;
-      --purple: #8B5CF6;
-    }
+<style>
+:root {
+--success: #27ae60; --danger: #e74c3c; --info: #1976d2;
+--border: #ddd; --primary: #4facfe; --total-bg: #f1f3f5;
+--glass-bg: rgba(255, 255, 255, 0.18); --glass-border: rgba(255, 255, 255, 0.25);
+--transition: all 0.3s cubic-bezier(0.34, 0.68, 0.26, 0.99);
+--card-shadow: 0 8px 25px rgba(0,0,0,0.1);
+--card-hover: 0 14px 40px rgba(79, 172, 254, 0.22);
+--col-width: 90px;
+--input-font: 0.95rem;
+--text-dark: #2c3e50;
+--btn-height: 54px;
+--btn-font: 1rem;
+--red: rgba(220, 38, 38, 0.15);
+--green: rgba(34, 197, 94, 0.15);
+--blue-grad: linear-gradient(135deg, #4facfe, #00f2fe);
+--warning: #f59e0b;
+--purple: #8B5CF6;
+}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-    body { 
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-      padding: 16px 16px 120px 16px; min-height: 100vh; position: relative; 
-      -webkit-tap-highlight-color: transparent;
-    }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+body { 
+background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+padding: 16px 16px 120px 16px; min-height: 100vh; position: relative; 
+-webkit-tap-highlight-color: transparent;
+}
 
-    /* TOAST MESAJLARI */
-    .toast-container {
-      position: fixed; top: 20px; right: 20px; z-index: 10000;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .toast {
-      padding: 12px 20px; border-radius: 8px; color: white;
-      font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transform: translateX(120%); transition: transform 0.3s ease;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .toast.show { transform: translateX(0); }
-    .toast.success { background: var(--success); }
-    .toast.error { background: var(--danger); }
-    .toast.warning { background: var(--warning); }
+/* TOAST MESAJLARI */
+.toast-container {
+position: fixed; top: 20px; right: 20px; z-index: 10000;
+display: flex; flex-direction: column; gap: 10px;
+}
+.toast {
+padding: 12px 20px; border-radius: 8px; color: white;
+font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+transform: translateX(120%); transition: transform 0.3s ease;
+display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateX(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.warning { background: var(--warning); }
 
-    /* LOGO VE DİL BARI */
-    .top-bar {
-      position: fixed; top: 16px; right: 16px; display: flex; gap: 12px; z-index: 1000;
-      background: var(--glass-bg); padding: 8px 16px; border-radius: 40px;
-      border: 1px solid var(--glass-border); backdrop-filter: blur(16px); 
-      box-shadow: 0 6px 24px rgba(0,0,0,0.14); align-items: center;
-    }
+/* LOGO VE DİL BARI */
+.top-bar {
+position: fixed; top: 16px; right: 16px; display: flex; gap: 12px; z-index: 1000;
+background: var(--glass-bg); padding: 8px 16px; border-radius: 40px;
+border: 1px solid var(--glass-border); backdrop-filter: blur(16px); 
+box-shadow: 0 6px 24px rgba(0,0,0,0.14); align-items: center;
+}
 
-    .logo {
-      width: 32px; height: 32px; border-radius: 8px; object-fit: cover;
-      border: 2px solid var(--glass-border);
-    }
+.logo {
+width: 32px; height: 32px; border-radius: 8px; object-fit: cover;
+border: 2px solid var(--glass-border);
+}
 
-    .lang-btn {
-      min-width: 50px; height: 36px; background: var(--glass-bg); color: #333;
-      border: none; border-radius: 18px; font-weight: 700; font-size: 0.85rem;
-      cursor: pointer; transition: var(--transition); display: flex; align-items: center;
-      justify-content: center; gap: 4px; padding: 0 12px; position: relative;
-      border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .lang-btn::before {
-      content: ''; position: absolute; inset: 2px; background: var(--blue-grad);
-      border-radius: 16px; opacity: 0; transition: var(--transition); z-index: -1;
-    }
-    .lang-btn:hover { 
-      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,172,254,0.25); 
-    }
-    .lang-btn.active { color: #fff; font-weight: 800; }
-    .lang-btn.active::before { opacity: 1; }
+.lang-btn {
+min-width: 50px; height: 36px; background: var(--glass-bg); color: #333;
+border: none; border-radius: 18px; font-weight: 700; font-size: 0.85rem;
+cursor: pointer; transition: var(--transition); display: flex; align-items: center;
+justify-content: center; gap: 4px; padding: 0 12px; position: relative;
+border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.lang-btn::before {
+content: ''; position: absolute; inset: 2px; background: var(--blue-grad);
+border-radius: 16px; opacity: 0; transition: var(--transition); z-index: -1;
+}
+.lang-btn:hover { 
+transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,172,254,0.25); 
+}
+.lang-btn.active { color: #fff; font-weight: 800; }
+.lang-btn.active::before { opacity: 1; }
 
-    #lang-ar { background: var(--green); border-color: rgba(34,197,94,0.3); }
-    #lang-ar i { color: #16a34a; }
+#lang-ar { background: var(--green); border-color: rgba(34,197,94,0.3); }
+#lang-ar i { color: #16a34a; }
 
-    .page-title {
-      text-align: center; font-size: 1.7rem; font-weight: 800; color: var(--text-dark); 
-      margin: 60px 0 20px; background: linear-gradient(135deg, #4facfe, #8B5CF6);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+.page-title {
+text-align: center; font-size: 1.7rem; font-weight: 800; color: var(--text-dark); 
+margin: 60px 0 20px; background: linear-gradient(135deg, #4facfe, #8B5CF6);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+background-clip: text;
+}
 
-    /* MOBİL UYUMLU ARAYÜZ */
-    .search-container {
-      max-width: 800px; margin: 0 auto 20px; position: relative;
-    }
-    .search-bar {
-      position: relative; width: 100%;
-    }
-    .search-bar input {
-      width: 100%; padding: 14px 45px 14px 16px; border: 2px solid var(--border);
-      border-radius: 12px; font-size: 1rem; background: white;
-      transition: var(--transition); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .search-bar input:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
-      outline: none;
-    }
-    .search-clear {
-      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-      color: #666; font-size: 1.1rem; cursor: pointer;
-      transition: var(--transition); opacity: 0.7;
-      display: none;
-    }
-    .search-clear:hover { opacity: 1; color: var(--danger); }
-    .search-clear.show { display: block; }
+/* MOBİL UYUMLU ARAYÜZ */
+.search-container {
+max-width: 800px; margin: 0 auto 20px; position: relative;
+}
+.search-bar {
+position: relative; width: 100%;
+}
+.search-bar input {
+width: 100%; padding: 14px 45px 14px 16px; border: 2px solid var(--border);
+border-radius: 12px; font-size: 1rem; background: white;
+transition: var(--transition); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.search-bar input:focus {
+border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+outline: none;
+}
+.search-clear {
+position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+color: #666; font-size: 1.1rem; cursor: pointer;
+transition: var(--transition); opacity: 0.7;
+display: none;
+}
+.search-clear:hover { opacity: 1; color: var(--danger); }
+.search-clear.show { display: block; }
 
-    .order-info {
-      max-width: 800px; margin: 0 auto 24px; display: grid; gap: 14px;
-      grid-template-columns: 1fr;
-    }
+.order-info {
+max-width: 800px; margin: 0 auto 24px; display: grid; gap: 14px;
+grid-template-columns: 1fr;
+}
 
-    @media (min-width: 768px) {
-      .order-info {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+@media (min-width: 768px) {
+.order-info {
+grid-template-columns: 1fr 1fr;
+}
+}
 
-    .input-group {
-      display: flex; flex-direction: column;
-    }
-    .input-group label {
-      font-weight: 600; color: var(--text-dark); margin-bottom: 5px; font-size: 0.9rem;
-    }
-    .input-group input {
-      padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 1rem; background: white; transition: var(--transition);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04); text-transform: uppercase;
-    }
-    .input-group input:focus {
-      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.18); 
-      outline: none;
-    }
-    .input-group input.invalid {
-      border-color: var(--danger); background: rgba(231, 76, 60, 0.05);
-    }
-    .required-hint {
-      color: var(--danger); font-size: 0.8rem; margin-top: 3px; 
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .required-hint.show { opacity: 1; }
+.input-group {
+display: flex; flex-direction: column;
+}
+.input-group label {
+font-weight: 600; color: var(--text-dark); margin-bottom: 5px; font-size: 0.9rem;
+}
+.input-group input {
+padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+font-size: 1rem; background: white; transition: var(--transition);
+box-shadow: 0 2px 5px rgba(0,0,0,0.04); text-transform: uppercase;
+}
+.input-group input:focus {
+border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.18); 
+outline: none;
+}
+.input-group input.invalid {
+border-color: var(--danger); background: rgba(231, 76, 60, 0.05);
+}
+.required-hint {
+color: var(--danger); font-size: 0.8rem; margin-top: 3px; 
+opacity: 0; transition: opacity 0.3s;
+}
+.required-hint.show { opacity: 1; }
 
-    /* TESLİM ŞEKLİ BUTONLARI - İKONLU */
-    .delivery-methods {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;
-    }
+/* TESLİM ŞEKLİ BUTONLARI - İKONLU */
+.delivery-methods {
+display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;
+}
 
-    .delivery-btn {
-      padding: 12px 8px; border: 2px solid var(--border); background: white;
-      border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-      transition: var(--transition); text-align: center; display: flex;
-      align-items: center; justify-content: center; gap: 6px;
-    }
+.delivery-btn {
+padding: 12px 8px; border: 2px solid var(--border); background: white;
+border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+transition: var(--transition); text-align: center; display: flex;
+align-items: center; justify-content: center; gap: 6px;
+}
 
-    .delivery-btn.active {
-      border-color: var(--primary); background: var(--primary); color: white;
-    }
+.delivery-btn.active {
+border-color: var(--primary); background: var(--primary); color: white;
+}
 
-    .delivery-btn i {
-      font-size: 1.1rem;
-    }
+.delivery-btn i {
+font-size: 1.1rem;
+}
 
-    /* BUTON GRUBU */
-    .button-group {
-      display: grid; grid-template-columns: 1fr; gap: 14px;
-    }
+/* BUTON GRUBU */
+.button-group {
+display: grid; grid-template-columns: 1fr; gap: 14px;
+}
 
-    @media (min-width: 768px) {
-      .button-group {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
+@media (min-width: 768px) {
+.button-group {
+grid-template-columns: 1fr 1fr;
+}
+}
 
-    .new-order-btn {
-      padding: 14px; border: 2px solid var(--success); background: white;
-      color: var(--success); border-radius: 12px; font-size: 1.1rem; 
-      font-weight: 700; cursor: pointer; transition: var(--transition);
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      min-height: var(--btn-height);
-    }
-    .new-order-btn:hover {
-      background: var(--success); color: white;
-      transform: translateY(-2px); box-shadow: 0 5px 16px rgba(39, 174, 96, 0.3);
-    }
+.new-order-btn {
+padding: 14px; border: 2px solid var(--success); background: white;
+color: var(--success); border-radius: 12px; font-size: 1.1rem; 
+font-weight: 700; cursor: pointer; transition: var(--transition);
+display: flex; align-items: center; justify-content: center; gap: 8px;
+min-height: var(--btn-height);
+}
+.new-order-btn:hover {
+background: var(--success); color: white;
+transform: translateY(-2px); box-shadow: 0 5px 16px rgba(39, 174, 96, 0.3);
+}
 
-    .summary-btn {
-      padding: 14px; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;
-      font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition);
-      box-shadow: 0 3px 12px rgba(79, 172, 254, 0.28); min-height: var(--btn-height);
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .summary-btn:disabled {
-      background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6;
-      transform: none !important;
-    }
-    .summary-btn:hover:not(:disabled), .summary-btn:active:not(:disabled) { 
-      transform: translateY(-1px); box-shadow: 0 5px 16px rgba(79, 172, 254, 0.35); 
-    }
+.summary-btn {
+padding: 14px; border: none; border-radius: 12px;
+background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;
+font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition);
+box-shadow: 0 3px 12px rgba(79, 172, 254, 0.28); min-height: var(--btn-height);
+display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.summary-btn:disabled {
+background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6;
+transform: none !important;
+}
+.summary-btn:hover:not(:disabled), .summary-btn:active:not(:disabled) { 
+transform: translateY(-1px); box-shadow: 0 5px 16px rgba(79, 172, 254, 0.35); 
+}
 
-    .products-container {
-      display: grid; gap: 18px; max-width: 1600px; margin: 0 auto;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      position: relative; z-index: 1;
-    }
+.products-container {
+display: grid; gap: 18px; max-width: 1600px; margin: 0 auto;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+position: relative; z-index: 1;
+}
 
-    @media (max-width: 768px) {
-      .products-container {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-    }
+@media (max-width: 768px) {
+.products-container {
+grid-template-columns: 1fr;
+gap: 12px;
+}
+}
 
-    .product-card {
-      border-radius: 16px; overflow: hidden; background: white;
-      box-shadow: var(--card-shadow); transition: var(--transition);
-      will-change: transform, opacity; opacity: 0; transform: translateY(20px);
-      border: 2px solid transparent;
-    }
-    .product-card.visible {
-      opacity: 1; transform: translateY(0);
-      transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
-    }
-    .product-card:hover {
-      transform: translateY(-5px); box-shadow: var(--card-hover);
-    }
+.product-card {
+border-radius: 16px; overflow: hidden; background: white;
+box-shadow: var(--card-shadow); transition: var(--transition);
+will-change: transform, opacity; opacity: 0; transform: translateY(20px);
+border: 2px solid transparent;
+}
+.product-card.visible {
+opacity: 1; transform: translateY(0);
+transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+transform: translateY(-5px); box-shadow: var(--card-hover);
+}
 
-    /* ÜRÜN RESİMLERİ İÇİN OPTİMİZE BOYUT */
-    .product-img { 
-      width: 100%; 
-      height: 140px; 
-      object-fit: contain; /* Resmin tamamını göster, bozulma olmadan */
-      background: #f8f9fa; /* Boş alanlar için arkaplan */
-      padding: 8px; /* Resme biraz boşluk */
-    }
+/* ÜRÜN RESİMLERİ İÇİN OPTİMİZE BOYUT */
+.product-img { 
+width: 100%; 
+height: 140px; 
+object-fit: contain; /* Resmin tamamını göster, bozulma olmadan */
+background: #f8f9fa; /* Boş alanlar için arkaplan */
+padding: 8px; /* Resme biraz boşluk */
+}
 
-    .product-header {
-      background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;
-      padding: 10px 8px; text-align: center; font-weight: 700; font-size: 1rem;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+.product-header {
+background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;
+padding: 10px 8px; text-align: center; font-weight: 700; font-size: 1rem;
+white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-    /* TABLO STİLLERİ - MOBİL UYUMLU */
-    .product-table {
-      width: 100%; border-collapse: collapse; font-size: 0.85rem;
-    }
-    .product-table th, .product-table td {
-      width: var(--col-width); padding: 6px 4px; text-align: center; 
-      border: 1px solid #e0e0e0; font-size: 0.82rem;
-      height: 32px;
-    }
-    .product-table th {
-      background: #f8f9fa; font-weight: 700; color: var(--text-dark);
-      padding: 8px 4px;
-    }
-    .product-table tbody tr.gram-50 { background: #e8f5e9; }
-    .product-table tbody tr.gram-250 { background: #ffebee; }
-    .product-table tbody tr.gram-1000 { background: #e3f2fd; }
-    .product-table tfoot td {
-      font-weight: 700; background: var(--total-bg); color: var(--text-dark); 
-      font-size: 0.88rem; padding: 8px 4px;
-    }
+/* TABLO STİLLERİ - MOBİL UYUMLU */
+.product-table {
+width: 100%; border-collapse: collapse; font-size: 0.85rem;
+}
+.product-table th, .product-table td {
+width: var(--col-width); padding: 6px 4px; text-align: center; 
+border: 1px solid #e0e0e0; font-size: 0.82rem;
+height: 32px;
+}
+.product-table th {
+background: #f8f9fa; font-weight: 700; color: var(--text-dark);
+padding: 8px 4px;
+}
+.product-table tbody tr.gram-50 { background: #e8f5e9; }
+.product-table tbody tr.gram-250 { background: #ffebee; }
+.product-table tbody tr.gram-1000 { background: #e3f2fd; }
+.product-table tfoot td {
+font-weight: 700; background: var(--total-bg); color: var(--text-dark); 
+font-size: 0.88rem; padding: 8px 4px;
+}
 
-    .quantity-input { position: relative; }
-    .quantity-input input {
-      width: 100%; padding: 6px 4px; border: 1.4px solid var(--border);
-      border-radius: 6px; font-family: 'Courier New', monospace; 
-      font-size: var(--input-font); font-weight: 600; background: white; 
-      text-align: center; direction: ltr; unicode-bidi: plaintext;
-      transition: var(--transition);
-      /* MOBİL İÇİN SAYI KLAVYESİ */
-      inputmode: numeric;
-      pattern: "[0-9]*"
-    }
-    .quantity-input input:focus { 
-      border-color: var(--primary); outline: none; 
-    }
-    .quantity-input input.invalid {
-      border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
-    }
+.quantity-input { position: relative; }
+.quantity-input input {
+width: 100%; padding: 6px 4px; border: 1.4px solid var(--border);
+border-radius: 6px; font-family: 'Courier New', monospace; 
+font-size: var(--input-font); font-weight: 600; background: white; 
+text-align: center; direction: ltr; unicode-bidi: plaintext;
+transition: var(--transition);
+/* MOBİL İÇİN SAYI KLAVYESİ */
+inputmode: numeric;
+pattern: "[0-9]*"
+}
+.quantity-input input:focus { 
+border-color: var(--primary); outline: none; 
+}
+.quantity-input input.invalid {
+border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
+}
 
-    /* GENEL TOPLAM - MOBİL İÇİN KÜÇÜLTÜLMÜŞ */
-    .grand-total-card {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: white; z-index: 900; padding: 10px 12px;
-      border-top: 2px solid #4facfe; box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-    }
+/* GENEL TOPLAM - MOBİL İÇİN KÜÇÜLTÜLMÜŞ */
+.grand-total-card {
+position: fixed; bottom: 0; left: 0; right: 0;
+background: white; z-index: 900; padding: 10px 12px;
+border-top: 2px solid #4facfe; box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+}
 
-    @media (min-width: 768px) {
-      .grand-total-card {
-        position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-        width: 95%; max-width: 450px; border-radius: 16px;
-        border-top: none; box-shadow: 0 12px 35px rgba(0,0,0,0.16);
-        padding: 12px 16px;
-      }
-    }
+@media (min-width: 768px) {
+.grand-total-card {
+position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+width: 95%; max-width: 450px; border-radius: 16px;
+border-top: none; box-shadow: 0 12px 35px rgba(0,0,0,0.16);
+padding: 12px 16px;
+}
+}
 
-    .grand-total-header {
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 6px; font-weight: 700; font-size: 0.9rem; color: var(--text-dark);
-    }
-    .grand-total-header .label { color: #4facfe; }
+.grand-total-header {
+display: flex; justify-content: space-between; align-items: center; 
+margin-bottom: 6px; font-weight: 700; font-size: 0.9rem; color: var(--text-dark);
+}
+.grand-total-header .label { color: #4facfe; }
 
-    .grand-table {
-      width: 100%; border-collapse: collapse; font-size: 0.75rem;
-    }
+.grand-table {
+width: 100%; border-collapse: collapse; font-size: 0.75rem;
+}
 
-    @media (min-width: 768px) {
-      .grand-table {
-        font-size: 0.8rem;
-      }
-    }
+@media (min-width: 768px) {
+.grand-table {
+font-size: 0.8rem;
+}
+}
 
-    .grand-table th, .grand-table td {
-      padding: 4px 2px; text-align: center; 
-      border: 1px solid #e0e0e0;
-      width: 33.33%; /* EŞİT SÜTUN GENİŞLİĞİ */
-    }
-    .grand-table th {
-      background: #f8f9fa; font-weight: 700; color: var(--text-dark);
-    }
-    .grand-table tbody tr.gram-50 { background: #e8f5e9; }
-    .grand-table tbody tr.gram-250 { background: #ffebee; }
-    .grand-table tbody tr.gram-1000 { background: #e3f2fd; }
-    .grand-table tfoot td {
-      font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe); 
-      color: var(--text-dark); font-size: 0.85rem;
-    }
+.grand-table th, .grand-table td {
+padding: 4px 2px; text-align: center; 
+border: 1px solid #e0e0e0;
+width: 33.33%; /* EŞİT SÜTUN GENİŞLİĞİ */
+}
+.grand-table th {
+background: #f8f9fa; font-weight: 700; color: var(--text-dark);
+}
+.grand-table tbody tr.gram-50 { background: #e8f5e9; }
+.grand-table tbody tr.gram-250 { background: #ffebee; }
+.grand-table tbody tr.gram-1000 { background: #e3f2fd; }
+.grand-table tfoot td {
+font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe); 
+color: var(--text-dark); font-size: 0.85rem;
+}
 
-    .grand-input input {
-      width: 100%; padding: 3px 2px; border: 1.4px solid var(--border);
-      border-radius: 4px; font-family: 'Courier New', monospace; 
-      font-size: 0.75rem; font-weight: 600; background: #f8f9fa; 
-      text-align: center; direction: ltr; unicode-bidi: plaintext;
-      pointer-events: none; color: var(--text-dark);
-    }
+.grand-input input {
+width: 100%; padding: 3px 2px; border: 1.4px solid var(--border);
+border-radius: 4px; font-family: 'Courier New', monospace; 
+font-size: 0.75rem; font-weight: 600; background: #f8f9fa; 
+text-align: center; direction: ltr; unicode-bidi: plaintext;
+pointer-events: none; color: var(--text-dark);
+}
 
-    /* MODAL STİLLERİ */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; 
-      justify-content: center; padding: 16px;
-    }
-    .modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* MODAL STİLLERİ */
+.modal {
+display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; 
+justify-content: center; padding: 16px;
+}
+.modal.show { display: flex; animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .modal-content {
-      background: white; border-radius: 16px; width: 100%; max-width: 95%; 
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 18px 50px rgba(0,0,0,0.2);
-      animation: slideUp 0.4s ease-out; border: 2px solid #4facfe;
-    }
+.modal-content {
+background: white; border-radius: 16px; width: 100%; max-width: 95%; 
+max-height: 90vh; overflow-y: auto; box-shadow: 0 18px 50px rgba(0,0,0,0.2);
+animation: slideUp 0.4s ease-out; border: 2px solid #4facfe;
+}
 
-    @media (min-width: 768px) {
-      .modal-content {
-        max-width: 800px;
-      }
-    }
+@media (min-width: 768px) {
+.modal-content {
+max-width: 800px;
+}
+}
 
-    @keyframes slideUp { 
-      from { transform: translateY(40px); opacity: 0; } 
-      to { transform: translateY(0); opacity: 1; } 
-    }
+@keyframes slideUp { 
+from { transform: translateY(40px); opacity: 0; } 
+to { transform: translateY(0); opacity: 1; } 
+}
 
-    .modal-header {
-      padding: 16px; border-bottom: 1px solid #eee; text-align: center; 
-      position: relative; background: linear-gradient(135deg, #4facfe, #00f2fe); 
-      color: white;
-    }
-    .modal-header h2 { font-size: 1.3rem; font-weight: 700; }
+.modal-header {
+padding: 16px; border-bottom: 1px solid #eee; text-align: center; 
+position: relative; background: linear-gradient(135deg, #4facfe, #00f2fe); 
+color: white;
+}
+.modal-header h2 { font-size: 1.3rem; font-weight: 700; }
 
-    .close-modal {
-      position: absolute; top: 10px; right: 10px; width: 38px; height: 38px;
-      background: var(--danger); color: white; border-radius: 50%; 
-      font-size: 1.3rem; cursor: pointer; display: flex; 
-      align-items: center; justify-content: center; transition: var(--transition); 
-      box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3); border: none;
-    }
-    .close-modal:hover, .close-modal:active { 
-      transform: scale(1.08); background: #c0392b; 
-    }
+.close-modal {
+position: absolute; top: 10px; right: 10px; width: 38px; height: 38px;
+background: var(--danger); color: white; border-radius: 50%; 
+font-size: 1.3rem; cursor: pointer; display: flex; 
+align-items: center; justify-content: center; transition: var(--transition); 
+box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3); border: none;
+}
+.close-modal:hover, .close-modal:active { 
+transform: scale(1.08); background: #c0392b; 
+}
 
-    .modal-body { padding: 16px; }
+.modal-body { padding: 16px; }
 
-    .summary-info {
-      margin-bottom: 12px; padding: 10px; background: #f8f9fa; 
-      border-radius: 8px; font-size: 0.85rem; line-height: 1.5; 
-      border: 1px solid #eee;
-    }
-    .summary-info strong { color: var(--text-dark); }
+.summary-info {
+margin-bottom: 12px; padding: 10px; background: #f8f9fa; 
+border-radius: 8px; font-size: 0.85rem; line-height: 1.5; 
+border: 1px solid #eee;
+}
+.summary-info strong { color: var(--text-dark); }
 
-    .summary-table {
-      width: 100%; border-collapse: collapse; font-size: 0.75rem;
-      margin-bottom: 0;
-    }
+.summary-table {
+width: 100%; border-collapse: collapse; font-size: 0.75rem;
+margin-bottom: 0;
+}
 
-    @media (min-width: 768px) {
-      .summary-table {
-        font-size: 0.88rem;
-      }
-    }
+@media (min-width: 768px) {
+.summary-table {
+font-size: 0.88rem;
+}
+}
 
-    .summary-table th, .summary-table td {
-      padding: 6px 4px; text-align: center; border: 1px solid #e0e0e0;
-    }
-    .summary-table th {
-      background: #f8f9fa; font-weight: 700; color: var(--text-dark);
-    }
-    .summary-table .product-name { 
-      text-align: left; font-weight: 600; 
-      min-width: 80px; max-width: 120px;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+.summary-table th, .summary-table td {
+padding: 6px 4px; text-align: center; border: 1px solid #e0e0e0;
+}
+.summary-table th {
+background: #f8f9fa; font-weight: 700; color: var(--text-dark);
+}
+.summary-table .product-name { 
+text-align: left; font-weight: 600; 
+min-width: 80px; max-width: 120px;
+overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 
-    @media (min-width: 768px) {
-      .summary-table .product-name {
-        min-width: 150px; max-width: 200px;
-      }
-    }
+@media (min-width: 768px) {
+.summary-table .product-name {
+min-width: 150px; max-width: 200px;
+}
+}
 
-    .summary-table th:nth-child(2), .summary-table td:nth-child(2) { background: #e8f5e9 !important; }
-    .summary-table th:nth-child(3), .summary-table td:nth-child(3) { background: #ffebee !important; }
-    .summary-table th:nth-child(4), .summary-table td:nth-child(4) { background: #e3f2fd !important; }
-    .summary-table th:nth-child(5), .summary-table td:nth-child(5) { background: #f0f4c3 !important; }
-    .summary-table th:nth-child(6), .summary-table td:nth-child(6) { background: #e8f5e9 !important; }
+.summary-table th:nth-child(2), .summary-table td:nth-child(2) { background: #e8f5e9 !important; }
+.summary-table th:nth-child(3), .summary-table td:nth-child(3) { background: #ffebee !important; }
+.summary-table th:nth-child(4), .summary-table td:nth-child(4) { background: #e3f2fd !important; }
+.summary-table th:nth-child(5), .summary-table td:nth-child(5) { background: #f0f4c3 !important; }
+.summary-table th:nth-child(6), .summary-table td:nth-child(6) { background: #e8f5e9 !important; }
 
-    .summary-table tfoot td {
-      font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe) !important; 
-      color: var(--text-dark); font-size: 0.9rem;
-    }
+.summary-table tfoot td {
+font-weight: 700; background: linear-gradient(135deg, #4facfe, #00f2fe) !important; 
+color: var(--text-dark); font-size: 0.9rem;
+}
 
-    /* PAYLAŞIM BUTONLARI */
-    .share-buttons {
-      display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; 
-      padding: 0 4px;
-    }
+/* PAYLAŞIM BUTONLARI */
+.share-buttons {
+display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px; 
+padding: 0 4px;
+}
 
-    @media (min-width: 768px) {
-      .share-buttons {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-      }
-    }
+@media (min-width: 768px) {
+.share-buttons {
+grid-template-columns: repeat(3, 1fr);
+gap: 14px;
+}
+}
 
-    .share-btn {
-      padding: 12px 16px; border: none; border-radius: 12px;
-      font-size: 0.9rem; font-weight: 700; cursor: pointer; 
-      transition: var(--transition); display: flex; align-items: center; 
-      justify-content: center; gap: 8px; min-height: 48px; 
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: relative; overflow: hidden;
-    }
+.share-btn {
+padding: 12px 16px; border: none; border-radius: 12px;
+font-size: 0.9rem; font-weight: 700; cursor: pointer; 
+transition: var(--transition); display: flex; align-items: center; 
+justify-content: center; gap: 8px; min-height: 48px; 
+box-shadow: 0 4px 15px rgba(0,0,0,0.15); position: relative; overflow: hidden;
+}
 
-    @media (min-width: 768px) {
-      .share-btn {
-        padding: 14px 18px;
-        font-size: var(--btn-font);
-        min-height: var(--btn-height);
-      }
-    }
+@media (min-width: 768px) {
+.share-btn {
+padding: 14px 18px;
+font-size: var(--btn-font);
+min-height: var(--btn-height);
+}
+}
 
-    .share-btn::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: 0.6s;
-    }
-    .share-btn:hover::before, .share-btn:active::before {
-      left: 100%;
-    }
-    .share-btn i {
-      font-size: 1.4rem;
-    }
+.share-btn::before {
+content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+transition: 0.6s;
+}
+.share-btn:hover::before, .share-btn:active::before {
+left: 100%;
+}
+.share-btn i {
+font-size: 1.4rem;
+}
 
-    @media (min-width: 768px) {
-      .share-btn i {
-        font-size: 1.6rem;
-      }
-    }
+@media (min-width: 768px) {
+.share-btn i {
+font-size: 1.6rem;
+}
+}
 
-    .share-btn.whatsapp { background: #25D366; color: white; }
-    .share-btn.excel { background: #1e7e34; color: white; }
-    .share-btn.pdf { background: #d32f2f; color: white; }
-    .share-btn:hover, .share-btn:active { 
-      transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.25); 
-    }
+.share-btn.whatsapp { background: #25D366; color: white; }
+.share-btn.excel { background: #1e7e34; color: white; }
+.share-btn.pdf { background: #d32f2f; color: white; }
+.share-btn:hover, .share-btn:active { 
+transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.25); 
+}
 
-    [dir="rtl"] .product-name, [dir="rtl"] .summary-table .product-name { text-align: right; }
-    [dir="rtl"] .quantity-input input, [dir="rtl"] .grand-input input { text-align: left; }
+[dir="rtl"] .product-name, [dir="rtl"] .summary-table .product-name { text-align: right; }
+[dir="rtl"] .quantity-input input, [dir="rtl"] .grand-input input { text-align: left; }
 
-    /* BOŞ DEĞER STİLİ */
-    .empty-value {
-      color: #999;
-    }
-  </style>
+/* BOŞ DEĞER STİLİ */
+.empty-value {
+color: #999;
+}
+</style>
 </head>
 <body>
 
@@ -514,1045 +513,1072 @@ html
 
 <!-- SABİT ÜST BAR -->
 <div class="top-bar">
-  <img src="images/adalyalogo.jpg" alt="Adalya Logo" class="logo">
-  <button class="lang-btn active" data-lang="tr" id="lang-tr">
-    TR
-  </button>
-  <button class="lang-btn" data-lang="ar" id="lang-ar">
-    العربية
-  </button>
-  <button class="lang-btn" data-lang="en" id="lang-en">
-    EN
-  </button>
+<img src="images/adalyalogo.jpg" alt="Adalya Logo" class="logo">
+<button class="lang-btn active" data-lang="tr" id="lang-tr">
+TR
+</button>
+<button class="lang-btn" data-lang="ar" id="lang-ar">
+العربية
+</button>
+<button class="lang-btn" data-lang="en" id="lang-en">
+EN
+</button>
 </div>
 
 <h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">Sipariş Oluştur</h1>
 
 <!-- BASİT SEARCH BAR -->
 <div class="search-container">
-  <div class="search-bar">
-    <input type="text" id="product-search" placeholder="Ürün ara..." aria-label="Ürün arama">
-    <i class="fas fa-times search-clear" id="search-clear"></i>
-  </div>
+<div class="search-bar">
+<input type="text" id="product-search" placeholder="Ürün ara..." aria-label="Ürün arama">
+<i class="fas fa-times search-clear" id="search-clear"></i>
+</div>
 </div>
 
 <div class="order-info">
-  <div class="input-group">
-    <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
-    <input type="text" id="customer-name" required placeholder="Örn: AHMET YILMAZ" aria-required="true">
-    <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
-  </div>
-  <div class="input-group">
-    <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
-    <input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
-  </div>
+<div class="input-group">
+<label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
+<input type="text" id="customer-name" required placeholder="Örn: AHMET YILMAZ" aria-required="true">
+<small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
+</div>
+<div class="input-group">
+<label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
+<input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
+</div>
 
-  <!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
-  <div class="input-group">
-    <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
-    <div class="delivery-methods">
-      <button class="delivery-btn active" data-method="road">
-        <i class="fas fa-truck"></i>
-        <span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
-      </button>
-      <button class="delivery-btn" data-method="sea">
-        <i class="fas fa-ship"></i>
-        <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
-      </button>
-      <button class="delivery-btn" data-method="air">
-        <i class="fas fa-plane"></i>
-        <span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
-      </button>
-    </div>
-  </div>
-  
-  <!-- BUTON GRUBU -->
-  <div class="button-group">
-    <button class="new-order-btn" id="new-order-btn">
-      <i class="fas fa-plus-circle"></i>
-      <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
-    </button>
-    <button class="summary-btn" id="show-summary" disabled>
-      <i class="fas fa-receipt"></i>
-      <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
-    </button>
-  </div>
+<!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
+<div class="input-group">
+<label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
+<div class="delivery-methods">
+<button class="delivery-btn active" data-method="road">
+<i class="fas fa-truck"></i>
+<span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
+</button>
+<button class="delivery-btn" data-method="sea">
+<i class="fas fa-ship"></i>
+<span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
+</button>
+<button class="delivery-btn" data-method="air">
+<i class="fas fa-plane"></i>
+<span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
+</button>
+</div>
+</div>
+
+<!-- BUTON GRUBU -->
+<div class="button-group">
+<button class="new-order-btn" id="new-order-btn">
+<i class="fas fa-plus-circle"></i>
+<span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
+</button>
+<button class="summary-btn" id="show-summary" disabled>
+<i class="fas fa-receipt"></i>
+<span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
+</button>
+</div>
 </div>
 
 <div class="products-container" id="products"></div>
 
 <!-- GENEL TOPLAM - OPTİMİZE EDİLMİŞ -->
 <div class="grand-total-card">
-  <div class="grand-total-header">
-    <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
-    <span id="order-code-display" class="empty-value">-</span>
-  </div>
-  <table class="grand-table">
-    <thead>
-      <tr>
-        <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
-        <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
-        <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="gram-50">
-        <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
-        <td id="grand-kg-50" class="empty-value">-</td>
-      </tr>
-      <tr class="gram-250">
-        <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
-        <td id="grand-kg-250" class="empty-value">-</td>
-      </tr>
-      <tr class="gram-1000">
-        <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
-        <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
-        <td id="grand-kg-1000" class="empty-value">-</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
-        <td><strong id="final-koli">-</strong></td>
-        <td><strong id="final-kg">-</strong></td>
-      </tr>
-    </tfoot>
-  </table>
+<div class="grand-total-header">
+<span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
+<span id="order-code-display" class="empty-value">-</span>
+</div>
+<table class="grand-table">
+<thead>
+<tr>
+<th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
+<th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
+<th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="gram-50">
+<td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
+<td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
+<td id="grand-kg-50" class="empty-value">-</td>
+</tr>
+<tr class="gram-250">
+<td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
+<td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
+<td id="grand-kg-250" class="empty-value">-</td>
+</tr>
+<tr class="gram-1000">
+<td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
+<td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
+<td id="grand-kg-1000" class="empty-value">-</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
+<td><strong id="final-koli">-</strong></td>
+<td><strong id="final-kg">-</strong></td>
+</tr>
+</tfoot>
+</table>
 </div>
 
 <div class="modal" id="summary-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 data-tr="Sipariş Özeti" data-ar="ملخص الطلب" data-en="Order Summary">Sipariş Özeti</h2>
-      <button class="close-modal" id="close-modal" aria-label="Kapat">X</button>
-    </div>
-    <div class="modal-body" id="summary-content"></div>
-  </div>
+<div class="modal-content">
+<div class="modal-header">
+<h2 data-tr="Sipariş Özeti" data-ar="ملخص الطلب" data-en="Order Summary">Sipariş Özeti</h2>
+<button class="close-modal" id="close-modal" aria-label="Kapat">X</button>
+</div>
+<div class="modal-body" id="summary-content"></div>
+</div>
 </div>
 
 <script>
 // GÜNCELLENMİŞ ORDER MANAGER
 const OrderManager = {
-  KOLI_KG: 6,
-  MAX_INPUT: 999999,
-  arabicDigits: '٠١٢٣٤٥٦٧٨٩',
-  latinDigits: '0123456789',
-  currentLang: 'tr',
-  isAnimating: false,
-  inputTimeout: null,
-  currentOrderData: null,
-  currentOrderCode: null,
-  deliveryMethod: 'road',
-
-  async loadProducts() {
-    try {
-      const response = await fetch('./products.json');
-      if (!response.ok) throw new Error('Products.json not found');
-      const data = await response.json();
-      return data.products || this.getDefaultProducts();
-    } catch (error) {
-      console.log('GitHub ürünleri yüklenemedi, varsayılan ürünler kullanılıyor:', error);
-      return this.getDefaultProducts();
-    }
-  },
-
-  getDefaultProducts() {
-    return Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      tr: `Ürün ${i + 1}`,
-      ar: `منتج ${i + 1}`,
-      en: `Product ${i + 1}`,
-      img: `images/${i + 1}.png`
-    }));
-  },
-
-  async init() {
-    this.products = await this.loadProducts();
-    this.generateOrderCode();
-    this.renderProducts();
-    this.bindEvents();
-    this.setLang('tr');
-    this.updateGrandTotal();
-    this.toggleSearchClear();
-  },
-
-  generateOrderCode() {
-    const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
-    const now = new Date();
-    
-    const dateStr = now.toLocaleDateString('tr-TR', {
-      day: '2-digit',
-      month: '2-digit', 
-      year: 'numeric'
-    }).replace(/\./g, '/');
-    
-    const timeStr = now.toLocaleTimeString('tr-TR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-
-    if (customerName) {
-      this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}-${dateStr}-${timeStr}`;
-    } else {
-      this.currentOrderCode = `SIPARIS-${dateStr}-${timeStr}`;
-    }
-    
-    document.getElementById('order-code-display').textContent = this.currentOrderCode;
-    document.getElementById('order-code').value = this.currentOrderCode;
-    
-    return this.currentOrderCode;
-  },
-
-  toLatin(str) {
-    if (!str || str === '-' || str === '') return 0;
-    return parseInt(str.toString().split('').map(d => this.latinDigits[this.arabicDigits.indexOf(d)] || d).join('').replace(/[٬,.]/g, ''), 10) || 0;
-  },
-
-  formatNumber(num, lang) {
-    if (!num && num !== 0) return '';
-    if (num === 0) return '';
-    const formatted = num.toLocaleString(lang === 'ar' ? 'ar-EG' : 'tr-TR');
-    return lang === 'ar' ? formatted.replace(/\./g, ',').replace(/,/g, '٬') : formatted;
-  },
-
-  createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.dataset.productId = product.id;
-
-    const img = document.createElement('img');
-    img.className = 'product-img';
-    img.loading = 'lazy';
-    img.src = product.img;
-    img.alt = product[this.currentLang] || product.tr;
-    img.onerror = function() { 
-      this.src = `https://picsum.photos/400/300?random=${product.id}`;
-    };
-
-    const header = document.createElement('div');
-    header.className = 'product-header';
-    header.textContent = product[this.currentLang] || product.tr;
-
-    const table = document.createElement('table');
-    table.className = 'product-table';
-    table.innerHTML = `
-      <thead>
-        <tr>
-          <th>Gramaj</th>
-          <th>Koli</th>
-          <th>KG</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="gram-50">
-          <td><strong>50G</strong></td>
-          <td><div class="quantity-input"></div></td>
-          <td data-kg="50" class="empty-value">-</td>
-        </tr>
-        <tr class="gram-250">
-          <td><strong>250G</strong></td>
-          <td><div class="quantity-input"></div></td>
-          <td data-kg="250" class="empty-value">-</td>
-        </tr>
-        <tr class="gram-1000">
-          <td><strong>1000G</strong></td>
-          <td><div class="quantity-input"></div></td>
-          <td data-kg="1000" class="empty-value">-</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td><strong>Toplam</strong></td>
-          <td data-total-koli class="empty-value">-</td>
-          <td data-total-kg class="empty-value">-</td>
-        </tr>
-      </tfoot>
-    `;
-
-    const qtyDivs = table.querySelectorAll('.quantity-input');
-    const grams = ['50', '250', '1000'];
-    grams.forEach((g, idx) => {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.setAttribute('data-gram', g);
-      input.placeholder = '';
-      input.maxLength = 6;
-      input.setAttribute('aria-label', `${g} gram koli sayısı`);
-      input.setAttribute('inputmode', 'numeric');
-      input.setAttribute('pattern', '[0-9]*');
-      qtyDivs[idx].appendChild(input);
-    });
-
-    card.appendChild(img);
-    card.appendChild(header);
-    card.appendChild(table);
-
-    return card;
-  },
-
-  renderProducts() {
-    const container = document.getElementById('products');
-    container.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-
-    this.products.forEach((p, i) => {
-      const card = this.createProductCard(p);
-      card.style.transitionDelay = `${i * 0.02}s`;
-      fragment.appendChild(card);
-    });
-
-    container.appendChild(fragment);
-
-    requestAnimationFrame(() => {
-      container.querySelectorAll('.product-card').forEach((card, i) => {
-        setTimeout(() => card.classList.add('visible'), i * 15);
-      });
-    });
-  },
-
-  bindEvents() {
-    document.getElementById('products').addEventListener('input', (e) => {
-      if (e.target.matches('input[data-gram]')) {
-        this.handleInput(e.target);
-      }
-    });
-
-    document.getElementById('customer-name').addEventListener('input', (e) => {
-      e.target.value = e.target.value.toUpperCase();
-      this.generateOrderCode();
-      this.updateGrandTotal();
-    });
-
-    // TESLİM ŞEKLİ BUTONLARI - İKON SORUNU ÇÖZÜLDÜ
-    document.querySelectorAll('.delivery-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        this.deliveryMethod = e.currentTarget.dataset.method;
-      });
-    });
-
-    document.getElementById('show-summary').addEventListener('click', () => this.showSummary());
-    
-    document.getElementById('new-order-btn').addEventListener('click', () => {
-      this.clearForm();
-      ToastManager.show('Yeni siparişe başlayabilirsiniz!', 'success');
-    });
-    
-    document.getElementById('close-modal').addEventListener('click', () => this.closeModal());
-    
-    document.getElementById('summary-modal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('summary-modal')) {
-        this.closeModal();
-      }
-    });
-
-    document.getElementById('search-clear').addEventListener('click', () => {
-      this.clearSearch();
-    });
-
-    document.getElementById('product-search').addEventListener('input', (e) => {
-      this.filterProducts(e.target.value);
-      this.toggleSearchClear();
-    });
-
-    // Dil değiştirme
-    document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
-    document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
-    document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.closeModal();
-      }
-    });
-  },
-
-  clearSearch() {
-    const searchInput = document.getElementById('product-search');
-    searchInput.value = '';
-    this.filterProducts('');
-    this.toggleSearchClear();
-    searchInput.focus();
-  },
-
-  toggleSearchClear() {
-    const searchInput = document.getElementById('product-search');
-    const clearBtn = document.getElementById('search-clear');
-    if (searchInput.value.length > 0) {
-      clearBtn.classList.add('show');
-    } else {
-      clearBtn.classList.remove('show');
-    }
-  },
-
-  handleInput(input) {
-    clearTimeout(this.inputTimeout);
-    this.inputTimeout = setTimeout(() => this.updateCard(input), 50);
-  },
-
-  updateCard(input) {
-    if (this.isAnimating) return;
-    
-    const val = input.value.replace(/[٬,.]/g, '').trim();
-    
-    if (!val || val === '-') {
-      input.value = '';
-    } else {
-      const koli = Math.min(this.toLatin(val), this.MAX_INPUT);
-      
-      if (!this.validateInput(koli)) {
-        input.classList.add('invalid');
-        ToastManager.show('Maksimum değer aşıldı!', 'warning');
-        return;
-      } else {
-        input.classList.remove('invalid');
-      }
-
-      input.value = this.formatNumber(koli, this.currentLang);
-    }
-
-    const card = input.closest('.product-card');
-    const gram = input.dataset.gram;
-    const koli = this.toLatin(input.value.replace(/[٬,.]/g, ''));
-    const kg = koli * this.KOLI_KG;
-    const kgEl = card.querySelector(`[data-kg="${gram}"]`);
-    
-    if (kgEl) {
-      if (koli > 0) {
-        kgEl.textContent = this.formatNumber(kg, this.currentLang);
-        kgEl.classList.remove('empty-value');
-      } else {
-        kgEl.textContent = '-';
-        kgEl.classList.add('empty-value');
-      }
-    }
-
-    this.updateCardTotal(card);
-    this.updateGrandTotal();
-  },
-
-  validateInput(value) {
-    return value <= this.MAX_INPUT;
-  },
-
-  updateCardTotal(card) {
-    let totalKoli = 0;
-    card.querySelectorAll('input[data-gram]').forEach(inp => {
-      totalKoli += this.toLatin(inp.value.replace(/[٬,.]/g, ''));
-    });
-    const totalKG = totalKoli * this.KOLI_KG;
-    const totalKoliEl = card.querySelector('[data-total-koli]');
-    const totalKgEl = card.querySelector('[data-total-kg]');
-    
-    if (totalKoliEl) {
-      if (totalKoli > 0) {
-        totalKoliEl.textContent = this.formatNumber(totalKoli, this.currentLang);
-        totalKoliEl.classList.remove('empty-value');
-      } else {
-        totalKoliEl.textContent = '-';
-        totalKoliEl.classList.add('empty-value');
-      }
-    }
-    
-    if (totalKgEl) {
-      if (totalKG > 0) {
-        totalKgEl.textContent = this.formatNumber(totalKG, this.currentLang);
-        totalKgEl.classList.remove('empty-value');
-      } else {
-        totalKgEl.textContent = '-';
-        totalKgEl.classList.add('empty-value');
-      }
-    }
-  },
-
-  updateGrandTotal() {
-    const gramTotals = { 50: 0, 250: 0, 1000: 0 };
-    let hasAnyValue = false;
-    
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.querySelectorAll('input[data-gram]').forEach(inp => {
-        const gram = inp.dataset.gram;
-        const value = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
-        gramTotals[gram] += value;
-        if (value > 0) hasAnyValue = true;
-      });
-    });
-
-    [50, 250, 1000].forEach(g => {
-      const koli = gramTotals[g];
-      const el = document.getElementById(`grand-${g}`);
-      const kgEl = document.getElementById(`grand-kg-${g}`);
-      
-      if (el) {
-        if (koli > 0) {
-          el.value = this.formatNumber(koli, this.currentLang);
-        } else {
-          el.value = '';
-        }
-      }
-      
-      if (kgEl) {
-        if (koli > 0) {
-          kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
-          kgEl.classList.remove('empty-value');
-        } else {
-          kgEl.textContent = '-';
-          kgEl.classList.add('empty-value');
-        }
-      }
-    });
-
-    const finalKoli = gramTotals[50] + gramTotals[250] + gramTotals[1000];
-    const finalKG = finalKoli * this.KOLI_KG;
-    const finalKoliEl = document.getElementById('final-koli');
-    const finalKgEl = document.getElementById('final-kg');
-    
-    if (finalKoliEl) {
-      if (finalKoli > 0) {
-        finalKoliEl.textContent = this.formatNumber(finalKoli, this.currentLang);
-        finalKoliEl.classList.remove('empty-value');
-      } else {
-        finalKoliEl.textContent = '-';
-        finalKoliEl.classList.add('empty-value');
-      }
-    }
-    
-    if (finalKgEl) {
-      if (finalKG > 0) {
-        finalKgEl.textContent = this.formatNumber(finalKG, this.currentLang);
-        finalKgEl.classList.remove('empty-value');
-      } else {
-        finalKgEl.textContent = '-';
-        finalKgEl.classList.add('empty-value');
-      }
-    }
-
-    const codeDisplay = document.getElementById('order-code-display');
-    if (this.currentOrderCode) {
-      codeDisplay.textContent = this.currentOrderCode;
-      codeDisplay.classList.remove('empty-value');
-    } else {
-      codeDisplay.textContent = '-';
-      codeDisplay.classList.add('empty-value');
-    }
-
-    document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
-  },
-
-  validateCustomerName() {
-    const input = document.getElementById('customer-name');
-    const error = document.getElementById('name-error');
-    if (!input.value.trim()) {
-      error.classList.add('show');
-      input.classList.add('invalid');
-      return false;
-    } else {
-      error.classList.remove('show');
-      input.classList.remove('invalid');
-      return true;
-    }
-  },
-
-  showSummary() {
-    if (!this.validateCustomerName()) return;
-
-    const content = document.getElementById('summary-content');
-    const customer = document.getElementById('customer-name').value.trim();
-    const code = this.currentOrderCode;
-    const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
-      year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
-
-    const deliveryTexts = {
-      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
-      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
-      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
-    };
-
-    let html = `
-      <div class="summary-info">
-        <p><strong>Müşteri:</strong> <span>${customer}</span></p>
-        <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
-        <p><strong>Tarih:</strong> <span>${date}</span></p>
-        <p><strong>Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
-      </div>
-
-      <table class="summary-table">
-        <thead>
-          <tr>
-            <th class="product-name">Ürün</th>
-            <th>50G</th>
-            <th>250G</th>
-            <th>1000G</th>
-            <th>Toplam Koli</th>
-            <th>Toplam KG</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    const colTotals = { 50: 0, 250: 0, 1000: 0, koli: 0, kg: 0 };
-    const items = [];
-    document.querySelectorAll('.product-card').forEach(card => {
-      const headerEl = card.querySelector('.product-header');
-      const productName = headerEl ? headerEl.textContent : '';
-      const vals = { 50: 0, 250: 0, 1000: 0 };
-      let itemKoli = 0;
-      card.querySelectorAll('input[data-gram]').forEach(inp => {
-        const gram = inp.dataset.gram;
-        const koli = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
-        vals[gram] = koli;
-        itemKoli += koli;
-        colTotals[gram] += koli;
-      });
-      colTotals.koli += itemKoli;
-      colTotals.kg += itemKoli * this.KOLI_KG;
-
-      if (itemKoli > 0) {
-        items.push({ name: productName, ...vals, koli: itemKoli, kg: itemKoli * this.KOLI_KG });
-        html += `
-          <tr>
-            <td class="product-name">${productName}</td>
-            <td>${vals[50] > 0 ? this.formatNumber(vals[50], this.currentLang) : ''}</td>
-            <td>${vals[250] > 0 ? this.formatNumber(vals[250], this.currentLang) : ''}</td>
-            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], this.currentLang) : ''}</td>
-            <td>${this.formatNumber(itemKoli, this.currentLang)}</td>
-            <td>${this.formatNumber(itemKoli * this.KOLI_KG, this.currentLang)}</td>
-          </tr>
-        `;
-      }
-    });
-
-    html += `
-        </tbody>
-        <tfoot>
-          <tr>
-            <td class="product-name"><strong>Genel Toplam</strong></td>
-            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
-            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
-            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.koli, this.currentLang)}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.kg, this.currentLang)}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <div class="share-buttons">
-        <button class="share-btn whatsapp" id="share-whatsapp">
-          <i class="fab fa-whatsapp"></i>
-          <span>WhatsApp'ta Paylaş</span>
-        </button>
-        <button class="share-btn excel" id="download-excel">
-          <i class="fas fa-file-excel"></i>
-          <span>Excel İndir</span>
-        </button>
-        <button class="share-btn pdf" id="download-pdf">
-          <i class="fas fa-file-pdf"></i>
-          <span>PDF İndir</span>
-        </button>
-      </div>
-    `;
-
-    content.innerHTML = html;
-    document.getElementById('summary-modal').classList.add('show');
-
-    this.currentOrderData = { 
-      customer, 
-      code, 
-      date, 
-      items, 
-      totals: colTotals,
-      delivery: deliveryTexts[this.deliveryMethod][this.currentLang]
-    };
-
-    document.getElementById('share-whatsapp').addEventListener('click', () => {
-      ExportManager.shareWhatsApp();
-    });
-    document.getElementById('download-excel').addEventListener('click', () => {
-      ExportManager.downloadExcel();
-    });
-    document.getElementById('download-pdf').addEventListener('click', () => {
-      ExportManager.downloadPDF();
-    });
-  },
-
-  clearForm() {
-    document.getElementById('customer-name').value = '';
-    document.getElementById('product-search').value = '';
-    this.toggleSearchClear();
-    
-    document.querySelectorAll('input[data-gram]').forEach(input => {
-      input.value = '';
-      this.updateCard(input);
-    });
-    
-    this.filterProducts('');
-    this.generateOrderCode();
-    this.updateGrandTotal();
-  },
-
-  closeModal() {
-    document.getElementById('summary-modal').classList.remove('show');
-  },
-
-  setLang(lang) {
-    if (this.currentLang === lang || this.isAnimating) return;
-    this.isAnimating = true; 
-    this.currentLang = lang; 
-    const isAR = lang === 'ar';
-
-    document.documentElement.lang = lang;
-    document.documentElement.dir = isAR ? 'rtl' : 'ltr';
-
-    // Tüm dil öğelerini güncelle
-    document.querySelectorAll('[data-tr]').forEach(el => {
-      if (el.dataset[lang] !== undefined) {
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-          el.placeholder = el.dataset[lang];
-        } else {
-          el.textContent = el.dataset[lang];
-        }
-      }
-    });
-
-    // Input değerlerini formatla
-    document.querySelectorAll('.quantity-input input').forEach(inp => {
-      const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
-      inp.value = this.formatNumber(val, lang);
-    });
-
-    // Dil butonlarını güncelle
-    document.querySelectorAll('.lang-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.lang === lang);
-    });
-
-    // Tablo başlıklarını güncelle
-    document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli, #final-kg').forEach(el => {
-      const num = this.toLatin(el.textContent.replace(/[٬,.]/g, ''));
-      if (num > 0) {
-        el.textContent = this.formatNumber(num, lang);
-        el.classList.remove('empty-value');
-      } else {
-        el.textContent = '-';
-        el.classList.add('empty-value');
-      }
-    });
-
-    // Ürün isimlerini güncelle
-    document.querySelectorAll('.product-header').forEach(header => {
-      const productId = header.closest('.product-card').dataset.productId;
-      const product = this.products.find(p => p.id == productId);
-      if (product && product[lang]) {
-        header.textContent = product[lang];
-      }
-    });
-
-    this.updateGrandTotal();
-    this.isAnimating = false;
-  },
-
-  filterProducts(query) {
-    const products = document.querySelectorAll('.product-card');
-    const searchTerm = query.toLowerCase().trim();
-
-    products.forEach(card => {
-      const productName = card.querySelector('.product-header').textContent.toLowerCase();
-      if (productName.includes(searchTerm) || query === '') {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  }
+KOLI_KG: 6,
+MAX_INPUT: 999999,
+arabicDigits: '٠١٢٣٤٥٦٧٨٩',
+latinDigits: '0123456789',
+currentLang: 'tr',
+isAnimating: false,
+inputTimeout: null,
+currentOrderData: null,
+currentOrderCode: null,
+deliveryMethod: 'road',
+
+async loadProducts() {
+try {
+const response = await fetch('./products.json');
+if (!response.ok) throw new Error('Products.json not found');
+const data = await response.json();
+return data.products || this.getDefaultProducts();
+} catch (error) {
+console.log('GitHub ürünleri yüklenemedi, varsayılan ürünler kullanılıyor:', error);
+return this.getDefaultProducts();
+}
+},
+
+getDefaultProducts() {
+return Array.from({ length: 10 }, (_, i) => ({
+id: i + 1,
+tr: `Ürün ${i + 1}`,
+ar: `منتج ${i + 1}`,
+en: `Product ${i + 1}`,
+img: `images/${i + 1}.png`
+}));
+},
+
+async init() {
+this.products = await this.loadProducts();
+this.generateOrderCode();
+this.renderProducts();
+this.bindEvents();
+this.setLang('tr');
+this.updateGrandTotal();
+this.toggleSearchClear();
+},
+
+generateOrderCode() {
+const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
+const now = new Date();
+
+const dateStr = now.toLocaleDateString('tr-TR', {
+day: '2-digit',
+month: '2-digit', 
+year: 'numeric'
+}).replace(/\./g, '/');
+
+const timeStr = now.toLocaleTimeString('tr-TR', {
+hour: '2-digit',
+minute: '2-digit',
+hour12: false
+});
+
+if (customerName) {
+this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}-${dateStr}-${timeStr}`;
+} else {
+this.currentOrderCode = `SIPARIS-${dateStr}-${timeStr}`;
+}
+
+document.getElementById('order-code-display').textContent = this.currentOrderCode;
+document.getElementById('order-code').value = this.currentOrderCode;
+
+return this.currentOrderCode;
+},
+
+toLatin(str) {
+if (!str || str === '-' || str === '') return 0;
+return parseInt(str.toString().split('').map(d => this.latinDigits[this.arabicDigits.indexOf(d)] || d).join('').replace(/[٬,.]/g, ''), 10) || 0;
+},
+
+formatNumber(num, lang) {
+if (!num && num !== 0) return '';
+if (num === 0) return '';
+const formatted = num.toLocaleString(lang === 'ar' ? 'ar-EG' : 'tr-TR');
+return lang === 'ar' ? formatted.replace(/\./g, ',').replace(/,/g, '٬') : formatted;
+},
+
+createProductCard(product) {
+const card = document.createElement('div');
+card.className = 'product-card';
+card.dataset.productId = product.id;
+
+const img = document.createElement('img');
+img.className = 'product-img';
+img.loading = 'lazy';
+img.src = product.img;
+img.alt = product[this.currentLang] || product.tr;
+img.onerror = function() { 
+this.src = `https://picsum.photos/400/300?random=${product.id}`;
+};
+
+const header = document.createElement('div');
+header.className = 'product-header';
+header.textContent = product[this.currentLang] || product.tr;
+
+const table = document.createElement('table');
+table.className = 'product-table';
+table.innerHTML = `
+     <thead>
+       <tr>
+         <th>Gramaj</th>
+         <th>Koli</th>
+         <th>KG</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr class="gram-50">
+         <td><strong>50G</strong></td>
+         <td><div class="quantity-input"></div></td>
+         <td data-kg="50" class="empty-value">-</td>
+       </tr>
+       <tr class="gram-250">
+         <td><strong>250G</strong></td>
+         <td><div class="quantity-input"></div></td>
+         <td data-kg="250" class="empty-value">-</td>
+       </tr>
+       <tr class="gram-1000">
+         <td><strong>1000G</strong></td>
+         <td><div class="quantity-input"></div></td>
+         <td data-kg="1000" class="empty-value">-</td>
+       </tr>
+     </tbody>
+     <tfoot>
+       <tr>
+         <td><strong>Toplam</strong></td>
+         <td data-total-koli class="empty-value">-</td>
+         <td data-total-kg class="empty-value">-</td>
+       </tr>
+     </tfoot>
+   `;
+
+const qtyDivs = table.querySelectorAll('.quantity-input');
+const grams = ['50', '250', '1000'];
+grams.forEach((g, idx) => {
+const input = document.createElement('input');
+input.type = 'text';
+input.setAttribute('data-gram', g);
+input.placeholder = '';
+input.maxLength = 6;
+input.setAttribute('aria-label', `${g} gram koli sayısı`);
+input.setAttribute('inputmode', 'numeric');
+input.setAttribute('pattern', '[0-9]*');
+qtyDivs[idx].appendChild(input);
+});
+
+card.appendChild(img);
+card.appendChild(header);
+card.appendChild(table);
+
+return card;
+},
+
+renderProducts() {
+const container = document.getElementById('products');
+container.innerHTML = '';
+const fragment = document.createDocumentFragment();
+
+this.products.forEach((p, i) => {
+const card = this.createProductCard(p);
+card.style.transitionDelay = `${i * 0.02}s`;
+fragment.appendChild(card);
+});
+
+container.appendChild(fragment);
+
+requestAnimationFrame(() => {
+container.querySelectorAll('.product-card').forEach((card, i) => {
+setTimeout(() => card.classList.add('visible'), i * 15);
+});
+});
+},
+
+bindEvents() {
+document.getElementById('products').addEventListener('input', (e) => {
+if (e.target.matches('input[data-gram]')) {
+this.handleInput(e.target);
+}
+});
+
+document.getElementById('customer-name').addEventListener('input', (e) => {
+e.target.value = e.target.value.toUpperCase();
+this.generateOrderCode();
+this.updateGrandTotal();
+});
+
+// TESLİM ŞEKLİ BUTONLARI - İKON SORUNU ÇÖZÜLDÜ
+document.querySelectorAll('.delivery-btn').forEach(btn => {
+btn.addEventListener('click', (e) => {
+document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
+e.currentTarget.classList.add('active');
+this.deliveryMethod = e.currentTarget.dataset.method;
+});
+});
+
+document.getElementById('show-summary').addEventListener('click', () => this.showSummary());
+
+document.getElementById('new-order-btn').addEventListener('click', () => {
+this.clearForm();
+ToastManager.show('Yeni siparişe başlayabilirsiniz!', 'success');
+});
+
+document.getElementById('close-modal').addEventListener('click', () => this.closeModal());
+
+document.getElementById('summary-modal').addEventListener('click', (e) => {
+if (e.target === document.getElementById('summary-modal')) {
+this.closeModal();
+}
+});
+
+document.getElementById('search-clear').addEventListener('click', () => {
+this.clearSearch();
+});
+
+document.getElementById('product-search').addEventListener('input', (e) => {
+this.filterProducts(e.target.value);
+this.toggleSearchClear();
+});
+
+// Dil değiştirme
+document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
+document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
+document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
+
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') {
+this.closeModal();
+}
+});
+},
+
+clearSearch() {
+const searchInput = document.getElementById('product-search');
+searchInput.value = '';
+this.filterProducts('');
+this.toggleSearchClear();
+searchInput.focus();
+},
+
+toggleSearchClear() {
+const searchInput = document.getElementById('product-search');
+const clearBtn = document.getElementById('search-clear');
+if (searchInput.value.length > 0) {
+clearBtn.classList.add('show');
+} else {
+clearBtn.classList.remove('show');
+}
+},
+
+handleInput(input) {
+clearTimeout(this.inputTimeout);
+this.inputTimeout = setTimeout(() => this.updateCard(input), 50);
+},
+
+updateCard(input) {
+if (this.isAnimating) return;
+
+const val = input.value.replace(/[٬,.]/g, '').trim();
+
+if (!val || val === '-') {
+input.value = '';
+} else {
+const koli = Math.min(this.toLatin(val), this.MAX_INPUT);
+
+if (!this.validateInput(koli)) {
+input.classList.add('invalid');
+ToastManager.show('Maksimum değer aşıldı!', 'warning');
+return;
+} else {
+input.classList.remove('invalid');
+}
+
+input.value = this.formatNumber(koli, this.currentLang);
+}
+
+const card = input.closest('.product-card');
+const gram = input.dataset.gram;
+const koli = this.toLatin(input.value.replace(/[٬,.]/g, ''));
+const kg = koli * this.KOLI_KG;
+const kgEl = card.querySelector(`[data-kg="${gram}"]`);
+
+if (kgEl) {
+if (koli > 0) {
+kgEl.textContent = this.formatNumber(kg, this.currentLang);
+kgEl.classList.remove('empty-value');
+} else {
+kgEl.textContent = '-';
+kgEl.classList.add('empty-value');
+}
+}
+
+this.updateCardTotal(card);
+this.updateGrandTotal();
+},
+
+validateInput(value) {
+return value <= this.MAX_INPUT;
+},
+
+updateCardTotal(card) {
+let totalKoli = 0;
+card.querySelectorAll('input[data-gram]').forEach(inp => {
+totalKoli += this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+});
+const totalKG = totalKoli * this.KOLI_KG;
+const totalKoliEl = card.querySelector('[data-total-koli]');
+const totalKgEl = card.querySelector('[data-total-kg]');
+
+if (totalKoliEl) {
+if (totalKoli > 0) {
+totalKoliEl.textContent = this.formatNumber(totalKoli, this.currentLang);
+totalKoliEl.classList.remove('empty-value');
+} else {
+totalKoliEl.textContent = '-';
+totalKoliEl.classList.add('empty-value');
+}
+}
+
+if (totalKgEl) {
+if (totalKG > 0) {
+totalKgEl.textContent = this.formatNumber(totalKG, this.currentLang);
+totalKgEl.classList.remove('empty-value');
+} else {
+totalKgEl.textContent = '-';
+totalKgEl.classList.add('empty-value');
+}
+}
+},
+
+updateGrandTotal() {
+const gramTotals = { 50: 0, 250: 0, 1000: 0 };
+let hasAnyValue = false;
+
+document.querySelectorAll('.product-card').forEach(card => {
+card.querySelectorAll('input[data-gram]').forEach(inp => {
+const gram = inp.dataset.gram;
+const value = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+gramTotals[gram] += value;
+if (value > 0) hasAnyValue = true;
+});
+});
+
+[50, 250, 1000].forEach(g => {
+const koli = gramTotals[g];
+const el = document.getElementById(`grand-${g}`);
+const kgEl = document.getElementById(`grand-kg-${g}`);
+
+if (el) {
+if (koli > 0) {
+el.value = this.formatNumber(koli, this.currentLang);
+} else {
+el.value = '';
+}
+}
+
+if (kgEl) {
+if (koli > 0) {
+kgEl.textContent = this.formatNumber(koli * this.KOLI_KG, this.currentLang);
+kgEl.classList.remove('empty-value');
+} else {
+kgEl.textContent = '-';
+kgEl.classList.add('empty-value');
+}
+}
+});
+
+const finalKoli = gramTotals[50] + gramTotals[250] + gramTotals[1000];
+const finalKG = finalKoli * this.KOLI_KG;
+const finalKoliEl = document.getElementById('final-koli');
+const finalKgEl = document.getElementById('final-kg');
+
+if (finalKoliEl) {
+if (finalKoli > 0) {
+finalKoliEl.textContent = this.formatNumber(finalKoli, this.currentLang);
+finalKoliEl.classList.remove('empty-value');
+} else {
+finalKoliEl.textContent = '-';
+finalKoliEl.classList.add('empty-value');
+}
+}
+
+if (finalKgEl) {
+if (finalKG > 0) {
+finalKgEl.textContent = this.formatNumber(finalKG, this.currentLang);
+finalKgEl.classList.remove('empty-value');
+} else {
+finalKgEl.textContent = '-';
+finalKgEl.classList.add('empty-value');
+}
+}
+
+const codeDisplay = document.getElementById('order-code-display');
+if (this.currentOrderCode) {
+codeDisplay.textContent = this.currentOrderCode;
+codeDisplay.classList.remove('empty-value');
+} else {
+codeDisplay.textContent = '-';
+codeDisplay.classList.add('empty-value');
+}
+
+document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
+},
+
+validateCustomerName() {
+const input = document.getElementById('customer-name');
+const error = document.getElementById('name-error');
+if (!input.value.trim()) {
+error.classList.add('show');
+input.classList.add('invalid');
+return false;
+} else {
+error.classList.remove('show');
+input.classList.remove('invalid');
+return true;
+}
+},
+
+showSummary() {
+if (!this.validateCustomerName()) return;
+
+const content = document.getElementById('summary-content');
+const customer = document.getElementById('customer-name').value.trim();
+const code = this.currentOrderCode;
+const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
+year: 'numeric', month: 'long', day: 'numeric',
+hour: '2-digit', minute: '2-digit'
+});
+
+const deliveryTexts = {
+'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
+'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
+'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
+};
+
+let html = `
+     <div class="summary-info">
+       <p><strong>Müşteri:</strong> <span>${customer}</span></p>
+       <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
+       <p><strong>Tarih:</strong> <span>${date}</span></p>
+       <p><strong>Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
+     </div>
+
+     <table class="summary-table">
+       <thead>
+         <tr>
+           <th class="product-name">Ürün</th>
+           <th>50G</th>
+           <th>250G</th>
+           <th>1000G</th>
+           <th>Toplam Koli</th>
+           <th>Toplam KG</th>
+         </tr>
+       </thead>
+       <tbody>
+   `;
+
+const colTotals = { 50: 0, 250: 0, 1000: 0, koli: 0, kg: 0 };
+const items = [];
+document.querySelectorAll('.product-card').forEach(card => {
+const headerEl = card.querySelector('.product-header');
+const productName = headerEl ? headerEl.textContent : '';
+const vals = { 50: 0, 250: 0, 1000: 0 };
+let itemKoli = 0;
+card.querySelectorAll('input[data-gram]').forEach(inp => {
+const gram = inp.dataset.gram;
+const koli = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+vals[gram] = koli;
+itemKoli += koli;
+colTotals[gram] += koli;
+});
+colTotals.koli += itemKoli;
+colTotals.kg += itemKoli * this.KOLI_KG;
+
+if (itemKoli > 0) {
+items.push({ name: productName, ...vals, koli: itemKoli, kg: itemKoli * this.KOLI_KG });
+html += `
+         <tr>
+           <td class="product-name">${productName}</td>
+           <td>${vals[50] > 0 ? this.formatNumber(vals[50], this.currentLang) : ''}</td>
+           <td>${vals[250] > 0 ? this.formatNumber(vals[250], this.currentLang) : ''}</td>
+           <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], this.currentLang) : ''}</td>
+           <td>${this.formatNumber(itemKoli, this.currentLang)}</td>
+           <td>${this.formatNumber(itemKoli * this.KOLI_KG, this.currentLang)}</td>
+         </tr>
+       `;
+}
+});
+
+html += `
+       </tbody>
+       <tfoot>
+         <tr>
+           <td class="product-name"><strong>Genel Toplam</strong></td>
+           <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
+           <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
+           <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
+           <td><strong>${this.formatNumber(colTotals.koli, this.currentLang)}</strong></td>
+           <td><strong>${this.formatNumber(colTotals.kg, this.currentLang)}</strong></td>
+         </tr>
+       </tfoot>
+     </table>
+
+     <div class="share-buttons">
+       <button class="share-btn whatsapp" id="share-whatsapp">
+         <i class="fab fa-whatsapp"></i>
+         <span>WhatsApp'ta Paylaş</span>
+       </button>
+       <button class="share-btn excel" id="download-excel">
+         <i class="fas fa-file-excel"></i>
+         <span>Excel İndir</span>
+       </button>
+       <button class="share-btn pdf" id="download-pdf">
+         <i class="fas fa-file-pdf"></i>
+         <span>PDF İndir</span>
+       </button>
+     </div>
+   `;
+
+content.innerHTML = html;
+document.getElementById('summary-modal').classList.add('show');
+
+this.currentOrderData = { 
+customer, 
+code, 
+date, 
+items, 
+totals: colTotals,
+delivery: deliveryTexts[this.deliveryMethod][this.currentLang]
+};
+
+document.getElementById('share-whatsapp').addEventListener('click', () => {
+ExportManager.shareWhatsApp();
+});
+document.getElementById('download-excel').addEventListener('click', () => {
+ExportManager.downloadExcel();
+});
+document.getElementById('download-pdf').addEventListener('click', () => {
+ExportManager.downloadPDF();
+});
+},
+
+clearForm() {
+document.getElementById('customer-name').value = '';
+document.getElementById('product-search').value = '';
+this.toggleSearchClear();
+
+document.querySelectorAll('input[data-gram]').forEach(input => {
+input.value = '';
+this.updateCard(input);
+});
+
+this.filterProducts('');
+this.generateOrderCode();
+this.updateGrandTotal();
+},
+
+closeModal() {
+document.getElementById('summary-modal').classList.remove('show');
+},
+
+setLang(lang) {
+if (this.currentLang === lang || this.isAnimating) return;
+this.isAnimating = true; 
+this.currentLang = lang; 
+const isAR = lang === 'ar';
+
+document.documentElement.lang = lang;
+document.documentElement.dir = isAR ? 'rtl' : 'ltr';
+
+// Tüm dil öğelerini güncelle
+document.querySelectorAll('[data-tr]').forEach(el => {
+if (el.dataset[lang] !== undefined) {
+if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+el.placeholder = el.dataset[lang];
+} else {
+el.textContent = el.dataset[lang];
+}
+}
+});
+
+// Gramaj isimlerini güncelle - YENİ EKLENDİ
+const gramTexts = {
+'tr': { '50G': '50G', '250G': '250G', '1000G': '1000G', 'Gramaj': 'Gramaj', 'Koli': 'Koli', 'KG': 'KG', 'Toplam': 'Toplam', 'TOPLAM': 'TOPLAM' },
+'ar': { '50G': '٥٠غ', '250G': '٢٥٠غ', '1000G': '١٠٠٠غ', 'Gramaj': 'الوزن', 'Koli': 'كولي', 'KG': 'كجم', 'Toplam': 'المجموع', 'TOPLAM': 'الإجمالي' },
+'en': { '50G': '50G', '250G': '250G', '1000G': '1000G', 'Gramaj': 'Weight', 'Koli': 'Box', 'KG': 'KG', 'Toplam': 'Total', 'TOPLAM': 'TOTAL' }
+};
+
+// Ürün tablolarındaki gramaj isimlerini güncelle
+document.querySelectorAll('.product-table th, .product-table td strong').forEach(el => {
+const text = el.textContent.trim();
+if (gramTexts[lang][text]) {
+el.textContent = gramTexts[lang][text];
+}
+});
+
+// Genel toplam tablosundaki gramaj isimlerini güncelle
+document.querySelectorAll('.grand-table th, .grand-table td strong').forEach(el => {
+const text = el.textContent.trim();
+if (gramTexts[lang][text]) {
+el.textContent = gramTexts[lang][text];
+}
+});
+
+// Input değerlerini formatla
+document.querySelectorAll('.quantity-input input').forEach(inp => {
+const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+inp.value = this.formatNumber(val, lang);
+});
+
+// Dil butonlarını güncelle
+document.querySelectorAll('.lang-btn').forEach(b => {
+b.classList.toggle('active', b.dataset.lang === lang);
+});
+
+// Tablo başlıklarını güncelle
+document.querySelectorAll('[data-kg], [data-total-koli], [data-total-kg], #final-koli, #final-kg').forEach(el => {
+const num = this.toLatin(el.textContent.replace(/[٬,.]/g, ''));
+if (num > 0) {
+el.textContent = this.formatNumber(num, lang);
+el.classList.remove('empty-value');
+} else {
+el.textContent = '-';
+el.classList.add('empty-value');
+}
+});
+
+// Ürün isimlerini güncelle
+document.querySelectorAll('.product-header').forEach(header => {
+const productId = header.closest('.product-card').dataset.productId;
+const product = this.products.find(p => p.id == productId);
+if (product && product[lang]) {
+header.textContent = product[lang];
+}
+});
+
+this.updateGrandTotal();
+this.isAnimating = false;
+},
+
+filterProducts(query) {
+const products = document.querySelectorAll('.product-card');
+const searchTerm = query.toLowerCase().trim();
+
+products.forEach(card => {
+const productName = card.querySelector('.product-header').textContent.toLowerCase();
+if (productName.includes(searchTerm) || query === '') {
+card.style.display = '';
+} else {
+card.style.display = 'none';
+}
+});
+}
 };
 
 const ToastManager = {
-  show(message, type = 'info') {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    
-    const icons = {
-      success: 'fa-check-circle',
-      error: 'fa-exclamation-circle',
-      warning: 'fa-exclamation-triangle',
-      info: 'fa-info-circle'
-    };
+show(message, type = 'info') {
+const container = document.getElementById('toast-container');
+const toast = document.createElement('div');
+toast.className = `toast ${type}`;
 
-    toast.innerHTML = `
-      <i class="fas ${icons[type] || icons.info}"></i>
-      <span>${message}</span>
-    `;
+const icons = {
+success: 'fa-check-circle',
+error: 'fa-exclamation-circle',
+warning: 'fa-exclamation-triangle',
+info: 'fa-info-circle'
+};
 
-    container.appendChild(toast);
+toast.innerHTML = `
+     <i class="fas ${icons[type] || icons.info}"></i>
+     <span>${message}</span>
+   `;
 
-    setTimeout(() => toast.classList.add('show'), 100);
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }
+container.appendChild(toast);
+
+setTimeout(() => toast.classList.add('show'), 100);
+setTimeout(() => {
+toast.classList.remove('show');
+setTimeout(() => toast.remove(), 300);
+}, 3000);
+}
 };
 
 const ExportManager = {
-  downloadExcel() {
-    if (!OrderManager.currentOrderData) return;
+downloadExcel() {
+if (!OrderManager.currentOrderData) return;
 
-    const wb = XLSX.utils.book_new();
-    
-    const title = [
-      ["SİPARİŞ DETAYI"],
-      [],
-      ["Müşteri:", OrderManager.currentOrderData.customer],
-      ["Sipariş Kodu:", OrderManager.currentOrderData.code],
-      ["Tarih:", OrderManager.currentOrderData.date],
-      ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
-      []
-    ];
+const wb = XLSX.utils.book_new();
 
-    const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
-    
-    const data = OrderManager.currentOrderData.items.map(item => [
-      item.name,
-      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
-      OrderManager.formatNumber(item.koli, 'tr'),
-      OrderManager.formatNumber(item.kg, 'tr')
-    ]);
+const title = [
+["SİPARİŞ DETAYI"],
+[],
+["Müşteri:", OrderManager.currentOrderData.customer],
+["Sipariş Kodu:", OrderManager.currentOrderData.code],
+["Tarih:", OrderManager.currentOrderData.date],
+["Teslim Şekli:", OrderManager.currentOrderData.delivery],
+[]
+];
 
-    const totals = [
-      ["GENEL TOPLAM", 
-       OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-       OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-       OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
-      ]
-    ];
+const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
 
-    const allData = [...title, ...headers, ...data, ...totals];
-    const ws = XLSX.utils.aoa_to_sheet(allData);
-    
-    // TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - GELİŞTİRİLMİŞ
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cell_address = {c: C, r: R};
-        const cell_ref = XLSX.utils.encode_cell(cell_address);
-        if (!ws[cell_ref]) continue;
-        
-        // Hücre stillerini oluştur
-        if (!ws[cell_ref].s) ws[cell_ref].s = {};
-        
-        // Border stilleri - TÜM HÜCRELER İÇİN
-        ws[cell_ref].s.border = {
-          top: {style: "thin", color: {rgb: "000000"}},
-          left: {style: "thin", color: {rgb: "000000"}},
-          bottom: {style: "thin", color: {rgb: "000000"}},
-          right: {style: "thin", color: {rgb: "000000"}}
-        };
-        
-        // Hizalama
-        ws[cell_ref].s.alignment = { 
-          horizontal: "center", 
-          vertical: "center" 
-        };
-        
-        // Başlık satırı için özel stil (8. satır - tablo başlıkları)
-        if (R === 7) {
-          ws[cell_ref].s.fill = {
-            patternType: "solid",
-            fgColor: {rgb: "4FACFE"}
-          };
-          ws[cell_ref].s.font = {
-            color: {rgb: "FFFFFF"},
-            bold: true
-          };
-        }
-        
-        // Genel toplam satırı için özel stil
-        if (R === range.e.r) {
-          ws[cell_ref].s.fill = {
-            patternType: "solid",
-            fgColor: {rgb: "27AE60"}
-          };
-          ws[cell_ref].s.font = {
-            color: {rgb: "FFFFFF"},
-            bold: true
-          };
-        }
-      }
-    }
+const data = OrderManager.currentOrderData.items.map(item => [
+item.name,
+item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+OrderManager.formatNumber(item.koli, 'tr'),
+OrderManager.formatNumber(item.kg, 'tr')
+]);
 
-    // Sütun genişlikleri
-    if (!ws['!cols']) ws['!cols'] = [];
-    ws['!cols'][0] = { width: 25 };
-    for (let i = 1; i <= 5; i++) {
-      ws['!cols'][i] = { width: 15 };
-    }
+const totals = [
+["GENEL TOPLAM", 
+OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
+OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
+]
+];
 
-    XLSX.utils.book_append_sheet(wb, ws, "Sipariş");
-    XLSX.writeFile(wb, `Sipariş_${OrderManager.currentOrderData.code}.xlsx`);
-    
-    ToastManager.show('Excel indirildi!', 'success');
-  },
+const allData = [...title, ...headers, ...data, ...totals];
+const ws = XLSX.utils.aoa_to_sheet(allData);
 
-  downloadPDF() {
-    if (!OrderManager.currentOrderData) return;
+// TÜM HÜCRELERE KENAR ÇİZGİLERİ EKLE - GELİŞTİRİLMİŞ
+const range = XLSX.utils.decode_range(ws['!ref']);
+for (let R = range.s.r; R <= range.e.r; ++R) {
+for (let C = range.s.c; C <= range.e.c; ++C) {
+const cell_address = {c: C, r: R};
+const cell_ref = XLSX.utils.encode_cell(cell_address);
+if (!ws[cell_ref]) continue;
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Türkçe karakter sorunu çözümü - özel font kullanımı
-    doc.setFont("helvetica", "normal");
-    
-    // Başlık
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
-    
-    // Bilgiler
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
-    doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
-    doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
-    doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
-    
-    const headers = [
-      "Ürün Adı", 
-      "50G", 
-      "250G", 
-      "1000G", 
-      "Toplam Koli", 
-      "Toplam KG"
-    ];
-    
-    const tableData = OrderManager.currentOrderData.items.map(item => [
-      item.name,
-      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
-      OrderManager.formatNumber(item.koli, 'tr'),
-      OrderManager.formatNumber(item.kg, 'tr')
-    ]);
-    
-    tableData.push([
-      "GENEL TOPLAM",
-      OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-      OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-      OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
-    ]);
+// Hücre stillerini oluştur
+if (!ws[cell_ref].s) ws[cell_ref].s = {};
 
-    // PDF oluştur - TÜRKÇE KARAKTER SORUNU ÇÖZÜLDÜ
-    try {
-      doc.autoTable({
-        head: [headers],
-        body: tableData,
-        startY: 52,
-        theme: 'grid',
-        styles: { 
-          fontSize: 8, 
-          cellPadding: 2,
-          textColor: [0, 0, 0],
-          font: "helvetica",
-          fontStyle: 'normal',
-          lineColor: [0, 0, 0],
-          lineWidth: 0.1,
-          // Türkçe karakter desteği
-          halign: 'center',
-          valign: 'middle'
-        },
-        headStyles: { 
-          fillColor: [79, 172, 254],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold',
-          fontSize: 9,
-          lineColor: [0, 0, 0],
-          lineWidth: 0.1,
-          halign: 'center'
-        },
-        bodyStyles: {
-          fillColor: [255, 255, 255],
-          textColor: [0, 0, 0],
-          lineColor: [0, 0, 0],
-          lineWidth: 0.1,
-          font: "helvetica",
-          halign: 'center'
-        },
-        alternateRowStyles: {
-          fillColor: [245, 245, 245]
-        },
-        didParseCell: function(data) {
-          // Tüm hücrelere border
-          data.cell.styles.lineColor = [0, 0, 0];
-          data.cell.styles.lineWidth = 0.1;
-          data.cell.styles.halign = 'center';
-          
-          // Ürün adı sütunu için sola hizalama
-          if (data.column.index === 0) {
-            data.cell.styles.halign = 'left';
-          }
-          
-          if (data.section === 'body' && data.row.index === tableData.length - 1) {
-            data.cell.styles.fillColor = [39, 174, 96];
-            data.cell.styles.textColor = [255, 255, 255];
-            data.cell.styles.fontStyle = 'bold';
-            data.cell.styles.halign = 'center';
-          }
-        },
-        margin: { top: 52 }
-      });
-    } catch (error) {
-      console.error('PDF oluşturma hatası:', error);
-    }
-    
-    doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
-    ToastManager.show('PDF indirildi!', 'success');
-  },
+// Border stilleri - TÜM HÜCRELER İÇİN
+ws[cell_ref].s.border = {
+top: {style: "thin", color: {rgb: "000000"}},
+left: {style: "thin", color: {rgb: "000000"}},
+bottom: {style: "thin", color: {rgb: "000000"}},
+right: {style: "thin", color: {rgb: "000000"}}
+};
 
-  shareWhatsApp() {
-    if (!OrderManager.currentOrderData) return;
+// Hizalama
+ws[cell_ref].s.alignment = { 
+horizontal: "center", 
+vertical: "center" 
+};
 
-    let text = `*SİPARİŞ DETAYI*\n\n`;
-    text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
-    text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
-    text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
-    text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
-    text += `*ÜRÜN DETAYLARI:*\n`;
+// Tablo başlıkları için özel stil
+const headerRowIndex = title.length; // Başlık satırının indeksi
+if (R === headerRowIndex) {
+ws[cell_ref].s.fill = {
+patternType: "solid",
+fgColor: {rgb: "4FACFE"}
+};
+ws[cell_ref].s.font = {
+color: {rgb: "FFFFFF"},
+bold: true
+};
+}
 
-    OrderManager.currentOrderData.items.forEach((item, index) => {
-      text += `\n${index + 1}. ${item.name}\n`;
-      if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
-      if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
-      if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
-      text += `   ➕ Toplam: ${OrderManager.formatNumber(item.koli, 'tr')} koli (${OrderManager.formatNumber(item.kg, 'tr')} KG)\n`;
-    });
+// Genel toplam satırı için özel stil
+if (R === range.e.r) {
+ws[cell_ref].s.fill = {
+patternType: "solid",
+fgColor: {rgb: "27AE60"}
+};
+ws[cell_ref].s.font = {
+color: {rgb: "FFFFFF"},
+bold: true
+};
+}
+}
+}
 
-    text += `\n*📊 GENEL TOPLAM:*\n`;
-    if (OrderManager.currentOrderData.totals[50] > 0) text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
-    if (OrderManager.currentOrderData.totals[250] > 0) text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
-    if (OrderManager.currentOrderData.totals[1000] > 0) text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
-    text += `✅ Toplam Koli: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr')}\n`;
-    text += `⚖️ Toplam KG: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')} KG`;
+// Sütun genişlikleri
+if (!ws['!cols']) ws['!cols'] = [];
+ws['!cols'][0] = { width: 25 };
+for (let i = 1; i <= 5; i++) {
+ws['!cols'][i] = { width: 15 };
+}
 
-    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
-    ToastManager.show('WhatsApp\'ta paylaşıldı!', 'success');
-  }
+XLSX.utils.book_append_sheet(wb, ws, "Sipariş");
+XLSX.writeFile(wb, `Sipariş_${OrderManager.currentOrderData.code}.xlsx`);
+
+ToastManager.show('Excel indirildi!', 'success');
+},
+
+downloadPDF() {
+if (!OrderManager.currentOrderData) return;
+
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+
+// Türkçe karakter sorunu çözümü
+doc.setFont("helvetica");
+
+// Başlık
+doc.setFontSize(16);
+doc.setFont(undefined, 'bold');
+doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
+
+// Bilgiler
+doc.setFontSize(10);
+doc.setFont(undefined, 'normal');
+doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
+doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
+doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
+doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
+
+const headers = [
+"Ürün Adı", 
+"50G", 
+"250G", 
+"1000G", 
+"Toplam Koli", 
+"Toplam KG"
+];
+
+const tableData = OrderManager.currentOrderData.items.map(item => [
+item.name,
+item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+OrderManager.formatNumber(item.koli, 'tr'),
+OrderManager.formatNumber(item.kg, 'tr')
+]);
+
+tableData.push([
+"GENEL TOPLAM",
+OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
+OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
+]);
+
+// PDF oluştur - GELİŞTİRİLMİŞ
+try {
+doc.autoTable({
+head: [headers],
+body: tableData,
+startY: 55,
+theme: 'grid',
+styles: { 
+fontSize: 8, 
+cellPadding: 3,
+textColor: [0, 0, 0],
+font: "helvetica",
+fontStyle: 'normal',
+lineColor: [0, 0, 0],
+lineWidth: 0.3,
+halign: 'center',
+valign: 'middle'
+},
+headStyles: { 
+fillColor: [79, 172, 254],
+textColor: [255, 255, 255],
+fontStyle: 'bold',
+fontSize: 9,
+lineColor: [0, 0, 0],
+lineWidth: 0.3,
+halign: 'center',
+cellPadding: 4
+},
+bodyStyles: {
+fillColor: [255, 255, 255],
+textColor: [0, 0, 0],
+lineColor: [0, 0, 0],
+lineWidth: 0.3,
+fontStyle: 'normal',
+halign: 'center',
+cellPadding: 3
+},
+alternateRowStyles: {
+fillColor: [245, 245, 245]
+},
+didParseCell: function(data) {
+// Tüm hücrelere kalın border
+data.cell.styles.lineColor = [0, 0, 0];
+data.cell.styles.lineWidth = 0.3;
+data.cell.styles.halign = 'center';
+
+// Ürün adı sütunu için sola hizalama
+if (data.column.index === 0) {
+data.cell.styles.halign = 'left';
+}
+
+// Genel toplam satırı
+if (data.section === 'body' && data.row.index === tableData.length - 1) {
+data.cell.styles.fillColor = [39, 174, 96];
+data.cell.styles.textColor = [255, 255, 255];
+data.cell.styles.fontStyle = 'bold';
+data.cell.styles.halign = 'center';
+}
+},
+margin: { top: 55 },
+tableWidth: 'wrap'
+});
+} catch (error) {
+console.error('PDF oluşturma hatası:', error);
+}
+
+doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
+ToastManager.show('PDF indirildi!', 'success');
+},
+
+shareWhatsApp() {
+if (!OrderManager.currentOrderData) return;
+
+let text = `*SİPARİŞ DETAYI*\n\n`;
+text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
+text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
+text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
+text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
+text += `*ÜRÜN DETAYLARI:*\n`;
+
+OrderManager.currentOrderData.items.forEach((item, index) => {
+text += `\n${index + 1}. ${item.name}\n`;
+if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
+if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
+if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
+text += `   ➕ Toplam: ${OrderManager.formatNumber(item.koli, 'tr')} koli (${OrderManager.formatNumber(item.kg, 'tr')} KG)\n`;
+});
+
+text += `\n*📊 GENEL TOPLAM:*\n`;
+if (OrderManager.currentOrderData.totals[50] > 0) text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
+if (OrderManager.currentOrderData.totals[250] > 0) text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
+if (OrderManager.currentOrderData.totals[1000] > 0) text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
+text += `✅ Toplam Koli: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr')}\n`;
+text += `⚖️ Toplam KG: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')} KG`;
+
+const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+window.open(url, '_blank');
+ToastManager.show('WhatsApp\'ta paylaşıldı!', 'success');
+}
 };
 
 // Uygulamayı başlat
 document.addEventListener('DOMContentLoaded', () => {
-  OrderManager.init();
+OrderManager.init();
 });
 </script>
 
