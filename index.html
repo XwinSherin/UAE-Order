@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
-  <title>Sipariş Oluştur</title>
+  <title>Adalya Sipariş</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -27,6 +27,7 @@
       --green: rgba(34, 197, 94, 0.15);
       --blue-grad: linear-gradient(135deg, #4facfe, #00f2fe);
       --warning: #f59e0b;
+      --purple: #8B5CF6;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
@@ -52,24 +53,47 @@
     .toast.error { background: var(--danger); }
     .toast.warning { background: var(--warning); }
 
-    /* SAVE SUCCESS ANIMATION */
-    .save-success {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      background: var(--success); color: white; padding: 20px 40px;
-      border-radius: 12px; font-weight: 700; font-size: 1.2rem;
-      box-shadow: 0 10px 30px rgba(39, 174, 96, 0.3); z-index: 10000;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .save-success.show {
-      opacity: 1; animation: pulse 2s ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.05); }
+    /* LOGO VE DİL BARI */
+    .top-bar {
+      position: fixed; top: 16px; right: 16px; display: flex; gap: 12px; z-index: 1000;
+      background: var(--glass-bg); padding: 8px 16px; border-radius: 40px;
+      border: 1px solid var(--glass-border); backdrop-filter: blur(16px); 
+      box-shadow: 0 6px 24px rgba(0,0,0,0.14); align-items: center;
     }
 
-    /* BASİT SEARCH BAR */
+    .logo {
+      width: 32px; height: 32px; border-radius: 8px; object-fit: cover;
+      border: 2px solid var(--glass-border);
+    }
+
+    .lang-btn {
+      min-width: 50px; height: 36px; background: var(--glass-bg); color: #333;
+      border: none; border-radius: 18px; font-weight: 700; font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition); display: flex; align-items: center;
+      justify-content: center; gap: 4px; padding: 0 12px; position: relative;
+      border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .lang-btn::before {
+      content: ''; position: absolute; inset: 2px; background: var(--blue-grad);
+      border-radius: 16px; opacity: 0; transition: var(--transition); z-index: -1;
+    }
+    .lang-btn:hover { 
+      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,172,254,0.25); 
+    }
+    .lang-btn.active { color: #fff; font-weight: 800; }
+    .lang-btn.active::before { opacity: 1; }
+
+    #lang-ar { background: var(--green); border-color: rgba(34,197,94,0.3); }
+    #lang-ar i { color: #16a34a; }
+
+    .page-title {
+      text-align: center; font-size: 1.7rem; font-weight: 800; color: var(--text-dark); 
+      margin: 60px 0 20px; background: linear-gradient(135deg, #4facfe, #8B5CF6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* MOBİL UYUMLU ARAYÜZ */
     .search-container {
       max-width: 800px; margin: 0 auto 20px; position: relative;
     }
@@ -96,56 +120,31 @@
 
     .bulk-actions {
       max-width: 800px; margin: 0 auto 20px; display: none;
-      gap: 12px; flex-wrap: wrap;
+      gap: 12px; flex-wrap: wrap; justify-content: center;
     }
     .bulk-actions.show { display: flex; }
     .bulk-btn {
       padding: 10px 16px; border: 2px solid var(--primary); background: white;
       color: var(--primary); border-radius: 8px; font-weight: 600;
       cursor: pointer; transition: var(--transition); display: flex;
-      align-items: center; gap: 6px;
+      align-items: center; gap: 6px; font-size: 0.9rem;
     }
     .bulk-btn:hover {
       background: var(--primary); color: white;
       transform: translateY(-2px);
     }
 
-    .top-bar {
-      position: fixed; top: 16px; right: 16px; display: flex; gap: 12px; z-index: 1000;
-      background: var(--glass-bg); padding: 10px 16px; border-radius: 40px;
-      border: 1px solid var(--glass-border); backdrop-filter: blur(16px); 
-      box-shadow: 0 6px 24px rgba(0,0,0,0.14); align-items: center;
-    }
-
-    .lang-btn {
-      min-width: 60px; height: 42px; background: var(--glass-bg); color: #333;
-      border: none; border-radius: 21px; font-weight: 700; font-size: 0.95rem;
-      cursor: pointer; transition: var(--transition); display: flex; align-items: center;
-      justify-content: center; gap: 6px; padding: 0 14px; position: relative;
-      border: 1px solid var(--glass-border); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .lang-btn::before {
-      content: ''; position: absolute; inset: 2px; background: var(--blue-grad);
-      border-radius: 19px; opacity: 0; transition: var(--transition); z-index: -1;
-    }
-    .lang-btn:hover { 
-      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,172,254,0.25); 
-    }
-    .lang-btn.active { color: #fff; font-weight: 800; }
-    .lang-btn.active::before { opacity: 1; }
-
-    #lang-ar { background: var(--green); border-color: rgba(34,197,94,0.3); }
-    #lang-ar i { color: #16a34a; }
-
-    .page-title {
-      text-align: center; font-size: 1.7rem; font-weight: 700; color: var(--text-dark); 
-      margin: 60px 0 20px;
-    }
-
     .order-info {
       max-width: 800px; margin: 0 auto 24px; display: grid; gap: 14px;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
     }
+
+    @media (min-width: 768px) {
+      .order-info {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .input-group {
       display: flex; flex-direction: column;
     }
@@ -172,8 +171,15 @@
 
     /* BUTON GRUBU */
     .button-group {
-      grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      display: grid; grid-template-columns: 1fr; gap: 14px;
     }
+
+    @media (min-width: 768px) {
+      .button-group {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .new-order-btn {
       padding: 14px; border: 2px solid var(--success); background: white;
       color: var(--success); border-radius: 12px; font-size: 1.1rem; 
@@ -195,6 +201,7 @@
     }
     .summary-btn:disabled {
       background: #ccc; cursor: not-allowed; box-shadow: none; opacity: 0.6;
+      transform: none !important;
     }
     .summary-btn:hover:not(:disabled), .summary-btn:active:not(:disabled) { 
       transform: translateY(-1px); box-shadow: 0 5px 16px rgba(79, 172, 254, 0.35); 
@@ -204,6 +211,13 @@
       display: grid; gap: 18px; max-width: 1600px; margin: 0 auto;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       position: relative; z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .products-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
 
     .product-card {
@@ -231,7 +245,7 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* TABLO SATIR YÜKSEKLİKLERİ DARALTILDI */
+    /* TABLO STİLLERİ */
     .product-table {
       width: 100%; border-collapse: collapse; font-size: 0.85rem;
     }
@@ -267,15 +281,24 @@
       border-color: var(--danger); background: rgba(231, 76, 60, 0.1);
     }
 
+    /* GENEL TOPLAM KARTI */
     .grand-total-card {
       position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
-      width: 90%; max-width: 560px; background: white; border-radius: 16px;
+      width: 95%; max-width: 560px; background: white; border-radius: 16px;
       box-shadow: 0 12px 35px rgba(0,0,0,0.16); z-index: 900; padding: 16px;
       border: 2px solid #4facfe;
     }
+
+    @media (max-width: 768px) {
+      .grand-total-card {
+        width: 95%;
+        padding: 12px;
+      }
+    }
+
     .grand-total-header {
       display: flex; justify-content: space-between; align-items: center; 
-      margin-bottom: 12px; font-weight: 700; font-size: 1.2rem; color: var(--text-dark);
+      margin-bottom: 12px; font-weight: 700; font-size: 1.1rem; color: var(--text-dark);
     }
     .grand-total-header .label { color: #4facfe; }
 
@@ -305,6 +328,7 @@
       pointer-events: none; color: var(--text-dark);
     }
 
+    /* MODAL STİLLERİ */
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; 
@@ -375,27 +399,20 @@
       color: var(--text-dark); font-size: 1rem;
     }
 
-    /* KAYDET BUTONU */
-    .save-order-btn {
-      width: 100%; padding: 16px; background: var(--success); color: white;
-      border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700;
-      cursor: pointer; transition: var(--transition); margin-bottom: 20px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-    }
-    .save-order-btn:hover:not(:disabled) {
-      transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-    }
-    .save-order-btn:disabled {
-      background: #ccc; cursor: not-allowed; transform: none; box-shadow: none;
+    /* PAYLAŞIM BUTONLARI */
+    .share-buttons {
+      display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px; 
+      padding: 0 8px;
     }
 
-    .share-buttons {
-      display: flex; flex-wrap: wrap; gap: 14px; margin-top: 20px; 
-      justify-content: center; padding: 0 8px;
+    @media (min-width: 768px) {
+      .share-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
+
     .share-btn {
-      flex: 1; min-width: 150px; padding: 14px 18px; border: none; border-radius: 16px;
+      padding: 14px 18px; border: none; border-radius: 16px;
       font-size: var(--btn-font); font-weight: 700; cursor: pointer; 
       transition: var(--transition); display: flex; align-items: center; 
       justify-content: center; gap: 12px; min-height: var(--btn-height); 
@@ -430,14 +447,15 @@
 
 <!-- SABİT ÜST BAR -->
 <div class="top-bar">
+  <img src="images/adalyalogo.jpg" alt="Adalya Logo" class="logo">
   <button class="lang-btn active" data-lang="tr" id="lang-tr">
-    <i class="fas fa-flag"></i> TR
+    TR
   </button>
   <button class="lang-btn" data-lang="ar" id="lang-ar">
-    <i class="fas fa-flag"></i> العربية
+    العربية
   </button>
   <button class="lang-btn" data-lang="en" id="lang-en">
-    <i class="fas fa-flag"></i> EN
+    EN
   </button>
 </div>
 
@@ -472,7 +490,7 @@
   </div>
   <div class="input-group">
     <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
-    <input type="text" id="order-code" placeholder="Boş bırakılırsa otomatik">
+    <input type="text" id="order-code" placeholder="Otomatik oluşturulur" readonly>
   </div>
   
   <!-- BUTON GRUBU -->
@@ -480,8 +498,8 @@
     <button class="new-order-btn" id="new-order-btn" data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">
       <i class="fas fa-plus-circle"></i> Yeni Sipariş
     </button>
-    <button class="summary-btn" id="show-summary" disabled data-tr="Özeti Gör ve Kaydet" data-ar="عرض الملخص وحفظ" data-en="View Summary & Save">
-      <i class="fas fa-receipt"></i> Özeti Gör ve Kaydet
+    <button class="summary-btn" id="show-summary" disabled data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">
+      <i class="fas fa-receipt"></i> Özeti Gör
     </button>
   </div>
 </div>
@@ -491,7 +509,7 @@
 <div class="grand-total-card">
   <div class="grand-total-header">
     <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
-    <span id="order-code-display">0000</span>
+    <span id="order-code-display">-</span>
   </div>
   <table class="grand-table">
     <thead>
@@ -505,24 +523,24 @@
       <tr class="gram-50">
         <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
-        <td id="grand-kg-50">0</td>
+        <td id="grand-kg-50">-</td>
       </tr>
       <tr class="gram-250">
         <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
-        <td id="grand-kg-250">0</td>
+        <td id="grand-kg-250">-</td>
       </tr>
       <tr class="gram-1000">
         <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
-        <td id="grand-kg-1000">0</td>
+        <td id="grand-kg-1000">-</td>
       </tr>
     </tbody>
     <tfoot>
       <tr>
         <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
-        <td><strong id="final-koli">0</strong></td>
-        <td><strong id="final-kg">0</strong></td>
+        <td><strong id="final-koli">-</strong></td>
+        <td><strong id="final-kg">-</strong></td>
       </tr>
     </tfoot>
   </table>
@@ -539,7 +557,7 @@
 </div>
 
 <script>
-// BASİTLEŞTİRİLMİŞ ORDER MANAGER - GitHub için optimize edilmiş
+// GÜNCELLENMİŞ ORDER MANAGER
 const OrderManager = {
   KOLI_KG: 6,
   MAX_INPUT: 999999,
@@ -547,18 +565,19 @@ const OrderManager = {
   latinDigits: '0123456789',
   currentLang: 'tr',
   isAnimating: false,
-  orderCounter: 1000,
+  orderCounter: 1,
   inputTimeout: null,
   currentOrderData: null,
   selectedProducts: new Set(),
-  autoSaveTimeout: null,
   currentOrderCode: null,
 
-  // GitHub'dan ürünleri çek
+  // GitHub'dan ürünleri çek - DÜZELTİLDİ
   async loadProducts() {
     try {
       const response = await fetch('./products.json');
+      if (!response.ok) throw new Error('Products.json not found');
       const data = await response.json();
+      console.log('Ürünler yüklendi:', data);
       return data.products || this.getDefaultProducts();
     } catch (error) {
       console.log('GitHub ürünleri yüklenemedi, varsayılan ürünler kullanılıyor:', error);
@@ -578,6 +597,7 @@ const OrderManager = {
 
   async init() {
     this.products = await this.loadProducts();
+    console.log('Başlatılan ürünler:', this.products);
     this.generateOrderCode();
     this.renderProducts();
     this.bindEvents();
@@ -586,23 +606,46 @@ const OrderManager = {
     this.toggleSearchClear();
   },
 
+  // YENİ SİPARİŞ KODU SİSTEMİ
   generateOrderCode() {
-    if (!this.currentOrderCode) {
-      this.orderCounter++;
-      this.currentOrderCode = this.orderCounter.toString().padStart(4, '0');
-      
-      document.getElementById('order-code-display').textContent = this.currentOrderCode;
-      document.getElementById('order-code').value = this.currentOrderCode;
+    const customerName = document.getElementById('customer-name').value.trim();
+    const now = new Date();
+    
+    // Tarih formatı: GG-AA-YYYY/SS:DD
+    const dateStr = now.toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit', 
+      year: 'numeric'
+    }).replace(/\./g, '-');
+    
+    const timeStr = now.toLocaleTimeString('tr-TR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).replace(/:/g, '');
+
+    if (customerName) {
+      // Müşteri adı + tarih + sayaç
+      const baseCode = `${customerName.replace(/\s+/g, '_')}_${dateStr}/${timeStr}`;
+      this.currentOrderCode = baseCode;
+    } else {
+      // Sadece tarih + sayaç
+      this.currentOrderCode = `SIPARIS_${dateStr}/${timeStr}_${this.orderCounter.toString().padStart(3, '0')}`;
     }
+    
+    document.getElementById('order-code-display').textContent = this.currentOrderCode;
+    document.getElementById('order-code').value = this.currentOrderCode;
+    
     return this.currentOrderCode;
   },
 
   toLatin(str) {
+    if (!str || str === '-') return 0;
     return parseInt(str.toString().split('').map(d => this.latinDigits[this.arabicDigits.indexOf(d)] || d).join('').replace(/[٬,.]/g, ''), 10) || 0;
   },
 
   formatNumber(num, lang) {
-    if (!num && num !== 0) return lang === 'ar' ? '٠' : '0';
+    if (!num && num !== 0) return '-';
+    if (num === 0) return '-';
     const formatted = num.toLocaleString(lang === 'ar' ? 'ar-EG' : 'tr-TR');
     return lang === 'ar' ? formatted.replace(/\./g, ',').replace(/,/g, '٬') : formatted;
   },
@@ -642,24 +685,24 @@ const OrderManager = {
         <tr class="gram-50">
           <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="50">0</td>
+          <td data-kg="50">-</td>
         </tr>
         <tr class="gram-250">
           <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="250">0</td>
+          <td data-kg="250">-</td>
         </tr>
         <tr class="gram-1000">
           <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
           <td><div class="quantity-input"></div></td>
-          <td data-kg="1000">0</td>
+          <td data-kg="1000">-</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td><strong data-tr="Toplam" data-ar="الإجمالي" data-en="Total">Toplam</strong></td>
-          <td data-total-koli>0</td>
-          <td data-total-kg>0</td>
+          <td data-total-koli>-</td>
+          <td data-total-kg>-</td>
         </tr>
       </tfoot>
     `;
@@ -670,7 +713,7 @@ const OrderManager = {
       const input = document.createElement('input');
       input.type = 'text';
       input.setAttribute('data-gram', g);
-      input.placeholder = '0';
+      input.placeholder = '-';
       input.maxLength = 6;
       input.setAttribute('aria-label', `${g} gram koli sayısı`);
       qtyDivs[idx].appendChild(input);
@@ -712,6 +755,7 @@ const OrderManager = {
 
   renderProducts() {
     const container = document.getElementById('products');
+    container.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
     this.products.forEach((p, i) => {
@@ -737,11 +781,8 @@ const OrderManager = {
     });
 
     document.getElementById('customer-name').addEventListener('input', () => {
+      this.generateOrderCode();
       this.updateGrandTotal();
-    });
-
-    document.getElementById('order-code').addEventListener('input', (e) => {
-      document.getElementById('order-code-display').textContent = e.target.value || this.currentOrderCode;
     });
 
     document.getElementById('show-summary').addEventListener('click', () => this.showSummary());
@@ -813,20 +854,28 @@ const OrderManager = {
     if (this.isAnimating) return;
     
     const val = input.value.replace(/[٬,.]/g, '').trim();
-    const koli = Math.min(this.toLatin(val), this.MAX_INPUT);
     
-    if (!this.validateInput(koli)) {
-      input.classList.add('invalid');
-      ToastManager.show('Maksimum değer aşıldı!', 'warning');
-      return;
+    // Boş değer kontrolü
+    if (!val || val === '-') {
+      input.value = '';
+      input.placeholder = '-';
     } else {
-      input.classList.remove('invalid');
-    }
+      const koli = Math.min(this.toLatin(val), this.MAX_INPUT);
+      
+      if (!this.validateInput(koli)) {
+        input.classList.add('invalid');
+        ToastManager.show('Maksimum değer aşıldı!', 'warning');
+        return;
+      } else {
+        input.classList.remove('invalid');
+      }
 
-    input.value = this.formatNumber(koli, this.currentLang);
+      input.value = this.formatNumber(koli, this.currentLang);
+    }
 
     const card = input.closest('.product-card');
     const gram = input.dataset.gram;
+    const koli = this.toLatin(input.value.replace(/[٬,.]/g, ''));
     const kg = koli * this.KOLI_KG;
     const kgEl = card.querySelector(`[data-kg="${gram}"]`);
     if (kgEl) kgEl.textContent = this.formatNumber(kg, this.currentLang);
@@ -853,10 +902,14 @@ const OrderManager = {
 
   updateGrandTotal() {
     const gramTotals = { 50: 0, 250: 0, 1000: 0 };
+    let hasAnyValue = false;
+    
     document.querySelectorAll('.product-card').forEach(card => {
       card.querySelectorAll('input[data-gram]').forEach(inp => {
         const gram = inp.dataset.gram;
-        gramTotals[gram] += this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+        const value = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
+        gramTotals[gram] += value;
+        if (value > 0) hasAnyValue = true;
       });
     });
 
@@ -873,16 +926,8 @@ const OrderManager = {
     document.getElementById('final-koli').textContent = this.formatNumber(finalKoli, this.currentLang);
     document.getElementById('final-kg').textContent = this.formatNumber(finalKG, this.currentLang);
 
-    const codeInput = document.getElementById('order-code');
-    const display = document.getElementById('order-code-display');
-    
-    if (codeInput.value.trim()) {
-      display.textContent = codeInput.value;
-    } else {
-      display.textContent = this.currentOrderCode;
-    }
-
-    document.getElementById('show-summary').disabled = !this.validateCustomerName() || finalKoli === 0;
+    // Özet butonunu aktif/pasif yap
+    document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
   },
 
   validateCustomerName() {
@@ -904,7 +949,7 @@ const OrderManager = {
 
     const content = document.getElementById('summary-content');
     const customer = document.getElementById('customer-name').value.trim();
-    const code = document.getElementById('order-code').value.trim() || this.currentOrderCode;
+    const code = this.currentOrderCode;
     const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
       year: 'numeric', month: 'long', day: 'numeric',
       hour: '2-digit', minute: '2-digit'
@@ -1012,12 +1057,12 @@ const OrderManager = {
 
   clearForm() {
     document.getElementById('customer-name').value = '';
-    document.getElementById('order-code').value = '';
     document.getElementById('product-search').value = '';
     this.toggleSearchClear();
     
     document.querySelectorAll('input[data-gram]').forEach(input => {
       input.value = '';
+      input.placeholder = '-';
       this.updateCard(input);
     });
     
@@ -1028,7 +1073,7 @@ const OrderManager = {
     this.toggleBulkActions();
     
     this.filterProducts('');
-    this.currentOrderCode = null;
+    this.orderCounter++;
     this.generateOrderCode();
     this.updateGrandTotal();
   },
@@ -1067,7 +1112,7 @@ const OrderManager = {
     document.querySelectorAll('.quantity-input input, .grand-input input').forEach(inp => {
       const val = this.toLatin(inp.value.replace(/[٬,.]/g, ''));
       inp.value = this.formatNumber(val, lang);
-      inp.placeholder = lang === 'ar' ? '٠' : '0';
+      inp.placeholder = '-';
     });
 
     document.querySelectorAll('.lang-btn').forEach(b => {
@@ -1079,12 +1124,15 @@ const OrderManager = {
       el.textContent = this.formatNumber(num, lang);
     });
 
-    // Ürün isimlerini güncelle
+    // Ürün isimlerini güncelle - DÜZELTİLDİ
     document.querySelectorAll('.product-header').forEach(header => {
       const productId = header.closest('.product-card').dataset.productId;
       const product = this.products.find(p => p.id == productId);
       if (product && product[lang]) {
         header.textContent = product[lang];
+        header.dataset.tr = product.tr;
+        header.dataset.ar = product.ar;
+        header.dataset.en = product.en;
       }
     });
 
