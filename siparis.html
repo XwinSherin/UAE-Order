@@ -1,3 +1,5 @@
+[file name]: siparis.html
+[file content begin]
 <!DOCTYPE html>
 <html lang="tr" dir="ltr">
 <head>
@@ -154,7 +156,7 @@
       border-radius: 16px; opacity: 0; transition: var(--transition); z-index: -1;
     }
     .lang-btn:hover { 
-      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,172,254,0.25); 
+      transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79, 172, 254, 0.25); 
     }
     .lang-btn.active { color: #fff; font-weight: 800; }
     .lang-btn.active::before { opacity: 1; }
@@ -252,6 +254,7 @@
     /* BUTON GRUBU */
     .button-group {
       display: grid; grid-template-columns: 1fr; gap: 14px;
+      max-width: 800px; margin: 0 auto 24px;
     }
 
     @media (min-width: 768px) {
@@ -571,6 +574,12 @@
     .empty-value {
       color: #999;
     }
+
+    /* LOADING STATE */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -599,8 +608,9 @@
 
 <h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">Sipariş Oluştur</h1>
 
-<!-- MÜŞTERİ ADI -->
-<div class="input-group">
+<div class="order-info">
+  <!-- MÜŞTERİ ADI -->
+  <div class="input-group">
     <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
     <input type="text" id="customer-name" required 
            data-tr="Örn: AHMET YILMAZ" 
@@ -608,60 +618,60 @@
            data-en="Ex: AHMET YILMAZ"
            placeholder="Örn: AHMET YILMAZ" aria-required="true">
     <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
-</div>
+  </div>
 
-<!-- SİPARİŞ KODU -->
-<div class="input-group">
+  <!-- SİPARİŞ KODU -->
+  <div class="input-group">
     <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
     <input type="text" id="order-code" 
            data-tr="Otomatik oluşturulur" 
            data-ar="يتم إنشاؤه تلقائياً" 
            data-en="Auto-generated"
            placeholder="Otomatik oluşturulur" readonly>
+  </div>
 </div>
 
 <!-- ÜRÜN ARAMA -->
 <div class="search-container">
-    <div class="search-bar">
-        <input type="text" id="product-search" 
-               data-tr="Ürün ara..." 
-               data-ar="ابحث عن المنتج..." 
-               data-en="Search product..."
-               placeholder="Ürün ara..." aria-label="Ürün arama">
-        <i class="fas fa-times search-clear" id="search-clear"></i>
-    </div>
+  <div class="search-bar">
+    <input type="text" id="product-search" 
+           data-tr="Ürün ara..." 
+           data-ar="ابحث عن المنتج..." 
+           data-en="Search product..."
+           placeholder="Ürün ara..." aria-label="Ürün arama">
+    <i class="fas fa-times search-clear" id="search-clear"></i>
+  </div>
 </div>
 
-  <!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
-  <div class="input-group">
-    <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
-    <div class="delivery-methods">
-      <button class="delivery-btn active" data-method="road">
-        <i class="fas fa-truck"></i>
-        <span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
-      </button>
-      <button class="delivery-btn" data-method="sea">
-        <i class="fas fa-ship"></i>
-        <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
-      </button>
-      <button class="delivery-btn" data-method="air">
-        <i class="fas fa-plane"></i>
-        <span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
-      </button>
-    </div>
-  </div>
-  
-  <!-- BUTON GRUBU -->
-  <div class="button-group">
-    <button class="new-order-btn" id="new-order-btn">
-      <i class="fas fa-plus-circle"></i>
-      <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
+<!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
+<div class="input-group" style="max-width: 800px; margin: 0 auto 24px;">
+  <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
+  <div class="delivery-methods">
+    <button class="delivery-btn active" data-method="road">
+      <i class="fas fa-truck"></i>
+      <span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
     </button>
-    <button class="summary-btn" id="show-summary" disabled>
-      <i class="fas fa-receipt"></i>
-      <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
+    <button class="delivery-btn" data-method="sea">
+      <i class="fas fa-ship"></i>
+      <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
+    </button>
+    <button class="delivery-btn" data-method="air">
+      <i class="fas fa-plane"></i>
+      <span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
     </button>
   </div>
+</div>
+
+<!-- BUTON GRUBU -->
+<div class="button-group">
+  <button class="new-order-btn" id="new-order-btn">
+    <i class="fas fa-plus-circle"></i>
+    <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
+  </button>
+  <button class="summary-btn" id="show-summary" disabled>
+    <i class="fas fa-receipt"></i>
+    <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
+  </button>
 </div>
 
 <div class="products-container" id="products"></div>
@@ -735,16 +745,27 @@ document.addEventListener('touchstart', function() {}, {passive: true});
 // BASIT OFFLINE DEPOLAMA
 const OfflineManager = {
   saveOrder(orderData) {
-    const orders = JSON.parse(localStorage.getItem('offline_orders') || '[]');
-    orders.push({
-      ...orderData,
-      timestamp: new Date().toISOString()
-    });
-    localStorage.setItem('offline_orders', JSON.stringify(orders));
+    try {
+      const orders = JSON.parse(localStorage.getItem('offline_orders') || '[]');
+      orders.push({
+        ...orderData,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('offline_orders', JSON.stringify(orders));
+      return true;
+    } catch (error) {
+      console.error('Offline kayıt hatası:', error);
+      return false;
+    }
   },
   
   getOfflineOrders() {
-    return JSON.parse(localStorage.getItem('offline_orders') || '[]');
+    try {
+      return JSON.parse(localStorage.getItem('offline_orders') || '[]');
+    } catch (error) {
+      console.error('Offline veri okuma hatası:', error);
+      return [];
+    }
   }
 };
 
@@ -784,13 +805,21 @@ const OrderManager = {
   },
 
   async init() {
-    this.products = await this.loadProducts();
-    this.generateOrderCode();
-    this.renderProducts();
-    this.bindEvents();
-    this.setLang('tr');
-    this.updateGrandTotal();
-    this.toggleSearchClear();
+    try {
+      document.body.classList.add('loading');
+      this.products = await this.loadProducts();
+      this.generateOrderCode();
+      this.renderProducts();
+      this.bindEvents();
+      this.setLang('tr');
+      this.updateGrandTotal();
+      this.toggleSearchClear();
+    } catch (error) {
+      console.error('Başlatma hatası:', error);
+      ToastManager.show('Sistem başlatılamadı', 'error');
+    } finally {
+      document.body.classList.remove('loading');
+    }
   },
 
   generateOrderCode() {
@@ -929,18 +958,21 @@ const OrderManager = {
   },
 
   bindEvents() {
+    // Input event delegation
     document.getElementById('products').addEventListener('input', (e) => {
       if (e.target.matches('input[data-gram]')) {
         this.handleInput(e.target);
       }
     });
 
+    // Customer name input
     document.getElementById('customer-name').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
       this.generateOrderCode();
       this.updateGrandTotal();
     });
 
+    // Delivery method buttons
     document.querySelectorAll('.delivery-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('active'));
@@ -949,21 +981,22 @@ const OrderManager = {
       });
     });
 
+    // Main action buttons
     document.getElementById('show-summary').addEventListener('click', () => this.showSummary());
-    
     document.getElementById('new-order-btn').addEventListener('click', () => {
       this.clearForm();
       ToastManager.show('Yeni siparişe başlayabilirsiniz!', 'success');
     });
     
+    // Modal controls
     document.getElementById('close-modal').addEventListener('click', () => this.closeModal());
-    
     document.getElementById('summary-modal').addEventListener('click', (e) => {
       if (e.target === document.getElementById('summary-modal')) {
         this.closeModal();
       }
     });
 
+    // Search functionality
     document.getElementById('search-clear').addEventListener('click', () => {
       this.clearSearch();
     });
@@ -973,10 +1006,12 @@ const OrderManager = {
       this.toggleSearchClear();
     });
 
+    // Language switching
     document.getElementById('lang-tr').addEventListener('click', () => this.setLang('tr'));
     document.getElementById('lang-ar').addEventListener('click', () => this.setLang('ar'));
     document.getElementById('lang-en').addEventListener('click', () => this.setLang('en'));
 
+    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeModal();
@@ -995,11 +1030,7 @@ const OrderManager = {
   toggleSearchClear() {
     const searchInput = document.getElementById('product-search');
     const clearBtn = document.getElementById('search-clear');
-    if (searchInput.value.length > 0) {
-      clearBtn.classList.add('show');
-    } else {
-      clearBtn.classList.remove('show');
-    }
+    clearBtn.classList.toggle('show', searchInput.value.length > 0);
   },
 
   handleInput(input) {
@@ -1101,11 +1132,7 @@ const OrderManager = {
       const kgEl = document.getElementById(`grand-kg-${g}`);
       
       if (el) {
-        if (koli > 0) {
-          el.value = this.formatNumber(koli, this.currentLang);
-        } else {
-          el.value = '';
-        }
+        el.value = koli > 0 ? this.formatNumber(koli, this.currentLang) : '';
       }
       
       if (kgEl) {
@@ -1159,19 +1186,20 @@ const OrderManager = {
   validateCustomerName() {
     const input = document.getElementById('customer-name');
     const error = document.getElementById('name-error');
-    if (!input.value.trim()) {
-      error.classList.add('show');
-      input.classList.add('invalid');
-      return false;
-    } else {
-      error.classList.remove('show');
-      input.classList.remove('invalid');
-      return true;
-    }
+    const isValid = input.value.trim().length > 0;
+    
+    error.classList.toggle('show', !isValid);
+    input.classList.toggle('invalid', !isValid);
+    
+    return isValid;
   },
 
   showSummary() {
-    if (!this.validateCustomerName()) return;
+    if (!this.validateCustomerName()) {
+      ToastManager.show('Lütfen müşteri adını giriniz!', 'warning');
+      document.getElementById('customer-name').focus();
+      return;
+    }
 
     const content = document.getElementById('summary-content');
     const customer = document.getElementById('customer-name').value.trim();
@@ -1189,21 +1217,21 @@ const OrderManager = {
 
     let html = `
       <div class="summary-info">
-        <p><strong>Müşteri:</strong> <span>${customer}</span></p>
-        <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
-        <p><strong>Tarih:</strong> <span>${date}</span></p>
-        <p><strong>Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
+        <p><strong data-tr="Müşteri:" data-ar="العميل:" data-en="Customer:">Müşteri:</strong> <span>${customer}</span></p>
+        <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">Sipariş Kodu:</strong> <span>${code}</span></p>
+        <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">Tarih:</strong> <span>${date}</span></p>
+        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
       </div>
 
       <table class="summary-table">
         <thead>
           <tr>
-            <th class="product-name">Ürün</th>
-            <th>50G</th>
-            <th>250G</th>
-            <th>1000G</th>
-            <th>Toplam Koli</th>
-            <th>Toplam KG</th>
+            <th class="product-name" data-tr="Ürün" data-ar="المنتج" data-en="Product">Ürün</th>
+            <th data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</th>
+            <th data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</th>
+            <th data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</th>
+            <th data-tr="Toplam Koli" data-ar="المجموع كولي" data-en="Total Box">Toplam Koli</th>
+            <th data-tr="Toplam KG" data-ar="المجموع كجم" data-en="Total KG">Toplam KG</th>
           </tr>
         </thead>
         <tbody>
@@ -1245,7 +1273,7 @@ const OrderManager = {
         </tbody>
         <tfoot>
           <tr>
-            <td class="product-name"><strong>Genel Toplam</strong></td>
+            <td class="product-name"><strong data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</strong></td>
             <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
             <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
             <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
@@ -1258,15 +1286,15 @@ const OrderManager = {
       <div class="share-buttons">
         <button class="share-btn whatsapp" id="share-whatsapp">
           <i class="fab fa-whatsapp"></i>
-          <span>WhatsApp'ta Paylaş</span>
+          <span data-tr="WhatsApp'ta Paylaş" data-ar="مشاركة عبر واتساب" data-en="Share on WhatsApp">WhatsApp'ta Paylaş</span>
         </button>
         <button class="share-btn excel" id="download-excel">
           <i class="fas fa-file-excel"></i>
-          <span>Excel İndir</span>
+          <span data-tr="Excel İndir" data-ar="تحميل إكسل" data-en="Download Excel">Excel İndir</span>
         </button>
         <button class="share-btn pdf" id="download-pdf">
           <i class="fas fa-file-pdf"></i>
-          <span>PDF İndir</span>
+          <span data-tr="PDF İndir" data-ar="تحميل PDF" data-en="Download PDF">PDF İndir</span>
         </button>
       </div>
     `;
@@ -1284,17 +1312,28 @@ const OrderManager = {
     };
 
     // OFFLINE KAYIT
-    OfflineManager.saveOrder(this.currentOrderData);
+    if (OfflineManager.saveOrder(this.currentOrderData)) {
+      console.log('Sipariş offline kaydedildi');
+    }
 
-    document.getElementById('share-whatsapp').addEventListener('click', () => {
-      ExportManager.shareWhatsApp();
-    });
-    document.getElementById('download-excel').addEventListener('click', () => {
-      ExportManager.downloadExcel();
-    });
-    document.getElementById('download-pdf').addEventListener('click', () => {
-      ExportManager.downloadPDF();
-    });
+    // Event listener'ları yeniden bağla
+    this.bindExportEvents();
+  },
+
+  bindExportEvents() {
+    const shareBtn = document.getElementById('share-whatsapp');
+    const excelBtn = document.getElementById('download-excel');
+    const pdfBtn = document.getElementById('download-pdf');
+
+    if (shareBtn) {
+      shareBtn.onclick = () => ExportManager.shareWhatsApp();
+    }
+    if (excelBtn) {
+      excelBtn.onclick = () => ExportManager.downloadExcel();
+    }
+    if (pdfBtn) {
+      pdfBtn.onclick = () => ExportManager.downloadPDF();
+    }
   },
 
   clearForm() {
@@ -1364,7 +1403,10 @@ const OrderManager = {
     });
 
     this.updateGrandTotal();
-    this.isAnimating = false;
+    
+    setTimeout(() => {
+      this.isAnimating = false;
+    }, 300);
   },
 
   filterProducts(query) {
@@ -1373,11 +1415,8 @@ const OrderManager = {
 
     products.forEach(card => {
       const productName = card.querySelector('.product-header').textContent.toLowerCase();
-      if (productName.includes(searchTerm) || query === '') {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+      const shouldShow = productName.includes(searchTerm) || query === '';
+      card.style.display = shouldShow ? '' : 'none';
     });
   }
 };
@@ -1412,148 +1451,159 @@ const ToastManager = {
 
 const ExportManager = {
   downloadExcel() {
-    if (!OrderManager.currentOrderData) return;
+    if (!OrderManager.currentOrderData) {
+      ToastManager.show('Sipariş verisi bulunamadı!', 'error');
+      return;
+    }
 
-    const wb = XLSX.utils.book_new();
-    
-    const title = [
-      ["SİPARİŞ DETAYI"],
-      [],
-      ["Müşteri:", OrderManager.currentOrderData.customer],
-      ["Sipariş Kodu:", OrderManager.currentOrderData.code],
-      ["Tarih:", OrderManager.currentOrderData.date],
-      ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
-      []
-    ];
+    try {
+      const wb = XLSX.utils.book_new();
+      
+      const title = [
+        ["SİPARİŞ DETAYI"],
+        [],
+        ["Müşteri:", OrderManager.currentOrderData.customer],
+        ["Sipariş Kodu:", OrderManager.currentOrderData.code],
+        ["Tarih:", OrderManager.currentOrderData.date],
+        ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
+        []
+      ];
 
-    const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
-    
-    const data = OrderManager.currentOrderData.items.map(item => [
-      item.name,
-      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
-      OrderManager.formatNumber(item.koli, 'tr'),
-      OrderManager.formatNumber(item.kg, 'tr')
-    ]);
+      const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
+      
+      const data = OrderManager.currentOrderData.items.map(item => [
+        item.name,
+        item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+        item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+        item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+        OrderManager.formatNumber(item.koli, 'tr'),
+        OrderManager.formatNumber(item.kg, 'tr')
+      ]);
 
-    const totals = [
-      ["GENEL TOPLAM", 
-       OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-       OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-       OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
-       OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
-      ]
-    ];
+      const totals = [
+        ["GENEL TOPLAM", 
+         OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+         OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+         OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+         OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
+         OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
+        ]
+      ];
 
-    const allData = [...title, ...headers, ...data, ...totals];
-    const ws = XLSX.utils.aoa_to_sheet(allData);
-    
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cell_address = {c: C, r: R};
-        const cell_ref = XLSX.utils.encode_cell(cell_address);
-        if (!ws[cell_ref]) continue;
-        
-        if (!ws[cell_ref].s) ws[cell_ref].s = {};
-        
-        ws[cell_ref].s.border = {
-          top: {style: "thin", color: {rgb: "000000"}},
-          left: {style: "thin", color: {rgb: "000000"}},
-          bottom: {style: "thin", color: {rgb: "000000"}},
-          right: {style: "thin", color: {rgb: "000000"}}
-        };
-        
-        ws[cell_ref].s.alignment = { 
-          horizontal: "center", 
-          vertical: "center" 
-        };
-        
-        if (R === 7) {
-          ws[cell_ref].s.fill = {
-            patternType: "solid",
-            fgColor: {rgb: "4FACFE"}
+      const allData = [...title, ...headers, ...data, ...totals];
+      const ws = XLSX.utils.aoa_to_sheet(allData);
+      
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cell_address = {c: C, r: R};
+          const cell_ref = XLSX.utils.encode_cell(cell_address);
+          if (!ws[cell_ref]) continue;
+          
+          if (!ws[cell_ref].s) ws[cell_ref].s = {};
+          
+          ws[cell_ref].s.border = {
+            top: {style: "thin", color: {rgb: "000000"}},
+            left: {style: "thin", color: {rgb: "000000"}},
+            bottom: {style: "thin", color: {rgb: "000000"}},
+            right: {style: "thin", color: {rgb: "000000"}}
           };
-          ws[cell_ref].s.font = {
-            color: {rgb: "FFFFFF"},
-            bold: true
+          
+          ws[cell_ref].s.alignment = { 
+            horizontal: "center", 
+            vertical: "center" 
           };
-        }
-        
-        if (R === range.e.r) {
-          ws[cell_ref].s.fill = {
-            patternType: "solid",
-            fgColor: {rgb: "27AE60"}
-          };
-          ws[cell_ref].s.font = {
-            color: {rgb: "FFFFFF"},
-            bold: true
-          };
+          
+          if (R === 7) {
+            ws[cell_ref].s.fill = {
+              patternType: "solid",
+              fgColor: {rgb: "4FACFE"}
+            };
+            ws[cell_ref].s.font = {
+              color: {rgb: "FFFFFF"},
+              bold: true
+            };
+          }
+          
+          if (R === range.e.r) {
+            ws[cell_ref].s.fill = {
+              patternType: "solid",
+              fgColor: {rgb: "27AE60"}
+            };
+            ws[cell_ref].s.font = {
+              color: {rgb: "FFFFFF"},
+              bold: true
+            };
+          }
         }
       }
-    }
 
-    if (!ws['!cols']) ws['!cols'] = [];
-    ws['!cols'][0] = { width: 25 };
-    for (let i = 1; i <= 5; i++) {
-      ws['!cols'][i] = { width: 15 };
-    }
+      if (!ws['!cols']) ws['!cols'] = [];
+      ws['!cols'][0] = { width: 25 };
+      for (let i = 1; i <= 5; i++) {
+        ws['!cols'][i] = { width: 15 };
+      }
 
-    XLSX.utils.book_append_sheet(wb, ws, "Sipariş");
-    XLSX.writeFile(wb, `Sipariş_${OrderManager.currentOrderData.code}.xlsx`);
-    
-    ToastManager.show('Excel indirildi!', 'success');
+      XLSX.utils.book_append_sheet(wb, ws, "Sipariş");
+      XLSX.writeFile(wb, `Sipariş_${OrderManager.currentOrderData.code}.xlsx`);
+      
+      ToastManager.show('Excel indirildi!', 'success');
+    } catch (error) {
+      console.error('Excel indirme hatası:', error);
+      ToastManager.show('Excel indirilemedi!', 'error');
+    }
   },
 
   downloadPDF() {
-    if (!OrderManager.currentOrderData) return;
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    doc.setFont("helvetica", "normal");
-    
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
-    doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
-    doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
-    doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
-    
-    const headers = [
-      "Ürün Adı", 
-      "50G", 
-      "250G", 
-      "1000G", 
-      "Toplam Koli", 
-      "Toplam KG"
-    ];
-    
-    const tableData = OrderManager.currentOrderData.items.map(item => [
-      item.name,
-      item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
-      item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
-      item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
-      OrderManager.formatNumber(item.koli, 'tr'),
-      OrderManager.formatNumber(item.kg, 'tr')
-    ]);
-    
-    tableData.push([
-      "GENEL TOPLAM",
-      OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
-      OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
-      OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
-      OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
-    ]);
+    if (!OrderManager.currentOrderData) {
+      ToastManager.show('Sipariş verisi bulunamadı!', 'error');
+      return;
+    }
 
     try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.setFont("helvetica", "normal");
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("SİPARİŞ DETAYI", 105, 15, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
+      doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
+      doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
+      doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
+      
+      const headers = [
+        "Ürün Adı", 
+        "50G", 
+        "250G", 
+        "1000G", 
+        "Toplam Koli", 
+        "Toplam KG"
+      ];
+      
+      const tableData = OrderManager.currentOrderData.items.map(item => [
+        item.name,
+        item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
+        item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
+        item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
+        OrderManager.formatNumber(item.koli, 'tr'),
+        OrderManager.formatNumber(item.kg, 'tr')
+      ]);
+      
+      tableData.push([
+        "GENEL TOPLAM",
+        OrderManager.currentOrderData.totals[50] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr') : '',
+        OrderManager.currentOrderData.totals[250] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr') : '',
+        OrderManager.currentOrderData.totals[1000] > 0 ? OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr') : '',
+        OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr'),
+        OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')
+      ]);
+
       doc.autoTable({
         head: [headers],
         body: tableData,
@@ -1608,42 +1658,51 @@ const ExportManager = {
         },
         margin: { top: 52 }
       });
+      
+      doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
+      ToastManager.show('PDF indirildi!', 'success');
     } catch (error) {
       console.error('PDF oluşturma hatası:', error);
+      ToastManager.show('PDF oluşturulamadı!', 'error');
     }
-    
-    doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
-    ToastManager.show('PDF indirildi!', 'success');
   },
 
   shareWhatsApp() {
-    if (!OrderManager.currentOrderData) return;
+    if (!OrderManager.currentOrderData) {
+      ToastManager.show('Sipariş verisi bulunamadı!', 'error');
+      return;
+    }
 
-    let text = `*SİPARİŞ DETAYI*\n\n`;
-    text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
-    text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
-    text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
-    text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
-    text += `*ÜRÜN DETAYLARI:*\n`;
+    try {
+      let text = `*SİPARİŞ DETAYI*\n\n`;
+      text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
+      text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
+      text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
+      text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
+      text += `*ÜRÜN DETAYLARI:*\n`;
 
-    OrderManager.currentOrderData.items.forEach((item, index) => {
-      text += `\n${index + 1}. ${item.name}\n`;
-      if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
-      if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
-      if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
-      text += `   ➕ Toplam: ${OrderManager.formatNumber(item.koli, 'tr')} koli (${OrderManager.formatNumber(item.kg, 'tr')} KG)\n`;
-    });
+      OrderManager.currentOrderData.items.forEach((item, index) => {
+        text += `\n${index + 1}. ${item.name}\n`;
+        if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
+        if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
+        if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
+        text += `   ➕ Toplam: ${OrderManager.formatNumber(item.koli, 'tr')} koli (${OrderManager.formatNumber(item.kg, 'tr')} KG)\n`;
+      });
 
-    text += `\n*📊 GENEL TOPLAM:*\n`;
-    if (OrderManager.currentOrderData.totals[50] > 0) text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
-    if (OrderManager.currentOrderData.totals[250] > 0) text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
-    if (OrderManager.currentOrderData.totals[1000] > 0) text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
-    text += `✅ Toplam Koli: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr')}\n`;
-    text += `⚖️ Toplam KG: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')} KG`;
+      text += `\n*📊 GENEL TOPLAM:*\n`;
+      if (OrderManager.currentOrderData.totals[50] > 0) text += `📦 50G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[50], 'tr')} koli\n`;
+      if (OrderManager.currentOrderData.totals[250] > 0) text += `📦 250G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[250], 'tr')} koli\n`;
+      if (OrderManager.currentOrderData.totals[1000] > 0) text += `📦 1000G: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals[1000], 'tr')} koli\n`;
+      text += `✅ Toplam Koli: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.koli, 'tr')}\n`;
+      text += `⚖️ Toplam KG: ${OrderManager.formatNumber(OrderManager.currentOrderData.totals.kg, 'tr')} KG`;
 
-    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
-    ToastManager.show('WhatsApp\'ta paylaşıldı!', 'success');
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+      ToastManager.show('WhatsApp\'ta paylaşıldı!', 'success');
+    } catch (error) {
+      console.error('WhatsApp paylaşım hatası:', error);
+      ToastManager.show('WhatsApp\'ta paylaşılamadı!', 'error');
+    }
   }
 };
 
@@ -1655,3 +1714,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+[file content end]
