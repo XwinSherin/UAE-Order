@@ -1,67 +1,33 @@
 {
   "products": [
         {
-      "id": 6,
-      "tr": "Lemon Mint",
-      "en": "Lemon Mint",
-      "ar": "ليمون ونعناع",
-      "img": "images/9.png"
+      "id": 1,
+      "tr": "Moscow Evenings",
+      "en": "Moscow Evenings",
+      "ar": "أمسيات موسكو",
+      "img": "images/1.png"
     },
-    {
-      "id": 9,
-      "tr": "Love",
-      "en": "Love",
+  {
+      "id": 2,
+      "tr": "Love 66",
+      "en": "Love 66",
       "ar": "لوف 66",
       "img": "images/2.png"
     },
     {
-      "id": 1,
-      "tr": "Angel Lips",
-      "ar": "آنجل ليبس", 
-      "en": "Angel Lips",
-      "img": "images/1.png"
+      "id": 11,
+      "tr": "Wind Of Amazon",
+      "en": "Wind Of Amazon",
+      "ar": "رياح الامازون",
+      "img": "images/11.png"
     },
+   
     {
-      "id": 2,
-      "tr": "Bagdadi",
-      "ar": "بغدادي",
-      "en": "Bagdadi",
-      "img": "images/2.png"
-    },
-    {
-      "id": 3,
-      "tr": "Izmir Romantic",
-      "en": "Izmir Romantic",
-      "ar": "إزمير رومانتيك",
-      "img": "images/3.png"
-    },
-    {
-      "id": 4,
-      "tr": "JK777",
-      "en": "JK777",
-      "ar": "جوكر ٧٧٧",
-      "img": "images/4.png"
-    },
-    {
-      "id": 5,
-      "tr": "Lady Killer",
-      "en": "Lady Killer",
-      "ar": "ليدي  كلير",
-      "img": "images/5.png"
-    },
-    {
-      "id": 7,
-      "tr": "test",
-      "en": "test",
-      "ar": "كلير",
-      "img": "images/5.png"
-    },
-    {
-      "id": 8,
-      "tr": "Love 66",
-      "en": "Love 66",
-      "ar": "لوف ٦٦",
-      "img": "images/6.png"
+      "id": 40,
+      "tr": "Hasta La Vista",
+      "en": "Hasta La Vista",
+      "ar": "هاستا لا فيستا",
+      "img": "images/40.png"
     }
   ]
 }
