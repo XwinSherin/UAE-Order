@@ -1,3 +1,5 @@
+[file name]: index.html
+[file content begin]
 <!DOCTYPE html>
 <html lang="tr" dir="ltr">
 <head>
@@ -87,9 +89,9 @@
 </div>
 
 <div class="lang-float">
-  <button class="active" onclick="setLang('tr')">Türkçe</button>
-  <button onclick="setLang('ar')">العربية</button>
-  <button onclick="setLang('en')">English</button>
+  <button class="active" data-lang="tr">Türkçe</button>
+  <button data-lang="ar">العربية</button>
+  <button data-lang="en">English</button>
 </div>
 
 <script>
@@ -103,63 +105,87 @@ const localUsers = [
   { user: "ayse", pass: "1234" }
 ];
 
-function setLang(lang){
-  localStorage.setItem('lang', lang);
-  document.documentElement.lang = lang;
-  document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
-  
-  const texts = {
-    tr: {
-      title: "Adalya Company - Giriş",
-      company: "Adalya Company", 
-      formTitle: "Sipariş Formu",
-      userPlaceholder: "Kullanıcı adı",
-      passPlaceholder: "Şifre",
-      error: "Kullanıcı adı veya şifre yanlış!",
-      login: "Giriş"
-    },
-    ar: {
-      title: "أداليا - تسجيل الدخول",
-      company: "شركة أداليا",
-      formTitle: "نموذج الطلب", 
-      userPlaceholder: "اسم المستخدم",
-      passPlaceholder: "كلمة المرور",
-      error: "اسم المستخدم أو كلمة المرور خاطئة!",
-      login: "دخول"
-    },
-    en: {
-      title: "Adalya Company - Login",
-      company: "Adalya Company",
-      formTitle: "Order Form",
-      userPlaceholder: "Username", 
-      passPlaceholder: "Password",
-      error: "Wrong username or password!",
-      login: "Login"
+// DİL YÖNETİMİ
+function setLang(lang, element = null){
+  try {
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+    
+    const texts = {
+      tr: {
+        title: "Adalya Company - Giriş",
+        company: "Adalya Company", 
+        formTitle: "Sipariş Formu",
+        userPlaceholder: "Kullanıcı adı",
+        passPlaceholder: "Şifre",
+        error: "Kullanıcı adı veya şifre yanlış!",
+        login: "Giriş"
+      },
+      ar: {
+        title: "أداليا - تسجيل الدخول",
+        company: "شركة أداليا",
+        formTitle: "نموذج الطلب", 
+        userPlaceholder: "اسم المستخدم",
+        passPlaceholder: "كلمة المرور",
+        error: "اسم المستخدم أو كلمة المرور خاطئة!",
+        login: "دخول"
+      },
+      en: {
+        title: "Adalya Company - Login",
+        company: "Adalya Company",
+        formTitle: "Order Form",
+        userPlaceholder: "Username", 
+        passPlaceholder: "Password",
+        error: "Wrong username or password!",
+        login: "Login"
+      }
+    };
+    
+    const t = texts[lang];
+    if (t) {
+      document.title = t.title;
+      const companyEl = document.querySelector('.company');
+      const formTitleEl = document.querySelector('.form-title');
+      const userInput = document.getElementById('user');
+      const passInput = document.getElementById('pass');
+      const msgEl = document.getElementById('msg');
+      const loginBtn = document.querySelector('button[onclick="giris()"]');
+      
+      if (companyEl) companyEl.textContent = t.company;
+      if (formTitleEl) formTitleEl.textContent = t.formTitle;
+      if (userInput) userInput.placeholder = t.userPlaceholder;
+      if (passInput) passInput.placeholder = t.passPlaceholder;
+      if (msgEl) msgEl.textContent = t.error;
+      if (loginBtn) loginBtn.textContent = t.login;
     }
-  };
-  
-  const t = texts[lang];
-  document.title = t.title;
-  document.querySelector('.company').textContent = t.company;
-  document.querySelector('.form-title').textContent = t.formTitle;
-  document.getElementById('user').placeholder = t.userPlaceholder;
-  document.getElementById('pass').placeholder = t.passPlaceholder;
-  document.getElementById('msg').textContent = t.error;
-  document.querySelector('button[onclick="giris()"]').textContent = t.login;
-  
-  document.querySelectorAll('.lang-float button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  event.target.classList.add('active');
+    
+    // Aktif butonu güncelle
+    document.querySelectorAll('.lang-float button').forEach(btn => {
+      if (btn && btn.classList) {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      }
+    });
+    
+  } catch (error) {
+    console.error('Dil değiştirme hatası:', error);
+  }
 }
 
+// GİRİŞ FONKSİYONU
 async function giris(){
   const u = document.getElementById('user').value.trim();
   const p = document.getElementById('pass').value.trim();
   const msg = document.getElementById('msg');
   
   if (!u || !p) {
-    msg.textContent = "Kullanıcı adı ve şifre gerekli!";
+    const currentLang = localStorage.getItem('lang') || 'tr';
+    const errorTexts = {
+      tr: "Kullanıcı adı ve şifre gerekli!",
+      ar: "اسم المستخدم وكلمة المرور مطلوبان!",
+      en: "Username and password are required!"
+    };
+    msg.textContent = errorTexts[currentLang] || errorTexts.tr;
     msg.style.display = 'block';
     return;
   }
@@ -190,10 +216,27 @@ async function giris(){
   }
 }
 
-// Sayfa yüklendiğinde dili ayarla
+// SAYFA YÜKLENDİĞİNDE
 document.addEventListener('DOMContentLoaded', function() {
-  setLang(localStorage.getItem('lang') || 'tr');
+  // Dil butonlarına event listener ekle
+  document.querySelectorAll('.lang-float button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      setLang(this.dataset.lang, this);
+    });
+  });
+  
+  // Varsayılan dili ayarla
+  const savedLang = localStorage.getItem('lang') || 'tr';
+  setLang(savedLang);
+  
+  // Enter tuşu ile giriş yapma
+  document.getElementById('pass').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      giris();
+    }
+  });
 });
 </script>
 </body>
 </html>
+[file content end]
