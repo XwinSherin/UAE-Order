@@ -6,7 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Adalya Company - Giriş</title>
-
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+  
   <style>
     :root{
       --gold:#d4af37;
@@ -66,13 +67,18 @@
     }
     .lang-float button:active{transform:scale(.92)}
     .lang-float button.active{background:var(--gold);color:#fff}
+
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
   </style>
 </head>
 
 <body>
 <div class="login-box">
   <div class="logo-box">
-    <img src="images/adalyalogo.jpg" alt="Adalya Logo">
+    <img src="images/adalyalogo.jpg" alt="Adalya Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><rect width=\"100\" height=\"100\" fill=\"%23d4af37\"/><text x=\"50\" y=\"60\" font-family=\"Arial\" font-size=\"40\" text-anchor=\"middle\" fill=\"white\">A</text></svg>'">
   </div>
 
   <div class="brand">
@@ -80,12 +86,12 @@
     <div class="form-title">Sipariş Formu</div>
   </div>
 
-  <input type="text" id="user" placeholder="Kullanıcı adı">
-  <input type="password" id="pass" placeholder="Şifre">
+  <input type="text" id="user" placeholder="Kullanıcı adı" autocomplete="username">
+  <input type="password" id="pass" placeholder="Şifre" autocomplete="current-password">
 
   <div class="error" id="msg">Kullanıcı adı veya şifre yanlış!</div>
 
-  <button onclick="giris()">Giriş</button>
+  <button onclick="giris()" id="login-btn">Giriş</button>
 </div>
 
 <div class="lang-float">
@@ -98,11 +104,14 @@
 // KULLANICI LİSTESİ - GitHub'dan çekilecek
 const USERS_URL = 'https://raw.githubusercontent.com/XwinSherin/adalyacompany/main/users.json';
 
-// Yerel kullanıcı listesi (backup olarak)
+// Geliştirilmiş yerel kullanıcı listesi (backup olarak)
 const localUsers = [
   { user: "ahmet", pass: "1234" },
   { user: "mehmet", pass: "1234" },
-  { user: "ayse", pass: "1234" }
+  { user: "ayse", pass: "1234" },
+  { user: "admin", pass: "admin123" },
+  { user: "demo", pass: "demo123" },
+  { user: "test", pass: "test123" }
 ];
 
 // DİL YÖNETİMİ
@@ -120,7 +129,8 @@ function setLang(lang, element = null){
         userPlaceholder: "Kullanıcı adı",
         passPlaceholder: "Şifre",
         error: "Kullanıcı adı veya şifre yanlış!",
-        login: "Giriş"
+        login: "Giriş",
+        required: "Kullanıcı adı ve şifre gerekli!"
       },
       ar: {
         title: "أداليا - تسجيل الدخول",
@@ -129,7 +139,8 @@ function setLang(lang, element = null){
         userPlaceholder: "اسم المستخدم",
         passPlaceholder: "كلمة المرور",
         error: "اسم المستخدم أو كلمة المرور خاطئة!",
-        login: "دخول"
+        login: "دخول",
+        required: "اسم المستخدم وكلمة المرور مطلوبان!"
       },
       en: {
         title: "Adalya Company - Login",
@@ -138,7 +149,8 @@ function setLang(lang, element = null){
         userPlaceholder: "Username", 
         passPlaceholder: "Password",
         error: "Wrong username or password!",
-        login: "Login"
+        login: "Login",
+        required: "Username and password are required!"
       }
     };
     
@@ -150,13 +162,17 @@ function setLang(lang, element = null){
       const userInput = document.getElementById('user');
       const passInput = document.getElementById('pass');
       const msgEl = document.getElementById('msg');
-      const loginBtn = document.querySelector('button[onclick="giris()"]');
+      const loginBtn = document.getElementById('login-btn');
       
       if (companyEl) companyEl.textContent = t.company;
       if (formTitleEl) formTitleEl.textContent = t.formTitle;
       if (userInput) userInput.placeholder = t.userPlaceholder;
       if (passInput) passInput.placeholder = t.passPlaceholder;
-      if (msgEl) msgEl.textContent = t.error;
+      if (msgEl) {
+        msgEl.textContent = t.error;
+        // Hata mesajını dil değişince gizle
+        msgEl.style.display = 'none';
+      }
       if (loginBtn) loginBtn.textContent = t.login;
     }
     
@@ -177,47 +193,110 @@ async function giris(){
   const u = document.getElementById('user').value.trim();
   const p = document.getElementById('pass').value.trim();
   const msg = document.getElementById('msg');
+  const loginBtn = document.getElementById('login-btn');
+  
+  // Hata mesajını gizle
+  msg.style.display = 'none';
   
   if (!u || !p) {
     const currentLang = localStorage.getItem('lang') || 'tr';
-    const errorTexts = {
+    const requiredTexts = {
       tr: "Kullanıcı adı ve şifre gerekli!",
       ar: "اسم المستخدم وكلمة المرور مطلوبان!",
       en: "Username and password are required!"
     };
-    msg.textContent = errorTexts[currentLang] || errorTexts.tr;
+    msg.textContent = requiredTexts[currentLang] || requiredTexts.tr;
     msg.style.display = 'block';
     return;
   }
 
+  // Loading state
+  loginBtn.textContent = 'Giriş yapılıyor...';
+  loginBtn.disabled = true;
+  document.body.classList.add('loading');
+
   let users = [];
+  let source = 'local';
   
   try {
+    console.log('GitHub\'dan kullanıcı listesi çekiliyor...');
+    
     // Önce GitHub'dan kullanıcıları çek
-    const res = await fetch(USERS_URL);
+    const res = await fetch(USERS_URL + '?t=' + new Date().getTime()); // Cache bypass
+    
     if (res.ok) {
-      users = await res.json();
+      const data = await res.json();
+      console.log('GitHub\'dan alınan kullanıcılar:', data);
+      
+      if (Array.isArray(data)) {
+        users = data;
+        source = 'github';
+      } else {
+        throw new Error('Geçersiz veri formatı');
+      }
     } else {
-      throw new Error('GitHub bağlantı hatası');
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
   } catch (err) {
     // GitHub'dan çekilemezse yerel listeyi kullan
-    console.log('GitHub bağlantı hatası, yerel kullanıcılar kullanılıyor');
+    console.log('GitHub bağlantı hatası, yerel kullanıcılar kullanılıyor:', err.message);
     users = localUsers;
+    source = 'local';
   }
 
-  const found = users.find(x => x.user === u && x.pass === p);
+  console.log(`Kullanıcı kaynağı: ${source}, Toplam kullanıcı: ${users.length}`);
+  console.log('Kullanıcı listesi:', users);
+
+  // Kullanıcı adı ve şifre kontrolü (case-insensitive)
+  const found = users.find(x => 
+    x.user.toLowerCase() === u.toLowerCase() && 
+    x.pass === p
+  );
   
   if (found) {
+    console.log('Giriş başarılı! Kullanıcı:', found.user);
     sessionStorage.setItem('currentUser', u);
-    window.location.href = 'siparis.html'; // Sipariş sayfasına yönlendir
+    sessionStorage.setItem('loginTime', new Date().toISOString());
+    
+    // Başarılı giriş mesajı
+    const currentLang = localStorage.getItem('lang') || 'tr';
+    const successTexts = {
+      tr: 'Giriş başarılı! Yönlendiriliyor...',
+      ar: 'تم الدخول بنجاح! يتم التوجيه...',
+      en: 'Login successful! Redirecting...'
+    };
+    
+    loginBtn.textContent = successTexts[currentLang] || successTexts.tr;
+    
+    // 1 saniye sonra yönlendir
+    setTimeout(() => {
+      window.location.href = 'siparis.html';
+    }, 1000);
+    
   } else {
+    console.log('Giriş başarısız. Kullanıcı:', u);
+    
+    // Hata mesajını göster
     msg.style.display = 'block';
+    
+    // Butonu resetle
+    const currentLang = localStorage.getItem('lang') || 'tr';
+    const loginTexts = {
+      tr: 'Giriş',
+      ar: 'دخول', 
+      en: 'Login'
+    };
+    
+    loginBtn.textContent = loginTexts[currentLang] || loginTexts.tr;
+    loginBtn.disabled = false;
+    document.body.classList.remove('loading');
   }
 }
 
 // SAYFA YÜKLENDİĞİNDE
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Login sayfası yüklendi');
+  
   // Dil butonlarına event listener ekle
   document.querySelectorAll('.lang-float button').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -235,6 +314,17 @@ document.addEventListener('DOMContentLoaded', function() {
       giris();
     }
   });
+  
+  // Kullanıcı adı input'una focus
+  document.getElementById('user').focus();
+  
+  // Debug için test kullanıcısı (sadece development'ta)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('Development modu - Test kullanıcıları hazır');
+    // İsteğe bağlı: Otomatik doldurma için
+    // document.getElementById('user').value = 'ahmet';
+    // document.getElementById('pass').value = '1234';
+  }
 });
 </script>
 </body>
