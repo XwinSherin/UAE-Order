@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title data-tr="Adalya Company – Giriş" data-ar="أداليا – تسجيل الدخول" data-en="Adalya Company – Login">Adalya Company – Giriş</title>
+
+  <style>
+    :root{
+      --gold:#d4af37;
+      --gold-dark:#b8941f;
+      --bg-light:#f5f7fa;
+      --surface:#ffffff;
+      --text:#2c3e50;
+      --error:#e74c3c;
+      --border:#e0e0e0;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+    body{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:var(--bg-light);color:var(--text);padding:16px
+    }
+    .login-box{
+      width:100%;max-width:380px;background:var(--surface);
+      border-radius:20px;padding:40px 24px;
+      box-shadow:0 8px 30px rgba(0,0,0,.08);text-align:center
+    }
+    .logo-box{
+      width:120px;height:120px;margin:0 auto 12px;border-radius:50%;
+      background:#fff;border:4px solid var(--gold);
+      display:flex;align-items:center;justify-content:center;overflow:hidden
+    }
+    .logo-box img{width:88%;height:88%;object-fit:contain}
+    @media (min-width:480px){.logo-box{width:144px;height:144px}}
+
+    .brand{display:flex;flex-direction:column;gap:4px;margin-bottom:24px}
+    .brand .company{font-size:1.1rem;font-weight:700;color:var(--text)}
+    .brand .form-title{font-size:1.25rem;font-weight:800;color:var(--gold)}
+
+    input{
+      width:100%;padding:14px 16px;margin-bottom:16px;
+      background:#fff;border:1.5px solid var(--border);
+      border-radius:12px;font-size:1rem;transition:.3s
+    }
+    input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.2)}
+    button{
+      width:100%;padding:14px;background:var(--gold);color:#fff;
+      font-size:1rem;font-weight:700;border:none;border-radius:12px;
+      cursor:pointer;transition:.3s
+    }
+    button:hover{background:var(--gold-dark);transform:translateY(-2px)}
+    .error{display:none;color:var(--error);font-size:.85rem;margin-top:-10px;margin-bottom:10px}
+
+    .lang-float{
+      position:fixed;bottom:16px;right:16px;z-index:999;
+      display:flex;gap:6px;background:rgba(255,255,255,.85);
+      backdrop-filter:blur(6px);padding:6px;border-radius:30px;
+      box-shadow:0 4px 18px rgba(0,0,0,.15)
+    }
+    .lang-float button{
+      min-width:64px;height:40px;border:none;border-radius:20px;
+      font-size:.9rem;font-weight:700;cursor:pointer;
+      background:#fff;color:var(--text);transition:transform .2s
+    }
+    .lang-float button:active{transform:scale(.92)}
+    .lang-float button.active{background:var(--gold);color:#fff}
+  </style>
+
+  <script>
+    const USERS_URL = 'https://raw.githubusercontent.com/XwinSherin/adalyacompany/main/users.json';
+  </script>
+</head>
+
+<body>
+<div class="login-box">
+  <div class="logo-box">
+    <img src="images/adalyalogo.png" alt="Adalya Logo">
+  </div>
+
+  <div class="brand">
+    <div class="company" data-tr="Adalya Company" data-ar="شركة أداليا" data-en="Adalya Company">Adalya Company</div>
+    <div class="form-title" data-tr="Sipariş Formu" data-ar="نموذج الطلب" data-en="Order Form">Sipariş Formu</div>
+  </div>
+
+  <input type="text" id="user" placeholder="Kullanıcı adı" data-tr-placeholder="Kullanıcı adı" data-ar-placeholder="اسم المستخدم" data-en-placeholder="Username">
+  <input type="password" id="pass" placeholder="Şifre" data-tr-placeholder="Şifre" data-ar-placeholder="كلمة المرور" data-en-placeholder="Password">
+
+  <div class="error" id="msg" data-tr="Kullanıcı adı veya şifre yanlış!" data-ar="اسم المستخدم أو كلمة المرور خاطئة!" data-en="Wrong username or password!">Kullanıcı adı veya şifre yanlış!</div>
+
+  <button onclick="giris()" data-tr="Giriş" data-ar="دخول" data-en="Login">Giriş</button>
+</div>
+
+<div class="lang-float">
+  <button class="active" onclick="setLang('tr')" title="Türkçe">Türkçe</button>
+  <button onclick="setLang('ar')" title="العربية">العربية</button>
+  <button onclick="setLang('en')" title="English">English</button>
+</div>
+
+<script>
+  function setLang(lang){
+    localStorage.setItem('lang',lang);
+    document.documentElement.lang=lang;
+    document.documentElement.dir=(lang==='ar'?'rtl':'ltr');
+    document.querySelectorAll('[data-tr]').forEach(el=>el.textContent=el.dataset[lang]||el.dataset.tr);
+    document.querySelectorAll('[data-tr-placeholder]').forEach(el=>el.placeholder=el.dataset[lang+'Placeholder']||el.dataset.trPlaceholder);
+    document.querySelectorAll('.lang-float button').forEach(b=>b.classList.toggle('active',b.title.includes(lang==='ar'?'العربية':lang==='en'?'English':'Türkçe')));
+  }
+
+  async function giris(){
+    const u=document.getElementById('user').value.trim();
+    const p=document.getElementById('pass').value.trim();
+    const msg=document.getElementById('msg');
+    
+    try{
+      const res=await fetch(USERS_URL);
+      const users=await res.json();
+      const found=users.find(x=>x.user===u && x.pass===p);
+      
+      if(found){
+        sessionStorage.setItem('currentUser',u);
+        location.href = 'index.html'; // Sipariş sayfasına yönlendir
+      }else{
+        msg.style.display='block';
+      }
+    }catch(err){
+      msg.textContent='Bağlantı hatası!'; 
+      msg.style.display='block';
+    }
+  }
+
+  // Sayfa yüklendiğinde dili ayarla
+  (()=>{setLang(localStorage.getItem('lang')||'tr')})();
+</script>
+
+</body>
+</html>
