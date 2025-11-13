@@ -249,7 +249,7 @@
       font-size: 1.1rem;
     }
 
-    /* BUTON GRUBU */
+    /* BUTON GRUP */
     .button-group {
       display: grid; grid-template-columns: 1fr; gap: 14px;
       max-width: 800px; margin: 0 auto 24px;
@@ -607,15 +607,14 @@
 <h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">Sipariş Oluştur</h1>
 
 <div class="order-info">
-  <!-- MÜŞTERİ ADI -->
+  <!-- SIPARIŞ NOTU -->
   <div class="input-group">
-    <label data-tr="Müşteri Adı *" data-ar="اسم العميل *" data-en="Customer Name *">Müşteri Adı *</label>
-    <input type="text" id="customer-name" required 
-           data-tr="Örn: AHMET YILMAZ" 
-           data-ar="مثال: أحمد يلماز" 
-           data-en="Ex: AHMET YILMAZ"
-           placeholder="Örn: AHMET YILMAZ" aria-required="true">
-    <small class="required-hint" id="name-error" data-tr="Bu alan zorunludur!" data-ar="هذا الحقل مطلوب!" data-en="This field is required!">Bu alan zorunludur!</small>
+    <label data-tr="Sipariş Notu" data-ar="ملاحظة الطلب" data-en="Order Notes">Sipariş Notu</label>
+    <input type="text" id="order-notes" 
+           data-tr="Örn: Acil teslimat, özel paketleme..." 
+           data-ar="مثال: توصيل عاجل، تغليف خاص..." 
+           data-en="Ex: Urgent delivery, special packaging..."
+           placeholder="Örn: Acil teslimat, özel paketleme...">
   </div>
 
   <!-- SİPARİŞ KODU -->
@@ -821,7 +820,7 @@ const OrderManager = {
   },
 
   generateOrderCode() {
-    const customerName = document.getElementById('customer-name').value.trim().toUpperCase();
+    const currentUser = sessionStorage.getItem('currentUserUpper') || 'USER';
     const now = new Date();
     
     const dateStr = now.toLocaleDateString('tr-TR', {
@@ -836,16 +835,21 @@ const OrderManager = {
       hour12: false
     });
 
-    if (customerName) {
-      this.currentOrderCode = `${customerName.replace(/\s+/g, '_')}-${dateStr}-${timeStr}`;
-    } else {
-      this.currentOrderCode = `SIPARIS-${dateStr}-${timeStr}`;
-    }
+    this.currentOrderCode = `${currentUser}-${dateStr}-${timeStr}`;
     
     document.getElementById('order-code-display').textContent = this.currentOrderCode;
     document.getElementById('order-code').value = this.currentOrderCode;
     
     return this.currentOrderCode;
+  },
+
+  getDeliveryText() {
+    const deliveryTexts = {
+      'road': 'Karayolu',
+      'sea': 'Denizyolu', 
+      'air': 'Havayolu'
+    };
+    return deliveryTexts[this.deliveryMethod] || 'Karayolu';
   },
 
   toLatin(str) {
@@ -961,13 +965,6 @@ const OrderManager = {
       if (e.target.matches('input[data-gram]')) {
         this.handleInput(e.target);
       }
-    });
-
-    // Customer name input
-    document.getElementById('customer-name').addEventListener('input', (e) => {
-      e.target.value = e.target.value.toUpperCase();
-      this.generateOrderCode();
-      this.updateGrandTotal();
     });
 
     // Delivery method buttons
@@ -1111,6 +1108,16 @@ const OrderManager = {
     }
   },
 
+  validateForm() {
+    let hasAnyValue = false;
+    document.querySelectorAll('input[data-gram]').forEach(inp => {
+      if (this.toLatin(inp.value.replace(/[٬,.]/g, '')) > 0) {
+        hasAnyValue = true;
+      }
+    });
+    return hasAnyValue;
+  },
+
   updateGrandTotal() {
     const gramTotals = { 50: 0, 250: 0, 1000: 0 };
     let hasAnyValue = false;
@@ -1178,58 +1185,42 @@ const OrderManager = {
       codeDisplay.classList.add('empty-value');
     }
 
-    document.getElementById('show-summary').disabled = !this.validateCustomerName() || !hasAnyValue;
-  },
-
-  validateCustomerName() {
-    const input = document.getElementById('customer-name');
-    const error = document.getElementById('name-error');
-    const isValid = input.value.trim().length > 0;
-    
-    error.classList.toggle('show', !isValid);
-    input.classList.toggle('invalid', !isValid);
-    
-    return isValid;
+    document.getElementById('show-summary').disabled = !this.validateForm();
   },
 
   showSummary() {
-    if (!this.validateCustomerName()) {
-      ToastManager.show('Lütfen müşteri adını giriniz!', 'warning');
-      document.getElementById('customer-name').focus();
+    if (!this.validateForm()) {
+      ToastManager.show('Lütfen en az bir ürün seçiniz!', 'warning');
       return;
     }
 
     const content = document.getElementById('summary-content');
-    const customer = document.getElementById('customer-name').value.trim();
+    const orderNotes = document.getElementById('order-notes').value.trim();
+    const currentUser = sessionStorage.getItem('currentUserUpper') || 'USER';
     const code = this.currentOrderCode;
-    const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
+    const date = new Date().toLocaleString('tr-TR', {
       year: 'numeric', month: 'long', day: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
 
-    const deliveryTexts = {
-      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
-      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
-      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
-    };
-
     let html = `
       <div class="summary-info">
-        <p><strong data-tr="Müşteri:" data-ar="العميل:" data-en="Customer:">Müşteri:</strong> <span>${customer}</span></p>
-        <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">Sipariş Kodu:</strong> <span>${code}</span></p>
-        <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">Tarih:</strong> <span>${date}</span></p>
-        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">Teslim Şekli:</strong> <span>${deliveryTexts[this.deliveryMethod][this.currentLang]}</span></p>
+        <p><strong>Kullanıcı:</strong> <span>${currentUser}</span></p>
+        <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
+        ${orderNotes ? `<p><strong>Sipariş Notu:</strong> <span>${orderNotes}</span></p>` : ''}
+        <p><strong>Tarih:</strong> <span>${date}</span></p>
+        <p><strong>Teslim Şekli:</strong> <span>${this.getDeliveryText()}</span></p>
       </div>
 
       <table class="summary-table">
         <thead>
           <tr>
-            <th class="product-name" data-tr="Ürün" data-ar="المنتج" data-en="Product">Ürün</th>
-            <th data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</th>
-            <th data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</th>
-            <th data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</th>
-            <th data-tr="Toplam Koli" data-ar="المجموع كولي" data-en="Total Box">Toplam Koli</th>
-            <th data-tr="Toplam KG" data-ar="المجموع كجم" data-en="Total KG">Toplam KG</th>
+            <th class="product-name">Ürün</th>
+            <th>50G</th>
+            <th>250G</th>
+            <th>1000G</th>
+            <th>Toplam Koli</th>
+            <th>Toplam KG</th>
           </tr>
         </thead>
         <tbody>
@@ -1257,11 +1248,11 @@ const OrderManager = {
         html += `
           <tr>
             <td class="product-name">${productName}</td>
-            <td>${vals[50] > 0 ? this.formatNumber(vals[50], this.currentLang) : ''}</td>
-            <td>${vals[250] > 0 ? this.formatNumber(vals[250], this.currentLang) : ''}</td>
-            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], this.currentLang) : ''}</td>
-            <td>${this.formatNumber(itemKoli, this.currentLang)}</td>
-            <td>${this.formatNumber(itemKoli * this.KOLI_KG, this.currentLang)}</td>
+            <td>${vals[50] > 0 ? this.formatNumber(vals[50], 'tr') : ''}</td>
+            <td>${vals[250] > 0 ? this.formatNumber(vals[250], 'tr') : ''}</td>
+            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], 'tr') : ''}</td>
+            <td>${this.formatNumber(itemKoli, 'tr')}</td>
+            <td>${this.formatNumber(itemKoli * this.KOLI_KG, 'tr')}</td>
           </tr>
         `;
       }
@@ -1271,12 +1262,12 @@ const OrderManager = {
         </tbody>
         <tfoot>
           <tr>
-            <td class="product-name"><strong data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</strong></td>
-            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
-            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
-            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.koli, this.currentLang)}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.kg, this.currentLang)}</strong></td>
+            <td class="product-name"><strong>Genel Toplam</strong></td>
+            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], 'tr') : ''}</strong></td>
+            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], 'tr') : ''}</strong></td>
+            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], 'tr') : ''}</strong></td>
+            <td><strong>${this.formatNumber(colTotals.koli, 'tr')}</strong></td>
+            <td><strong>${this.formatNumber(colTotals.kg, 'tr')}</strong></td>
           </tr>
         </tfoot>
       </table>
@@ -1284,15 +1275,15 @@ const OrderManager = {
       <div class="share-buttons">
         <button class="share-btn whatsapp" id="share-whatsapp">
           <i class="fab fa-whatsapp"></i>
-          <span data-tr="WhatsApp'ta Paylaş" data-ar="مشاركة عبر واتساب" data-en="Share on WhatsApp">WhatsApp'ta Paylaş</span>
+          <span>WhatsApp'ta Paylaş</span>
         </button>
         <button class="share-btn excel" id="download-excel">
           <i class="fas fa-file-excel"></i>
-          <span data-tr="Excel İndir" data-ar="تحميل إكسل" data-en="Download Excel">Excel İndir</span>
+          <span>Excel İndir</span>
         </button>
         <button class="share-btn pdf" id="download-pdf">
           <i class="fas fa-file-pdf"></i>
-          <span data-tr="PDF İndir" data-ar="تحميل PDF" data-en="Download PDF">PDF İndir</span>
+          <span>PDF İndir</span>
         </button>
       </div>
     `;
@@ -1301,12 +1292,13 @@ const OrderManager = {
     document.getElementById('summary-modal').classList.add('show');
 
     this.currentOrderData = { 
-      customer, 
+      user: currentUser,
       code, 
       date, 
+      notes: orderNotes,
       items, 
       totals: colTotals,
-      delivery: deliveryTexts[this.deliveryMethod][this.currentLang]
+      delivery: this.getDeliveryText()
     };
 
     // OFFLINE KAYIT
@@ -1335,7 +1327,7 @@ const OrderManager = {
   },
 
   clearForm() {
-    document.getElementById('customer-name').value = '';
+    document.getElementById('order-notes').value = '';
     document.getElementById('product-search').value = '';
     this.toggleSearchClear();
     
@@ -1460,8 +1452,9 @@ const ExportManager = {
       const title = [
         ["SİPARİŞ DETAYI"],
         [],
-        ["Müşteri:", OrderManager.currentOrderData.customer],
+        ["Kullanıcı:", OrderManager.currentOrderData.user],
         ["Sipariş Kodu:", OrderManager.currentOrderData.code],
+        ...(OrderManager.currentOrderData.notes ? [["Sipariş Notu:", OrderManager.currentOrderData.notes]] : []),
         ["Tarih:", OrderManager.currentOrderData.date],
         ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
         []
@@ -1512,7 +1505,7 @@ const ExportManager = {
             vertical: "center" 
           };
           
-          if (R === 7) {
+          if (R === (title.length + 1)) {
             ws[cell_ref].s.fill = {
               patternType: "solid",
               fgColor: {rgb: "4FACFE"}
@@ -1570,10 +1563,21 @@ const ExportManager = {
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.text(`Müşteri: ${OrderManager.currentOrderData.customer}`, 20, 25);
-      doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, 32);
-      doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, 39);
-      doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, 46);
+      
+      let yPosition = 25;
+      doc.text(`Kullanıcı: ${OrderManager.currentOrderData.user}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Sipariş Kodu: ${OrderManager.currentOrderData.code}`, 20, yPosition);
+      yPosition += 7;
+      
+      if (OrderManager.currentOrderData.notes) {
+        doc.text(`Sipariş Notu: ${OrderManager.currentOrderData.notes}`, 20, yPosition);
+        yPosition += 7;
+      }
+      
+      doc.text(`Tarih: ${OrderManager.currentOrderData.date}`, 20, yPosition);
+      yPosition += 7;
+      doc.text(`Teslim Şekli: ${OrderManager.currentOrderData.delivery}`, 20, yPosition);
       
       const headers = [
         "Ürün Adı", 
@@ -1605,7 +1609,7 @@ const ExportManager = {
       doc.autoTable({
         head: [headers],
         body: tableData,
-        startY: 52,
+        startY: yPosition + 10,
         theme: 'grid',
         styles: { 
           fontSize: 8, 
@@ -1654,7 +1658,7 @@ const ExportManager = {
             data.cell.styles.halign = 'center';
           }
         },
-        margin: { top: 52 }
+        margin: { top: yPosition + 10 }
       });
       
       doc.save(`Sipariş_${OrderManager.currentOrderData.code}.pdf`);
@@ -1672,9 +1676,11 @@ const ExportManager = {
     }
 
     try {
-      let text = `*SİPARİŞ DETAYI*\n\n`;
-      text += `👤 *Müşteri:* ${OrderManager.currentOrderData.customer}\n`;
-      text += `📋 *Sipariş Kodu:* ${OrderManager.currentOrderData.code}\n`;
+      let text = `*SİPARİŞ DETAYI - ${OrderManager.currentOrderData.code}*\n\n`;
+      text += `👤 *Kullanıcı:* ${OrderManager.currentOrderData.user}\n`;
+      if (OrderManager.currentOrderData.notes) {
+        text += `📝 *Sipariş Notu:* ${OrderManager.currentOrderData.notes}\n`;
+      }
       text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
       text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
       text += `*ÜRÜN DETAYLARI:*\n`;
