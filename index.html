@@ -97,7 +97,7 @@
   <button data-lang="ar">العربية</button>
   <button data-lang="en">English</button>
 </div>
-users.json
+
 <script>
 // KULLANICI LİSTESİ - GitHub'dan çekilecek
 const USERS_URL = 'https://raw.githubusercontent.com/XwinSherin/UAE-Order/main/users.json';
@@ -254,6 +254,7 @@ async function giris(){
   if (found) {
     console.log('Giriş başarılı! Kullanıcı:', found.user);
     sessionStorage.setItem('currentUser', u);
+    sessionStorage.setItem('currentUserUpper', u.toUpperCase());
     sessionStorage.setItem('loginTime', new Date().toISOString());
     
     // Başarılı giriş mesajı
@@ -319,9 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Debug için test kullanıcısı (sadece development'ta)
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     console.log('Development modu - Test kullanıcıları hazır');
-    // İsteğe bağlı: Otomatik doldurma için
-    // document.getElementById('user').value = 'ahmet';
-    // document.getElementById('pass').value = '1234';
   }
 });
 </script>
