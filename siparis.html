@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
@@ -593,10 +593,10 @@
 <!-- SABİT ÜST BAR -->
 <div class="top-bar">
   <img src="images/adalyalogo.jpg" alt="Adalya Logo" class="logo">
-  <button class="lang-btn active" data-lang="tr" id="lang-tr">
+  <button class="lang-btn" data-lang="tr" id="lang-tr">
     TR
   </button>
-  <button class="lang-btn" data-lang="ar" id="lang-ar">
+  <button class="lang-btn active" data-lang="ar" id="lang-ar">
     العربية
   </button>
   <button class="lang-btn" data-lang="en" id="lang-en">
@@ -604,27 +604,27 @@
   </button>
 </div>
 
-<h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">Sipariş Oluştur</h1>
+<h1 class="page-title" data-tr="Sipariş Oluştur" data-ar="إنشاء طلب" data-en="Create Order">إنشاء طلب</h1>
 
 <div class="order-info">
   <!-- SIPARIŞ NOTU -->
   <div class="input-group">
-    <label data-tr="Sipariş Notu" data-ar="ملاحظة الطلب" data-en="Order Notes">Sipariş Notu</label>
+    <label data-tr="Sipariş Notu" data-ar="ملاحظة الطلب" data-en="Order Notes">ملاحظة الطلب</label>
     <input type="text" id="order-notes" 
            data-tr="Örn: Acil teslimat, özel paketleme..." 
            data-ar="مثال: توصيل عاجل، تغليف خاص..." 
            data-en="Ex: Urgent delivery, special packaging..."
-           placeholder="Örn: Acil teslimat, özel paketleme...">
+           placeholder="مثال: توصيل عاجل، تغليف خاص...">
   </div>
 
   <!-- SİPARİŞ KODU -->
   <div class="input-group">
-    <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">Sipariş Kodu</label>
+    <label data-tr="Sipariş Kodu" data-ar="رمز الطلب" data-en="Order Code">رمز الطلب</label>
     <input type="text" id="order-code" 
            data-tr="Otomatik oluşturulur" 
            data-ar="يتم إنشاؤه تلقائياً" 
            data-en="Auto-generated"
-           placeholder="Otomatik oluşturulur" readonly>
+           placeholder="يتم إنشاؤه تلقائياً" readonly>
   </div>
 </div>
 
@@ -635,26 +635,26 @@
            data-tr="Ürün ara..." 
            data-ar="ابحث عن المنتج..." 
            data-en="Search product..."
-           placeholder="Ürün ara..." aria-label="Ürün arama">
+           placeholder="ابحث عن المنتج..." aria-label="Ürün arama">
     <i class="fas fa-times search-clear" id="search-clear"></i>
   </div>
 </div>
 
 <!-- TESLİM ŞEKLİ SEÇİMİ - İKONLU -->
 <div class="input-group" style="max-width: 800px; margin: 0 auto 24px;">
-  <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">Teslim Şekli</label>
+  <label data-tr="Teslim Şekli" data-ar="طريقة التسليم" data-en="Delivery Method">طريقة التسليم</label>
   <div class="delivery-methods">
     <button class="delivery-btn active" data-method="road">
       <i class="fas fa-truck"></i>
-      <span data-tr="Karayolu" data-ar="براً" data-en="Road">Karayolu</span>
+      <span data-tr="Karayolu" data-ar="براً" data-en="Road">براً</span>
     </button>
     <button class="delivery-btn" data-method="sea">
       <i class="fas fa-ship"></i>
-      <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">Denizyolu</span>
+      <span data-tr="Denizyolu" data-ar="بحراً" data-en="Sea">بحراً</span>
     </button>
     <button class="delivery-btn" data-method="air">
       <i class="fas fa-plane"></i>
-      <span data-tr="Havayolu" data-ar="جواً" data-en="Air">Havayolu</span>
+      <span data-tr="Havayolu" data-ar="جواً" data-en="Air">جواً</span>
     </button>
   </div>
 </div>
@@ -663,11 +663,11 @@
 <div class="button-group">
   <button class="new-order-btn" id="new-order-btn">
     <i class="fas fa-plus-circle"></i>
-    <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">Yeni Sipariş</span>
+    <span data-tr="Yeni Sipariş" data-ar="طلب جديد" data-en="New Order">طلب جديد</span>
   </button>
   <button class="summary-btn" id="show-summary" disabled>
     <i class="fas fa-receipt"></i>
-    <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">Özeti Gör</span>
+    <span data-tr="Özeti Gör" data-ar="عرض الملخص" data-en="View Summary">عرض الملخص</span>
   </button>
 </div>
 
@@ -676,37 +676,37 @@
 <!-- GENEL TOPLAM - OPTİMİZE EDİLMİŞ -->
 <div class="grand-total-card">
   <div class="grand-total-header">
-    <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">Genel Toplam</span>
+    <span class="label" data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">الإجمالي الكلي</span>
     <span id="order-code-display" class="empty-value">-</span>
   </div>
   <table class="grand-table">
     <thead>
       <tr>
-        <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
-        <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
-        <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
+        <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">الوزن</th>
+        <th data-tr="Koli" data-ar="كولي" data-en="Box">كولي</th>
+        <th data-tr="KG" data-ar="كجم" data-en="KG">كجم</th>
       </tr>
     </thead>
     <tbody>
       <tr class="gram-50">
-        <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
+        <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">٥٠غ</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-50" value="" readonly></div></td>
         <td id="grand-kg-50" class="empty-value">-</td>
       </tr>
       <tr class="gram-250">
-        <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
+        <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">٢٥٠غ</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-250" value="" readonly></div></td>
         <td id="grand-kg-250" class="empty-value">-</td>
       </tr>
       <tr class="gram-1000">
-        <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
+        <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">١٠٠٠غ</strong></td>
         <td><div class="grand-input"><input type="text" id="grand-1000" value="" readonly></div></td>
         <td id="grand-kg-1000" class="empty-value">-</td>
       </tr>
     </tbody>
     <tfoot>
       <tr>
-        <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">TOPLAM</strong></td>
+        <td><strong data-tr="TOPLAM" data-ar="الإجمالي" data-en="TOTAL">الإجمالي</strong></td>
         <td><strong id="final-koli">-</strong></td>
         <td><strong id="final-kg">-</strong></td>
       </tr>
@@ -717,7 +717,7 @@
 <div class="modal" id="summary-modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2 data-tr="Sipariş Özeti" data-ar="ملخص الطلب" data-en="Order Summary">Sipariş Özeti</h2>
+      <h2 data-tr="Sipariş Özeti" data-ar="ملخص الطلب" data-en="Order Summary">ملخص الطلب</h2>
       <button class="close-modal" id="close-modal" aria-label="Kapat">X</button>
     </div>
     <div class="modal-body" id="summary-content"></div>
@@ -772,7 +772,7 @@ const OrderManager = {
   MAX_INPUT: 999999,
   arabicDigits: '٠١٢٣٤٥٦٧٨٩',
   latinDigits: '0123456789',
-  currentLang: 'tr',
+  currentLang: 'ar', // Varsayılan dil Arapça
   isAnimating: false,
   inputTimeout: null,
   currentOrderData: null,
@@ -808,7 +808,7 @@ const OrderManager = {
       this.generateOrderCode();
       this.renderProducts();
       this.bindEvents();
-      this.setLang('tr');
+      this.setLang('ar'); // Varsayılan dil Arapça
       this.updateGrandTotal();
       this.toggleSearchClear();
     } catch (error) {
@@ -843,13 +843,13 @@ const OrderManager = {
     return this.currentOrderCode;
   },
 
-  getDeliveryText() {
+  getDeliveryText(lang = 'tr') { // Varsayılan olarak Türkçe
     const deliveryTexts = {
-      'road': 'Karayolu',
-      'sea': 'Denizyolu', 
-      'air': 'Havayolu'
+      'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
+      'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
+      'air': { tr: 'Havayolu', ar: 'جواً', en: 'Air' }
     };
-    return deliveryTexts[this.deliveryMethod] || 'Karayolu';
+    return deliveryTexts[this.deliveryMethod][lang] || deliveryTexts[this.deliveryMethod]['tr'];
   },
 
   toLatin(str) {
@@ -887,31 +887,31 @@ const OrderManager = {
     table.innerHTML = `
       <thead>
         <tr>
-          <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">Gramaj</th>
-          <th data-tr="Koli" data-ar="كولي" data-en="Box">Koli</th>
-          <th data-tr="KG" data-ar="كجم" data-en="KG">KG</th>
+          <th data-tr="Gramaj" data-ar="الوزن" data-en="Weight">الوزن</th>
+          <th data-tr="Koli" data-ar="كولي" data-en="Box">كولي</th>
+          <th data-tr="KG" data-ar="كجم" data-en="KG">كجم</th>
         </tr>
       </thead>
       <tbody>
         <tr class="gram-50">
-          <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">50G</strong></td>
+          <td><strong data-tr="50G" data-ar="٥٠غ" data-en="50G">٥٠غ</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="50" class="empty-value">-</td>
         </tr>
         <tr class="gram-250">
-          <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">250G</strong></td>
+          <td><strong data-tr="250G" data-ar="٢٥٠غ" data-en="250G">٢٥٠غ</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="250" class="empty-value">-</td>
         </tr>
         <tr class="gram-1000">
-          <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">1000G</strong></td>
+          <td><strong data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">١٠٠٠غ</strong></td>
           <td><div class="quantity-input"></div></td>
           <td data-kg="1000" class="empty-value">-</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td><strong data-tr="Toplam" data-ar="المجموع" data-en="Total">Toplam</strong></td>
+          <td><strong data-tr="Toplam" data-ar="المجموع" data-en="Total">المجموع</strong></td>
           <td data-total-koli class="empty-value">-</td>
           <td data-total-kg class="empty-value">-</td>
         </tr>
@@ -1198,29 +1198,29 @@ const OrderManager = {
     const orderNotes = document.getElementById('order-notes').value.trim();
     const currentUser = sessionStorage.getItem('currentUserUpper') || 'USER';
     const code = this.currentOrderCode;
-    const date = new Date().toLocaleString('tr-TR', {
+    const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
       year: 'numeric', month: 'long', day: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
 
     let html = `
       <div class="summary-info">
-        <p><strong>Kullanıcı:</strong> <span>${currentUser}</span></p>
-        <p><strong>Sipariş Kodu:</strong> <span>${code}</span></p>
-        ${orderNotes ? `<p><strong>Sipariş Notu:</strong> <span>${orderNotes}</span></p>` : ''}
-        <p><strong>Tarih:</strong> <span>${date}</span></p>
-        <p><strong>Teslim Şekli:</strong> <span>${this.getDeliveryText()}</span></p>
+        <p><strong data-tr="Kullanıcı:" data-ar="المستخدم:" data-en="User:">${this.currentLang === 'ar' ? 'المستخدم:' : 'Kullanıcı:'}</strong> <span>${currentUser}</span></p>
+        <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">${this.currentLang === 'ar' ? 'رمز الطلب:' : 'Sipariş Kodu:'}</strong> <span>${code}</span></p>
+        ${orderNotes ? `<p><strong data-tr="Sipariş Notu:" data-ar="ملاحظة الطلب:" data-en="Order Notes:">${this.currentLang === 'ar' ? 'ملاحظة الطلب:' : 'Sipariş Notu:'}</strong> <span>${orderNotes}</span></p>` : ''}
+        <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">${this.currentLang === 'ar' ? 'التاريخ:' : 'Tarih:'}</strong> <span>${date}</span></p>
+        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">${this.currentLang === 'ar' ? 'طريقة التسليم:' : 'Teslim Şekli:'}</strong> <span>${this.getDeliveryText(this.currentLang)}</span></p>
       </div>
 
       <table class="summary-table">
         <thead>
           <tr>
-            <th class="product-name">Ürün</th>
-            <th>50G</th>
-            <th>250G</th>
-            <th>1000G</th>
-            <th>Toplam Koli</th>
-            <th>Toplam KG</th>
+            <th class="product-name" data-tr="Ürün" data-ar="المنتج" data-en="Product">${this.currentLang === 'ar' ? 'المنتج' : 'Ürün'}</th>
+            <th data-tr="50G" data-ar="٥٠غ" data-en="50G">${this.currentLang === 'ar' ? '٥٠غ' : '50G'}</th>
+            <th data-tr="250G" data-ar="٢٥٠غ" data-en="250G">${this.currentLang === 'ar' ? '٢٥٠غ' : '250G'}</th>
+            <th data-tr="1000G" data-ar="١٠٠٠غ" data-en="1000G">${this.currentLang === 'ar' ? '١٠٠٠غ' : '1000G'}</th>
+            <th data-tr="Toplam Koli" data-ar="المجموع كولي" data-en="Total Box">${this.currentLang === 'ar' ? 'المجموع كولي' : 'Toplam Koli'}</th>
+            <th data-tr="Toplam KG" data-ar="المجموع كجم" data-en="Total KG">${this.currentLang === 'ar' ? 'المجموع كجم' : 'Toplam KG'}</th>
           </tr>
         </thead>
         <tbody>
@@ -1248,11 +1248,11 @@ const OrderManager = {
         html += `
           <tr>
             <td class="product-name">${productName}</td>
-            <td>${vals[50] > 0 ? this.formatNumber(vals[50], 'tr') : ''}</td>
-            <td>${vals[250] > 0 ? this.formatNumber(vals[250], 'tr') : ''}</td>
-            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], 'tr') : ''}</td>
-            <td>${this.formatNumber(itemKoli, 'tr')}</td>
-            <td>${this.formatNumber(itemKoli * this.KOLI_KG, 'tr')}</td>
+            <td>${vals[50] > 0 ? this.formatNumber(vals[50], this.currentLang) : ''}</td>
+            <td>${vals[250] > 0 ? this.formatNumber(vals[250], this.currentLang) : ''}</td>
+            <td>${vals[1000] > 0 ? this.formatNumber(vals[1000], this.currentLang) : ''}</td>
+            <td>${this.formatNumber(itemKoli, this.currentLang)}</td>
+            <td>${this.formatNumber(itemKoli * this.KOLI_KG, this.currentLang)}</td>
           </tr>
         `;
       }
@@ -1262,12 +1262,12 @@ const OrderManager = {
         </tbody>
         <tfoot>
           <tr>
-            <td class="product-name"><strong>Genel Toplam</strong></td>
-            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], 'tr') : ''}</strong></td>
-            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], 'tr') : ''}</strong></td>
-            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], 'tr') : ''}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.koli, 'tr')}</strong></td>
-            <td><strong>${this.formatNumber(colTotals.kg, 'tr')}</strong></td>
+            <td class="product-name"><strong data-tr="Genel Toplam" data-ar="الإجمالي الكلي" data-en="Grand Total">${this.currentLang === 'ar' ? 'الإجمالي الكلي' : 'Genel Toplam'}</strong></td>
+            <td><strong>${colTotals[50] > 0 ? this.formatNumber(colTotals[50], this.currentLang) : ''}</strong></td>
+            <td><strong>${colTotals[250] > 0 ? this.formatNumber(colTotals[250], this.currentLang) : ''}</strong></td>
+            <td><strong>${colTotals[1000] > 0 ? this.formatNumber(colTotals[1000], this.currentLang) : ''}</strong></td>
+            <td><strong>${this.formatNumber(colTotals.koli, this.currentLang)}</strong></td>
+            <td><strong>${this.formatNumber(colTotals.kg, this.currentLang)}</strong></td>
           </tr>
         </tfoot>
       </table>
@@ -1298,7 +1298,7 @@ const OrderManager = {
       notes: orderNotes,
       items, 
       totals: colTotals,
-      delivery: this.getDeliveryText()
+      delivery: this.getDeliveryText('tr') // Export için her zaman Türkçe
     };
 
     // OFFLINE KAYIT
