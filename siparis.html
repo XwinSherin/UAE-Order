@@ -289,18 +289,26 @@
       transform: translateY(-1px); box-shadow: 0 5px 16px rgba(79, 172, 254, 0.35); 
     }
 
-    .products-container {
-      display: grid; gap: 18px; max-width: 1600px; margin: 0 auto;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      position: relative; z-index: 1;
-    }
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+  max-width: 1600px;
+  margin: 0 auto;
+  /* AŞAĞIDAKİ SATIRI EKLE */
+  justify-content: center;
+}
 
-    .product-card {
-      border-radius: 16px; overflow: hidden; background: white;
-      box-shadow: var(--card-shadow); transition: var(--transition);
-      will-change: transform, opacity; opacity: 0; transform: translateY(20px);
-      border: 2px solid transparent;
-    }
+   .product-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--card-shadow);
+  /* AŞAĞIDAKİ İKİ SATIRI EKLE */
+  width: 300px;
+  margin: 0 auto;
+  /* ... diğer stiller */
+}
     .product-card.visible {
       opacity: 1; transform: translateY(0);
       transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
