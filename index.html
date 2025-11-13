@@ -70,10 +70,26 @@
       opacity: 0.7;
       pointer-events: none;
     }
+
+    .debug-info {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      z-index: 1000;
+      display: none;
+    }
   </style>
 </head>
 
 <body>
+<!-- Debug info for testing -->
+<div class="debug-info" id="debug-info"></div>
+
 <div class="login-box">
   <div class="logo-box">
     <img src="images/adalyalogo.jpg" alt="Adalya Logo" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23d4af37\'/><text x=\'50\' y=\'60\' font-family=\'Arial\' font-size=\'40\' text-anchor=\'middle\' fill=\'white\'>A</text></svg>'">
@@ -104,6 +120,7 @@ const USERS_URL = 'https://raw.githubusercontent.com/XwinSherin/UAE-Order/main/u
 
 // Geliştirilmiş yerel kullanıcı listesi (backup olarak)
 const localUsers = [
+  { user: "omer", pass: "1" },
   { user: "ahmet", pass: "1234" },
   { user: "mehmet", pass: "1234" },
   { user: "ayse", pass: "1234" },
@@ -111,6 +128,17 @@ const localUsers = [
   { user: "demo", pass: "demo123" },
   { user: "test", pass: "test123" }
 ];
+
+// Debug fonksiyonu
+function debugLog(message) {
+  console.log(message);
+  const debugEl = document.getElementById('debug-info');
+  if (debugEl) {
+    debugEl.textContent = message;
+    debugEl.style.display = 'block';
+    setTimeout(() => debugEl.style.display = 'none', 3000);
+  }
+}
 
 // DİL YÖNETİMİ
 function setLang(lang, element = null){
@@ -209,6 +237,7 @@ async function giris(){
   }
 
   // Loading state
+  const originalText = loginBtn.textContent;
   loginBtn.textContent = 'Giriş yapılıyor...';
   loginBtn.disabled = true;
   document.body.classList.add('loading');
@@ -217,14 +246,14 @@ async function giris(){
   let source = 'local';
   
   try {
-    console.log('GitHub\'dan kullanıcı listesi çekiliyor...');
+    debugLog('GitHub\'dan kullanıcı listesi çekiliyor...');
     
     // Önce GitHub'dan kullanıcıları çek
     const res = await fetch(USERS_URL + '?t=' + new Date().getTime()); // Cache bypass
     
     if (res.ok) {
       const data = await res.json();
-      console.log('GitHub\'dan alınan kullanıcılar:', data);
+      debugLog('GitHub\'dan alınan kullanıcılar: ' + data.length + ' adet');
       
       if (Array.isArray(data)) {
         users = data;
@@ -237,13 +266,12 @@ async function giris(){
     }
   } catch (err) {
     // GitHub'dan çekilemezse yerel listeyi kullan
-    console.log('GitHub bağlantı hatası, yerel kullanıcılar kullanılıyor:', err.message);
+    debugLog('GitHub bağlantı hatası, yerel kullanıcılar kullanılıyor');
     users = localUsers;
     source = 'local';
   }
 
-  console.log(`Kullanıcı kaynağı: ${source}, Toplam kullanıcı: ${users.length}`);
-  console.log('Kullanıcı listesi:', users);
+  debugLog(`Kullanıcı kaynağı: ${source}, Toplam kullanıcı: ${users.length}`);
 
   // Kullanıcı adı ve şifre kontrolü (case-insensitive)
   const found = users.find(x => 
@@ -252,7 +280,7 @@ async function giris(){
   );
   
   if (found) {
-    console.log('Giriş başarılı! Kullanıcı:', found.user);
+    debugLog('Giriş başarılı! Kullanıcı: ' + found.user);
     sessionStorage.setItem('currentUser', u);
     sessionStorage.setItem('currentUserUpper', u.toUpperCase());
     sessionStorage.setItem('loginTime', new Date().toISOString());
@@ -273,7 +301,7 @@ async function giris(){
     }, 1000);
     
   } else {
-    console.log('Giriş başarısız. Kullanıcı:', u);
+    debugLog('Giriş başarısız. Kullanıcı: ' + u);
     
     // Hata mesajını göster
     msg.style.display = 'block';
@@ -294,7 +322,7 @@ async function giris(){
 
 // SAYFA YÜKLENDİĞİNDE
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Login sayfası yüklendi');
+  debugLog('Login sayfası yüklendi');
   
   // Dil butonlarına event listener ekle
   document.querySelectorAll('.lang-float button').forEach(btn => {
@@ -319,7 +347,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Debug için test kullanıcısı (sadece development'ta)
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    console.log('Development modu - Test kullanıcıları hazır');
+    debugLog('Development modu - Test kullanıcıları hazır');
+    // Otomatik doldurma için (isteğe bağlı)
+    // document.getElementById('user').value = 'omer';
+    // document.getElementById('pass').value = '1';
   }
 });
 </script>
