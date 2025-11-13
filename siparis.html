@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
   <!-- PWA META TAG'leri -->
   <meta name="theme-color" content="#4facfe"/>
@@ -792,13 +793,87 @@ const OrderManager = {
   },
 
   getDefaultProducts() {
-    return Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      tr: `Ürün ${i + 1}`,
-      ar: `منتج ${i + 1}`,
-      en: `Product ${i + 1}`,
-      img: `images/${i + 1}.png`
-    }));
+    return [
+      {
+        id: 1,
+        names: {
+          tr: "Moskova Akşamları",
+          ar: "أمسيات موسكو",
+          en: "Moscow Evenings"
+        },
+        code: "MOSKOVA_AKSAMLARI",
+        img: "images/1.png"
+      },
+      {
+        id: 2,
+        names: {
+          tr: "Lady Keller",
+          ar: "ليدي كيلر",
+          en: "Lady Keller"
+        },
+        code: "LADY_KELLER",
+        img: "images/2.png"
+      },
+      {
+        id: 3,
+        names: {
+          tr: "Sheikh Money",
+          ar: "شيخ موني",
+          en: "Sheikh Money"
+        },
+        code: "SHEIKH_MONEY",
+        img: "images/3.png"
+      },
+      {
+        id: 4,
+        names: {
+          tr: "Şehriyar",
+          ar: "شهريار",
+          en: "Shahriyar"
+        },
+        code: "SEHRIYAR",
+        img: "images/4.png"
+      }
+    ];
+  },
+
+  // STANDARDİZE EDİLMİŞ TARİH FORMATI
+  getFormattedDate(lang = 'tr') {
+    const now = new Date();
+    
+    if (lang === 'tr') {
+      const dateStr = now.toLocaleDateString('tr-TR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }).replace(/\./g, '/');
+      
+      const timeStr = now.toLocaleTimeString('tr-TR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      
+      return `${dateStr} ${timeStr}`;
+    } else if (lang === 'ar') {
+      return now.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } else {
+      return now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
   },
 
   async init() {
@@ -823,6 +898,7 @@ const OrderManager = {
     const currentUser = sessionStorage.getItem('currentUserUpper') || 'USER';
     const now = new Date();
     
+    // Tarihi her zaman Türkçe formatla (sabit kalması için)
     const dateStr = now.toLocaleDateString('tr-TR', {
       day: '2-digit',
       month: '2-digit', 
@@ -843,7 +919,7 @@ const OrderManager = {
     return this.currentOrderCode;
   },
 
-  getDeliveryText(lang = 'tr') { // Varsayılan olarak Türkçe
+  getDeliveryText(lang = 'tr') {
     const deliveryTexts = {
       'road': { tr: 'Karayolu', ar: 'براً', en: 'Road' },
       'sea': { tr: 'Denizyolu', ar: 'بحراً', en: 'Sea' },
@@ -873,14 +949,14 @@ const OrderManager = {
     img.className = 'product-img';
     img.loading = 'lazy';
     img.src = product.img;
-    img.alt = product[this.currentLang] || product.tr;
+    img.alt = product.names?.[this.currentLang] || product.names?.tr || product.tr;
     img.onerror = function() { 
       this.src = `https://picsum.photos/400/300?random=${product.id}`;
     };
 
     const header = document.createElement('div');
     header.className = 'product-header';
-    header.textContent = product[this.currentLang] || product.tr;
+    header.textContent = product.names?.[this.currentLang] || product.names?.tr || product.tr;
 
     const table = document.createElement('table');
     table.className = 'product-table';
@@ -1198,10 +1274,7 @@ const OrderManager = {
     const orderNotes = document.getElementById('order-notes').value.trim();
     const currentUser = sessionStorage.getItem('currentUserUpper') || 'USER';
     const code = this.currentOrderCode;
-    const date = new Date().toLocaleString(this.currentLang === 'ar' ? 'ar-EG' : 'tr-TR', {
-      year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+    const date = this.getFormattedDate(this.currentLang);
 
     let html = `
       <div class="summary-info">
@@ -1231,6 +1304,10 @@ const OrderManager = {
     document.querySelectorAll('.product-card').forEach(card => {
       const headerEl = card.querySelector('.product-header');
       const productName = headerEl ? headerEl.textContent : '';
+      const productId = card.dataset.productId;
+      const product = this.products.find(p => p.id == productId);
+      const productNameTr = product?.names?.tr || productName;
+      
       const vals = { 50: 0, 250: 0, 1000: 0 };
       let itemKoli = 0;
       card.querySelectorAll('input[data-gram]').forEach(inp => {
@@ -1244,7 +1321,13 @@ const OrderManager = {
       colTotals.kg += itemKoli * this.KOLI_KG;
 
       if (itemKoli > 0) {
-        items.push({ name: productName, ...vals, koli: itemKoli, kg: itemKoli * this.KOLI_KG });
+        items.push({ 
+          name: productName, 
+          nameTr: productNameTr,
+          ...vals, 
+          koli: itemKoli, 
+          kg: itemKoli * this.KOLI_KG 
+        });
         html += `
           <tr>
             <td class="product-name">${productName}</td>
@@ -1294,7 +1377,7 @@ const OrderManager = {
     this.currentOrderData = { 
       user: currentUser,
       code, 
-      date, 
+      date: this.getFormattedDate('tr'), // Export için Türkçe tarih
       notes: orderNotes,
       items, 
       totals: colTotals,
@@ -1387,8 +1470,8 @@ const OrderManager = {
     document.querySelectorAll('.product-header').forEach(header => {
       const productId = header.closest('.product-card').dataset.productId;
       const product = this.products.find(p => p.id == productId);
-      if (product && product[lang]) {
-        header.textContent = product[lang];
+      if (product && product.names) {
+        header.textContent = product.names[lang] || product.names.tr;
       }
     });
 
@@ -1404,8 +1487,20 @@ const OrderManager = {
     const searchTerm = query.toLowerCase().trim();
 
     products.forEach(card => {
-      const productName = card.querySelector('.product-header').textContent.toLowerCase();
-      const shouldShow = productName.includes(searchTerm) || query === '';
+      const productId = card.dataset.productId;
+      const product = this.products.find(p => p.id == productId);
+      
+      if (!product) return;
+      
+      // Tüm dillerde arama yap
+      const searchableText = [
+        product.names?.tr || '',
+        product.names?.ar || '', 
+        product.names?.en || '',
+        product.code || ''
+      ].join(' ').toLowerCase();
+
+      const shouldShow = searchableText.includes(searchTerm) || query === '';
       card.style.display = shouldShow ? '' : 'none';
     });
   }
@@ -1454,16 +1549,16 @@ const ExportManager = {
         [],
         ["Kullanıcı:", OrderManager.currentOrderData.user],
         ["Sipariş Kodu:", OrderManager.currentOrderData.code],
-        ...(OrderManager.currentOrderData.notes ? [["Sipariş Notu:", OrderManager.currentOrderData.notes]] : []),
-        ["Tarih:", OrderManager.currentOrderData.date],
+        ["Tarih:", OrderManager.currentOrderData.date], // Standardize edilmiş tarih
         ["Teslim Şekli:", OrderManager.currentOrderData.delivery],
+        ...(OrderManager.currentOrderData.notes ? [["Sipariş Notu:", OrderManager.currentOrderData.notes]] : []),
         []
       ];
 
       const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
       
       const data = OrderManager.currentOrderData.items.map(item => [
-        item.name,
+        item.nameTr || item.name, // Türkçe isim kullan
         item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
         item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
         item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
@@ -1589,7 +1684,7 @@ const ExportManager = {
       ];
       
       const tableData = OrderManager.currentOrderData.items.map(item => [
-        item.name,
+        item.nameTr || item.name, // Türkçe isim kullan
         item[50] > 0 ? OrderManager.formatNumber(item[50], 'tr') : '',
         item[250] > 0 ? OrderManager.formatNumber(item[250], 'tr') : '',
         item[1000] > 0 ? OrderManager.formatNumber(item[1000], 'tr') : '',
@@ -1678,15 +1773,17 @@ const ExportManager = {
     try {
       let text = `*SİPARİŞ DETAYI - ${OrderManager.currentOrderData.code}*\n\n`;
       text += `👤 *Kullanıcı:* ${OrderManager.currentOrderData.user}\n`;
+      text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`; // Eksik olan tarih eklendi
+      text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n`;
+      
       if (OrderManager.currentOrderData.notes) {
         text += `📝 *Sipariş Notu:* ${OrderManager.currentOrderData.notes}\n`;
       }
-      text += `📅 *Tarih:* ${OrderManager.currentOrderData.date}\n`;
-      text += `🚚 *Teslim Şekli:* ${OrderManager.currentOrderData.delivery}\n\n`;
-      text += `*ÜRÜN DETAYLARI:*\n`;
+      
+      text += `\n*ÜRÜN DETAYLARI:*\n`;
 
       OrderManager.currentOrderData.items.forEach((item, index) => {
-        text += `\n${index + 1}. ${item.name}\n`;
+        text += `\n${index + 1}. ${item.nameTr || item.name}\n`;
         if (item[50] > 0) text += `   📦 50G: ${OrderManager.formatNumber(item[50], 'tr')} koli\n`;
         if (item[250] > 0) text += `   📦 250G: ${OrderManager.formatNumber(item[250], 'tr')} koli\n`;
         if (item[1000] > 0) text += `   📦 1000G: ${OrderManager.formatNumber(item[1000], 'tr')} koli\n`;
