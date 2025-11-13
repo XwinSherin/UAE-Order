@@ -175,15 +175,6 @@
       "ar": "مي أمور",
       "img": "images/25.png"
     },
-    /*
-    {
-      "id": 26,
-      "tr": "Tehran Nights",
-      "en": "Tehran Nights",
-      "ar": "ليالي طهران",
-      "img": "images/26.png"
-    },
-    */
     {
       "id": 27,
       "tr": "Eskimo Leon",
@@ -191,15 +182,6 @@
       "ar": "اسكيمو ليون",
       "img": "images/27.png"
     },
-    /*
-    {
-      "id": 28,
-      "tr": "Baku Nights",
-      "en": "Baku Nights",
-      "ar": "ليالي باكو",
-      "img": "images/28.png"
-    },
-    */
     {
       "id": 29,
       "tr": "Punkman",
@@ -214,15 +196,6 @@
       "ar": "م.م",
       "img": "images/30.png"
     },
-    /*
-    {
-      "id": 31,
-      "tr": "Hawaii",
-      "en": "Hawaii",
-      "ar": "هاواي",
-      "img": "images/31.png"
-    },
-    */
     {
       "id": 32,
       "tr": "Chewinggum Cinnamon",
@@ -230,15 +203,6 @@
       "ar": "علكة وقرفة",
       "img": "images/32.png"
     },
-    /*
-    {
-      "id": 33,
-      "tr": "Cherry",
-      "en": "Cherry",
-      "ar": "كرز",
-      "img": "images/33.png"
-    },
-    */
     {
       "id": 34,
       "tr": "Mango Tango",
@@ -253,24 +217,6 @@
       "ar": "آيس",
       "img": "images/35.png"
     },
-    /*
-    {
-      "id": 36,
-      "tr": "Berlin Nights",
-      "en": "Berlin Nights",
-      "ar": "ليالي برلين",
-      "img": "images/36.png"
-    },
-    */
-    /*
-    {
-      "id": 37,
-      "tr": "Peach",
-      "en": "Peach",
-      "ar": "خوخ",
-      "img": "images/37.png"
-    },
-    */
     {
       "id": 38,
       "tr": "Orange",
