@@ -169,10 +169,10 @@
       "img": "images/24.png"
     },
     {
-      "id": 25,
-      "tr": "Mi Amor",
-      "en": "Mi Amor",
-      "ar": "مي أمور",
+       "id": 25,
+      "tr": "Blue Horse / Mi Amor",
+      "en": "Blue Horse / Mi Amor",
+      "ar": "الحصان الأزرق / مي أمور",
       "img": "images/25.png"
     },
     {
@@ -237,13 +237,6 @@
       "en": "Hasta La Vista",
       "ar": "هاستا لا فيستا",
       "img": "images/40.png"
-    },
-    {
-      "id": 41,
-      "tr": "Blue Horse / Mi Amor",
-      "en": "Blue Horse / Mi Amor",
-      "ar": "الحصان الأزرق / مي أمور",
-      "img": "images/41.png"
     }
   ]
 }
