@@ -1286,11 +1286,11 @@ const OrderManager = {
 
     let html = `
       <div class="summary-info">
-        <p><strong data-tr="Kullanıcı:" data-ar="المستخدم:" data-en="User:">${this.currentLang === 'ar' ? 'المستخدم:' : 'Kullanıcı:'}</strong> <span>${currentUser}</span></p>
+        <p><strong data-tr="Musteri:" data-ar="المستخدم:" data-en="User:">${this.currentLang === 'ar' ? 'المستخدم:' : 'Kullanıcı:'}</strong> <span>${currentUser}</span></p>
         <p><strong data-tr="Sipariş Kodu:" data-ar="رمز الطلب:" data-en="Order Code:">${this.currentLang === 'ar' ? 'رمز الطلب:' : 'Sipariş Kodu:'}</strong> <span>${code}</span></p>
         ${orderNotes ? `<p><strong data-tr="Sipariş Notu:" data-ar="ملاحظة الطلب:" data-en="Order Notes:">${this.currentLang === 'ar' ? 'ملاحظة الطلب:' : 'Sipariş Notu:'}</strong> <span>${orderNotes}</span></p>` : ''}
         <p><strong data-tr="Tarih:" data-ar="التاريخ:" data-en="Date:">${this.currentLang === 'ar' ? 'التاريخ:' : 'Tarih:'}</strong> <span>${date}</span></p>
-        <p><strong data-tr="Teslim Şekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">${this.currentLang === 'ar' ? 'طريقة التسليم:' : 'Teslim Şekli:'}</strong> <span>${this.getDeliveryText(this.currentLang)}</span></p>
+        <p><strong data-tr="Teslim Sekli:" data-ar="طريقة التسليم:" data-en="Delivery Method:">${this.currentLang === 'ar' ? 'طريقة التسليم:' : 'Teslim Şekli:'}</strong> <span>${this.getDeliveryText(this.currentLang)}</span></p>
       </div>
 
       <table class="summary-table">
@@ -1553,7 +1553,7 @@ const ExportManager = {
       const wb = XLSX.utils.book_new();
       
       const title = [
-        ["SİPARİŞ DETAYI"],
+        ["SİPARİS DETAYI"],
         [],
         ["Kullanıcı:", OrderManager.currentOrderData.user],
         ["Sipariş Kodu:", OrderManager.currentOrderData.code],
@@ -1563,7 +1563,7 @@ const ExportManager = {
         []
       ];
 
-      const headers = [["Ürün Adı", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
+      const headers = [["Ürün İsmi", "50G (Koli)", "250G (Koli)", "1000G (Koli)", "Toplam Koli", "Toplam KG"]];
       
       const data = OrderManager.currentOrderData.items.map(item => [
         item.nameTr || item.name, // Türkçe isim kullan
